@@ -1,3 +1,5 @@
+import streamlit as st
+
 # Define a list of companies
 companies = [
     {"rank": 1, "name": "Company A", "description": "Company A is a leader in sustainable practices...","rating":4},
