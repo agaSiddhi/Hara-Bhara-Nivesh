@@ -1,14 +1,9 @@
+import json
 import streamlit as st
-
+from backend.database import read_company_data
 # Define a list of companies
-companies = [
-    {"rank": 1, "name": "Company A", "description": "Company A is a leader in sustainable practices...","rating":4},
-    {"rank": 2, "name": "Company B", "description": "Company B is committed to reducing its carbon footprint...","rating":3},
-    {"rank": 3, "name": "Company C", "description": "Company B is committed to reducing its carbon footprint...","rating":2},
-    {"rank": 4, "name": "Company D", "description": "Company B is committed to reducing its carbon footprint...","rating":1},
-    {"rank": 5, "name": "Company E", "description": "Company B is committed to reducing its carbon footprint...","rating":1},
-    # Add more companies as needed
-]
+companies = json.loads(read_company_data())
+
 
 # Create a Streamlit app
 def main():
@@ -20,14 +15,14 @@ def main():
     search_button = st.button("Search")
 
     # Filter companies based on search term
-    filtered_companies = [company for company in companies if search_term.lower() in company["name"].lower()]
+    filtered_companies = [company for company in companies if search_term.lower() in company["Name"].lower()]
 
     # Display filtered companies
     for company in filtered_companies:
-        st.subheader(f"{company['rank']}. {company['name']}")
+        st.subheader(f"{company['Rank']}. {company['Name']}")
         col1, col2 = st.columns([3,1])
-        col1.write(company["description"])
-        col2.write(get_stars_html(company["rating"]))
+        col1.write(company["Description"])
+        col2.write(get_stars_html(company["Rating"]))
 
 # Function to generate HTML code for star rating
 def get_stars_html(rating):
