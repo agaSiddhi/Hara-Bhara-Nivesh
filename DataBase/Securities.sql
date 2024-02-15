@@ -1,6 +1,12 @@
 CREATE DATABASE Securities;
 USE Securities;
 
+CREATE TABLE Industry (
+industryID INT PRIMARY KEY AUTO_INCREMENT,
+keyword VARCHAR(255) NOT NULL,
+description TEXT(200)
+);
+
 CREATE TABLE Company (
 companyID INT PRIMARY KEY AUTO_INCREMENT,
 name VARCHAR(100) NOT NULL,
@@ -20,12 +26,6 @@ websiteID INT PRIMARY KEY AUTO_INCREMENT,
 companyID INT,
 url VARCHAR(255) NOT NULL,
 FOREIGN KEY (companyID) REFERENCES Company(companyID)
-);
-
-CREATE TABLE Industry (
-industryID INT PRIMARY KEY AUTO_INCREMENT,
-keyword VARCHAR(255) NOT NULL,
-description TEXT(200)
 );
 
 CREATE TABLE Article (
@@ -53,6 +53,13 @@ FOREIGN KEY (companyID) REFERENCES Company(companyID),
 CONSTRAINT CHK_Score_Range CHECK (score >= 0)
 );
 
+INSERT INTO Industry (keyword, description)
+VALUES
+('Technology', 'Companies involved in technology-related products and services.'),
+('Finance', 'Companies involved in financial services and activities.'),
+('Healthcare', 'Companies involved in healthcare and medical services.'),
+('Manufacturing', 'Companies involved in manufacturing and production processes.');
+
 INSERT INTO Company (name, totalAssets, revenue, employeeCount, currentScore, foundedYear, industryID)
 VALUES
 ('ABC Corp', 1000000.00, 500000.00, 50, 75.50, 2005, 1),
@@ -66,13 +73,6 @@ VALUES
 (2, 'http://www.xyzinc.com'),
 (3, 'http://www.123industries.com'),
 (4, 'http://www.techsolutionsltd.com');
-
-INSERT INTO Industry (keyword, description)
-VALUES
-('Technology', 'Companies involved in technology-related products and services.'),
-('Finance', 'Companies involved in financial services and activities.'),
-('Healthcare', 'Companies involved in healthcare and medical services.'),
-('Manufacturing', 'Companies involved in manufacturing and production processes.');
 
 INSERT INTO Article (link, companyID)
 VALUES
