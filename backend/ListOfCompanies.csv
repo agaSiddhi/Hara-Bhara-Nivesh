@@ -1,6 +1,11 @@
-Rank,Name,Description,Rating
-1,D.E. Shaw,"D. E. Shaw & Co., L.P. is a multinational investment management firm founded in 1988 by David E. Shaw and based in New York City",5
-2,Goldman Sachs,"Major Goldman Sachs offices The Goldman Sachs Group, Inc. is an American multinational investment bank and financial services company. ",3
-3,JP Morgan,JPMorgan Chase & Co. is an American multinational finance corporation headquartered in New York City and incorporated in Delaware,4
-4,Tesla,"Tesla, Inc. is an American multinational automotive and clean energy company headquartered in Austin, Texas, which designs, manufactures and sells electric vehicles",4
-5,Google,"Google LLC is an American multinational technology company focusing on artificial intelligence, online advertising, search engine technology, cloud",5
+"Name","updatedAt","totalAssests","revenue","employees","currentScore","websiteURL","foundedYear","companyID","description","rating"
+"ABC Corp","2022-02-15",5000000,1500000,200,8.2,"https://www.abccorp.com",2005,1,"Leading technology company",4.3
+"XYZ Ltd","2022-02-15",8000000,2500000,300,7.5,"https://www.xyzltd.com",2010,2,"Global manufacturing giant",3.8
+"Tech Innovators","2022-02-15",3000000,1200000,150,9.1,"https://www.techinnovators.com",2015,3,"Innovating the future",4.9
+"Green Energy Co.","2022-02-15",10000000,4000000,500,6.8,"https://www.greenenergyco.com",2000,4,"Leading in sustainable energy",3.5
+"Data Solutions Inc.","2022-02-15",6000000,2000000,250,8.7,"https://www.datasolutionsinc.com",2012,5,"Your data, our solutions",4.5
+"Innovate Tech","2022-02-15",4000000,1500000,180,7.9,"https://www.innovatetech.com",2008,6,"Driving innovation globally",3.2
+"Eco Solutions Ltd.","2022-02-15",9000000,3000000,350,6.5,"https://www.ecosolutionsltd.com",2011,7,"Sustainable solutions for a better tomorrow",4.0
+"Global Logistics Group","2022-02-15",7000000,2500000,280,8.0,"https://www.globallogisticsgroup.com",2007,8,"Connecting the world",3.6
+"Future Innovations Co.","2022-02-15",5500000,1800000,220,8.5,"https://www.futureinnovationsco.com",2014,9,"Innovating for the future",4.2
+"Dynamic Enterprises","2022-02-15",7500000,2800000,320,7.3,"https://www.dynamicenterprises.com",2009,10,"Empowering businesses",3.9
