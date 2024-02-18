@@ -37,14 +37,7 @@ def return_price_history_from_companyID(companyID=None):
 # connector.disconnect()
 
 
-def read_company_data():
-    company_data=pd.read_csv("/home/agasiddhi/Documents/desis/project/DesisSG-2/backend/ListOfCompanies.csv")
-    json_data= company_data.to_json( orient='records')
-    return json_data
-
-
-    
-
-
-
-
+# def read_company_data():
+#     company_data=pd.read_csv("/home/agasiddhi/Documents/desis/project/DesisSG-2/backend/ListOfCompanies.csv")
+#     json_data= company_data.to_json( orient='records')
+#     return json_data
