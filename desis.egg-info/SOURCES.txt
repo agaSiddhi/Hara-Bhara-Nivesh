@@ -1,5 +1,8 @@
 README.md
 setup.py
+backend/ConfigLoader.py
+backend/DatabaseConnector.py
+backend/DatabaseQueries.py
 backend/__init__.py
 backend/database.py
 desis.egg-info/PKG-INFO

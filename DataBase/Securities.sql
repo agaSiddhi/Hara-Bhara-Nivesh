@@ -53,6 +53,13 @@ FOREIGN KEY (companyID) REFERENCES Company(companyID),
 CONSTRAINT CHK_Score_Range CHECK (score >= 0)
 );
 
+CREATE TABLE companydata(
+    articleID INT PRIMARY KEY AUTO_INCREMENT,
+    articleHeading VARCHAR(255) NOT NULL,
+    articleText TEXT,
+    articleDatetime DATETIME
+);
+
 INSERT INTO Industry (keyword, description)
 VALUES
 ('Technology', 'Companies involved in technology-related products and services.'),
