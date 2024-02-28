@@ -1,12 +1,13 @@
 import pandas as pd 
-import mysql.connector
 from backend.ConfigLoader import ConfigLoader
 from backend.DatabaseConnector import DatabaseConnector
 from backend.DatabaseQueries import QueryRunner
 import os
 
 
-filepath= f"{os.path.dirname(__file__)}/config.ini"
+filepath= f"/Users/ojaswichopra/Downloads/DESIS/project/DesisSG-2/backend/config.ini"
+
+
 config_loader = ConfigLoader(filepath)  
 connector = DatabaseConnector(config_loader)
 

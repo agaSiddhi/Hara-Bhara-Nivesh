@@ -10,13 +10,11 @@ if st.button("Back to Home"):
 
 company_name = st.session_state['company']
 company_id = return_companyID_from_company_name(company_name)[0][0]
-# print(company_id)
 company_details = return_company_details_from_companyID(company_id)[0]
 company_description = return_industry_description_from_companyID(company_id)[0][0]
 score_history = return_score_history_from_companyID(company_id)
 price_history = return_price_history_from_companyID(company_id)
-# print("SH",score_history)
-# print("PH",price_history)
+
 
 st.markdown(f"# Details for {company_name}")
 

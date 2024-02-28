@@ -21,3 +21,6 @@ st.markdown(
 st.title("Landing Page")
 if st.button("Companies List"):
     st.switch_page("pages/1_Listings.py")
+
+if st.button("Portfolio Analyser"):
+    st.switch_page("pages/2_PortfolioAnalyser.py")

@@ -110,5 +110,4 @@ VALUES
 (65.50, '2024-02-13 14:20:00', 3),
 (85.50, '2024-02-13 15:10:00', 4);
 
--- Query to fetch details about listing page
-SELECT name,currentScore, (SELECT description FROM Industry WHERE Company.industryID = Industry.industryID)  FROM Company ORDER BY currentScore DESC;
+

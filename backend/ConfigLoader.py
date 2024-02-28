@@ -4,9 +4,9 @@ class ConfigLoader:
     def __init__(self, config_file_path):
         self.config = ConfigParser()
         self.config.read(config_file_path)
-
+        
     def get_host(self):
-        return self.config['DATABASE']['host']
+        return self.config.get('DATABASE','host')
 
     def get_user(self):
         return self.config['DATABASE']['user']
