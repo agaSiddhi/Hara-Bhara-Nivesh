@@ -5,6 +5,7 @@ import numpy as np
 import plotly.express as px
 import matplotlib.colors as mcolors
 
+
 def load_excel(file):
     df = pd.read_excel(file)
     df['Date'] = pd.to_datetime(df['Date'])
@@ -67,7 +68,7 @@ def calculate_portfolio_score(data):
 
     # Add 'Portfolio Score' column to DataFrame
     data['Score'] = portfolio_score
-    return data    
+    return current_score, data    
 
 # Assuming you have a function to map tickers to their categories
 def get_category(ticker):
@@ -123,7 +124,7 @@ def main():
 
         # Score History
         
-        portfolio = calculate_portfolio_score(portfolio)
+        current_score, portfolio = calculate_portfolio_score(portfolio)
         fig2 = px.line(portfolio, x='Date', y=['Score'], 
                 labels={'Date': 'Date', 'value': 'Score'}, 
                 title='Portfolio Score Over Time')
@@ -235,7 +236,7 @@ def main():
                 st.markdown(f"#### {industry}")
 
             # Display percentage in col3
-            with col3:
+            with col3:  
                 st.markdown(f"#### {percentage:.2%}")
 
             button_label = "→"
@@ -247,8 +248,19 @@ def main():
                 st.session_state['stocks'] = stocks
                 st.switch_page("pages/industries_page.py")
 
+        st.write("---")
+        # Display the target section on the left sidebar
+        st.markdown("### Wanna Go Sustainable?")
+        if st.button("Set Target", key="target_section"):
+            st.session_state['stocks'] = stocks
+            st.session_state['current_score'] = current_score
+            st.switch_page("pages/target_section.py")
+
     # portfolio = pd.read_excel('/Users/ojaswichopra/Downloads/MOCK.xlsx')
 
  
+
+
+
 if __name__ == "__main__":
     main()
