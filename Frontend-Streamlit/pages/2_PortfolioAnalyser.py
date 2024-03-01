@@ -97,6 +97,24 @@ def get_industry(ticker):
         return 'Services'
     else :
         return 'Other'
+    
+def get_category_percentage(stocks):
+    # Calculate the percentage of each category
+    total_stocks = sum(stocks.values())
+    category_percentage = {'Equity': 0, 'Debt': 0, 'Hybrid': 0, 'Others': 0}
+    for ticker, amount in stocks.items():
+        category = get_category(ticker)
+        category_percentage[category] += amount / total_stocks
+    return category_percentage
+
+def get_industry_percentage(stocks):
+    total_stocks = sum(stocks.values())
+    # Calculate the percentage of each industry
+    industry_percentage = {'Capital Goods': 0, 'Financial': 0, 'Services': 0, 'HealthCare': 0, 'Consumer Staples':0, 'Other':0}
+    for ticker, amount in stocks.items():
+        industry = get_industry(ticker)
+        industry_percentage[industry] += amount / total_stocks
+    return industry_percentage
 
 # Create a Streamlit app
 def main():
@@ -111,6 +129,7 @@ def main():
     if uploaded_file is not None:
         # Load excel file
         portfolio = load_excel(uploaded_file)
+        
         ## ----- Price and Score History
 
         # Price History
@@ -133,12 +152,7 @@ def main():
         
         ## ----- Distribution of Stock Categories
 
-        # Calculate the percentage of each category
-        total_stocks = sum(stocks.values())
-        category_percentage = {'Equity': 0, 'Debt': 0, 'Hybrid': 0, 'Others': 0}
-        for ticker, amount in stocks.items():
-            category = get_category(ticker)
-            category_percentage[category] += amount / total_stocks
+        category_percentage=get_category_percentage(stocks)
 
         # Convert dictionary to lists for plotting
         categories = list(category_percentage.keys())
@@ -189,15 +203,11 @@ def main():
                 st.session_state['category'] = category
                 st.session_state['stocks'] = stocks
                 st.switch_page("pages/categories_page.py") 
-    
+
 
         ## ----- Distribution of Stock Industries
                 
-        # Calculate the percentage of each industry
-        industry_percentage = {'Capital Goods': 0, 'Financial': 0, 'Services': 0, 'HealthCare': 0, 'Consumer Staples':0, 'Other':0}
-        for ticker, amount in stocks.items():
-            industry = get_industry(ticker)
-            industry_percentage[industry] += amount / total_stocks
+        industry_percentage=get_industry_percentage(stocks)
 
         # Convert dictionary to lists for plotting
         industries = list(industry_percentage.keys())
@@ -252,15 +262,10 @@ def main():
         # Display the target section on the left sidebar
         st.markdown("### Wanna Go Sustainable?")
         if st.button("Set Target", key="target_section"):
-            st.session_state['stocks'] = stocks
             st.session_state['current_score'] = current_score
             st.switch_page("pages/target_section.py")
 
     # portfolio = pd.read_excel('/Users/ojaswichopra/Downloads/MOCK.xlsx')
-
- 
-
-
 
 if __name__ == "__main__":
     main()

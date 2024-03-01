@@ -73,7 +73,6 @@ def main():
 
     # Page title
     st.title('Set Your Target!')    
-    current_stocks = st.session_state['stocks']
     current_score = st.session_state['current_score']
     # Main function for the target section
     target_score = st.number_input("Enter your score target:")

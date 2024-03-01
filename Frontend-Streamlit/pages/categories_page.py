@@ -62,57 +62,70 @@ def get_industry(ticker):
 def get_avg(ticker):
     return random.randint(10,20)
 
-if st.button("Back to Home"):
-        st.switch_page("Landing.py")
+def get_companies(stocks,category):
+    companies = []
+    for ticker, amount in stocks.items():
+        if category == get_category(ticker):
+            companies.append({ticker: amount})
+    return companies
 
-category = st.session_state['category']
-stocks = st.session_state['stocks']
+def get_ticker_percentages(companies):
+    # Getting composition of each ticker in out category
+    total_amount = sum(amount for company in companies for amount in company.values())
+    ticker_percentages = {}
+    for company in companies:
+        for ticker, amount in company.items():
+            percentage = (amount / total_amount) 
+            if percentage!=0:
+                ticker_percentages[ticker] = percentage
 
-companies = []
-for ticker, amount in stocks.items():
-    if category == get_category(ticker):
-        companies.append({ticker: amount})
+    # presenting current state of portfolio crategory
+    ticker_percentages = dict(sorted(ticker_percentages.items(), key=lambda item: item[1], reverse=True))
 
-# Getting composition of each ticker in out category
-total_amount = sum(amount for company in companies for amount in company.values())
-ticker_percentages = {}
-for company in companies:
-    for ticker, amount in company.items():
-        percentage = (amount / total_amount) 
-        if percentage!=0:
-            ticker_percentages[ticker] = percentage
+    return ticker_percentages
 
-# presenting current state of portfolio crategory
-ticker_percentages = dict(sorted(ticker_percentages.items(), key=lambda item: item[1], reverse=True))
+def main():
 
-if len(ticker_percentages)==0:
-    st.subheader(f'There are no {category} funds in your portfolio')
+    if st.button("Back to Home"):
+            st.switch_page("Landing.py")
+
+    category = st.session_state['category']
+    stocks = st.session_state['stocks']
+
+    companies = get_companies(stocks,category)
+
+    ticker_percentages = get_ticker_percentages(companies)
+
+    if len(ticker_percentages)==0:
+        st.subheader(f'There are no {category} funds in your portfolio')
+        st.write('---')
+
+    for ticker, percent in ticker_percentages.items():
+        company_name = company_mapping[ticker]
+        company_industry = get_industry(ticker)
+        rating = ratings[ticker]
+        col1,col2 = st.columns([3,1])
+        col1.markdown(f"### {company_name}")
+        col1.write(f"{company_industry} ●")
+        col2.markdown(f'### {percent:.2%}')
+        col2.write(f"{rating}★")
+        st.write('---')
+
+    st.subheader(f"High Scoring {category} funds")
+    for ticker in companies_sorted[{category}].values:
+        company_name = company_mapping[ticker[0]]
+        company_industry = get_industry(ticker[0])
+        score = get_avg(ticker)
+        st.markdown(f"##### {company_name}")
+        col1,col2 =st.columns([3,1])
+        col1.write(f"{company_industry} ●")
+        col2.write(f"Average Score: {score}")
+
     st.write('---')
-
-for ticker, percent in ticker_percentages.items():
-    company_name = company_mapping[ticker]
-    company_industry = get_industry(ticker)
-    rating = ratings[ticker]
-    col1,col2 = st.columns([3,1])
-    col1.markdown(f"### {company_name}")
-    col1.write(f"{company_industry} ●")
-    col2.markdown(f'### {percent:.2%}')
-    col2.write(f"{rating}★")
-    st.write('---')
-
-st.subheader(f"High Scoring {category} funds")
-for ticker in companies_sorted[{category}].values:
-    company_name = company_mapping[ticker[0]]
-    company_industry = get_industry(ticker[0])
-    score = get_avg(ticker)
-    st.markdown(f"##### {company_name}")
-    col1,col2 =st.columns([3,1])
-    col1.write(f"{company_industry} ●")
-    col2.write(f"Average Score: {score}")
-
-st.write('---')
-if st.button("Go back"):
-    st.switch_page("pages/2_PortfolioAnalyser.py")
+    if st.button("Go back"):
+        st.switch_page("pages/2_PortfolioAnalyser.py")
 
 
+if __name__ == "__main__":
+    main()
 
