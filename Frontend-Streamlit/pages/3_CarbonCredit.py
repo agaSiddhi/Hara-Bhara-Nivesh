@@ -27,9 +27,6 @@ def add_company(ticker, name, industry, total_assets, revenue, employee_count, f
 
 def form_callback():
     add_company(st.session_state.ticker, st.session_state.name, st.session_state.industry, st.session_state.total_assets, st.session_state.revenue, st.session_state.employee_count, st.session_state.founded_year, st.session_state.fund_category)
-    st.session_state['ticker']=st.session_state.ticker
-    st.session_state['data']=df
-    st.switch_page("pages/add_credits.py")
 
 
 
@@ -47,19 +44,22 @@ def main():
         if ticker.upper() not in df['Ticker'].str.upper().tolist():
             with st.form("Add Company"):
                 st.subheader(f'Company Details for Ticker: {ticker.upper()}')
-                name = st.text_input("Enter Company Name",key=name)
-                industry = st.selectbox('Industry:', industry_options,key=industry)
-                total_assets = st.text_input('Total Assets:',key=total_assets)
-                revenue = st.text_input('Revenue:',key=revenue)
-                employee_count = st.number_input('Employee Count:', min_value=0,key=employee_count)
-                founded_year = st.number_input('Founded Year:', min_value=0,key=founded_year)
-                fund_category = st.selectbox('Fund Category:', fund_category_options,key=fund_category)
-                st.form_submit_button("Add Company", on_click=form_callback) 
-
-        else:   
-            st.session_state['ticker']=ticker
-            st.session_state['data']=df
-            st.switch_page("pages/add_credits.py")
+                st.text_input("Enter Company Name",key="name")
+                st.selectbox('Industry:', industry_options,key="industry")
+                st.text_input('Total Assets:',key="total_assets")
+                st.text_input('Revenue:',key="revenue")
+                st.number_input('Employee Count:', min_value=0,key="employee_count")
+                st.number_input('Founded Year:', min_value=0,key="founded_year")
+                st.selectbox('Fund Category:', fund_category_options,key="fund_category")
+                submitted = st.form_submit_button("Add Company", on_click=form_callback) 
+        
+        else:
+            st.success('Company data present')
+        
+    if st.button('Get Credits'):
+        st.session_state['ticker']=ticker
+        st.session_state['data']=df
+        st.switch_page("pages/add_credits.py")
 
         
             
