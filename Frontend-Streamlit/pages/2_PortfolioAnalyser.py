@@ -116,6 +116,10 @@ def get_industry_percentage(stocks):
         industry_percentage[industry] += amount / total_stocks
     return industry_percentage
 
+@st.cache_data
+def save_uploaded_file(uploaded_file):
+    return uploaded_file
+
 # Create a Streamlit app
 def main():
     if st.button("Back to Home"):
@@ -123,18 +127,24 @@ def main():
     # Page title
         
     st.title('Investment Portfolio Analyzer')
-
-    uploaded_file= st.file_uploader('Upload your portfolio here', type=['xlsx'])
     
-    portfolio=None
-
+    if 'uploaded_file' in st.session_state:
+        uploaded_file=st.session_state.get("uploaded_file")
+        new_uploaded_file= st.file_uploader('Upload your portfolio here', type=['xlsx'])
+        if new_uploaded_file is not None:
+            uploaded_file= new_uploaded_file
+            st.session_state.uploaded_file = uploaded_file
+    else:
+        uploaded_file= st.file_uploader('Upload your portfolio here', type=['xlsx'])
+     
+    
+     
     if uploaded_file is not None:
         # Load excel file
+        if 'uploaded_file' not in st.session_state:
+            st.session_state.uploaded_file = uploaded_file
         portfolio = load_excel(uploaded_file)
-        portfolio.to_excel('portfolio.xlsx')
-    
-    portfolio = pd.read_excel('portfolio.xlsx')
-    if portfolio.shape[0]:
+        
         ## ----- Price and Score History
 
         # Price History
