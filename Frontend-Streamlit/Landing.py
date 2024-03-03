@@ -24,3 +24,6 @@ if st.button("Companies List"):
 
 if st.button("Portfolio Analyser"):
     st.switch_page("pages/2_PortfolioAnalyser.py")
+
+if st.button("Carbon Credit Marketplace"):
+    st.switch_page("pages/3_CarbonCredit.py")

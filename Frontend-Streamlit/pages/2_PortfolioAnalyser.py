@@ -125,11 +125,16 @@ def main():
     st.title('Investment Portfolio Analyzer')
 
     uploaded_file= st.file_uploader('Upload your portfolio here', type=['xlsx'])
-     
+    
+    portfolio=None
+
     if uploaded_file is not None:
         # Load excel file
         portfolio = load_excel(uploaded_file)
-        
+        portfolio.to_excel('portfolio.xlsx')
+    
+    portfolio = pd.read_excel('portfolio.xlsx')
+    if portfolio.shape[0]:
         ## ----- Price and Score History
 
         # Price History

@@ -114,7 +114,7 @@ class QueryRunner:
         """
         query = f'''SELECT c.companyID, c.name AS companyName, c.createdAt, c.updatedAt, c.totalAssets, c.revenue, c.employeeCount, c.currentScore, c.foundedYear, w.url 
                 FROM Company c 
-                LEFT JOIN CompanyWebsite w ON c.companyID = w.companyID WHERE c.companyID = {companyID};'''
+                LEFT JOIN CompanyWebsite w ON c.companyID = w.companyID WHERE c.companyID = "{companyID}";'''
         result = self.execute_query(query)
         print(result)
         return result
@@ -132,8 +132,8 @@ class QueryRunner:
         
         query = f'''SELECT i.description
                 FROM Company c
-                JOIN Industry i ON c.companyID = i.industryID
-                WHERE c.companyID = {companyID};'''
+                JOIN Industry i ON c.industryID = i.industryID
+                WHERE c.companyID = "{companyID}";'''
         result = self.execute_query(query)
         
         return result
@@ -149,7 +149,7 @@ class QueryRunner:
         """
         query = f'''SELECT price, updatedAt
                 FROM PriceHistory
-                WHERE companyID = {companyID};'''
+                WHERE companyID = "{companyID}";'''
         result = self.execute_query(query)
         return result
 
@@ -165,6 +165,6 @@ class QueryRunner:
         """
         query = f'''SELECT score, updatedAt
                 FROM ScoreHistory
-                WHERE companyID = {companyID};'''
+                WHERE companyID = "{companyID}";'''
         result = self.execute_query(query)
         return result
