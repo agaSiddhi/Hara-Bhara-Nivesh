@@ -5,7 +5,7 @@ from backend.DatabaseQueries import QueryRunner
 import os
 
 
-filepath= f"/Users/vidisha/Desktop/DESISProject/DesisSG-2/backend/config.ini"
+filepath= f"/Users/ojaswichopra/Downloads/DESIS/project/DesisSG-2/backend/config.ini"
 
 
 config_loader = ConfigLoader(filepath)  
