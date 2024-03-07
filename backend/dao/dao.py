@@ -1,4 +1,7 @@
 import mysql.connector
+# from backend.database import return_price_and_date, return_score_and_date
+import pandas as pd
+import numpy as np
 
 class CompanyDao:
     def __init__(self, host, user, password, database):
@@ -89,13 +92,16 @@ class CompanyDao:
         query = f'''SELECT companyID, price, updatedAt
                 FROM PriceHistory;'''
         result = self.execute_query(query)
-        print(result)
         return result
     
     def get_score_and_date(self):
         query = f'''SELECT companyID, score, updatedAt
                 FROM ScoreHistory;'''
         result = self.execute_query(query)
-        print(result)
+        return result
+    def get_fund_category_from_ticker(self,companyID=None):
+        query = f'''SELECT companyID, score, updatedAt
+                FROM ScoreHistory;'''
+        result = self.execute_query(query)
         return result
     

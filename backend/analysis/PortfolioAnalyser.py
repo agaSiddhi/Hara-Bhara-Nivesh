@@ -63,4 +63,4 @@ def calculate_portfolio_score(data):
     data['Score'] = portfolio_score
     return current_score, data 
 
- 
+

@@ -2,18 +2,23 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta
-from backend.database import return_companyID_from_company_name,return_company_details_from_companyID, return_industry_description_from_companyID,return_score_history_from_companyID,return_price_history_from_companyID
+# from backend.database import return_companyID_from_company_name,return_company_details_from_companyID, return_industry_description_from_companyID,return_score_history_from_companyID,return_price_history_from_companyID
 import datetime
+from backend.configuration import initialize_system
 
 if st.button("Back to Home"):
         st.switch_page("Landing.py")
 
+
+company_service = initialize_system()
+details = company_service.return_company_name_and_description()
+
 company_name = st.session_state['company']
-company_id = return_companyID_from_company_name(company_name)[0][0]
-company_details = return_company_details_from_companyID(company_id)[0]
-company_description = return_industry_description_from_companyID(company_id)[0][0]
-score_history = return_score_history_from_companyID(company_id)
-price_history = return_price_history_from_companyID(company_id)
+company_id = company_service.return_companyID_from_company_name(company_name)[0][0]
+company_details = company_service.return_company_details_from_companyID(company_id)[0]
+company_description = company_service.return_industry_description_from_companyID(company_id)[0][0]
+score_history = company_service.return_score_history_from_companyID(company_id)
+price_history = company_service.return_price_history_from_companyID(company_id)
 
 
 st.markdown(f"# Details for {company_name}")
