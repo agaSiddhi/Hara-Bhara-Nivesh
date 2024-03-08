@@ -25,3 +25,6 @@ class CompanyService:
 
     def return_score_and_date(self):
         return self.company_dao.get_score_and_date()
+    
+    def return_fund_category_from_ticker(self,companyID=None):
+        return self.return_companyID_from_company_name(companyID=companyID)

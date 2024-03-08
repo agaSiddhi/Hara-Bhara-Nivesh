@@ -1,12 +1,13 @@
 import json
 import streamlit as st
-from backend.database import return_company_name_and_description
 import time
 # from pages.details_page import show_details_page
 
 # Define a list of companies
 # companies = json.loads(read_company_data())
-details = return_company_name_and_description()
+from backend.configuration import initialize_system
+company_service = initialize_system()
+details = company_service.return_company_name_and_description()
 
 # Create a Streamlit app
 def main():
