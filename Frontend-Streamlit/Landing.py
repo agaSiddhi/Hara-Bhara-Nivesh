@@ -30,3 +30,9 @@ if st.button("Carbon Credit Marketplace"):
 
 if st.button("Auction"):
     st.switch_page("pages/4_AuctionPage.py")
+
+if st.button("Login"):
+    st.switch_page("pages/5_Login.py")
+
+if st.button("Signup"):
+    st.switch_page("pages/6_Signup.py")

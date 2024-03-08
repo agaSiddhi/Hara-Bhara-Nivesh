@@ -1,0 +1,13 @@
+cookie:
+  expiry_days: 30
+  key: abc
+  name: cookie
+credentials:
+  usernames:
+    chopra_01:
+      email: ojaswichopra06@gmail.com
+      name: Ojaswi Chopra
+      password: $2b$12$eXnheMHl7WT1iyp/v1cuQu/h1iGl2Kt7DybFWPaxlhVqXwfmoPd8O
+preauthorized:
+  emails:
+  - o_chopra@ee.iitr.ac.in
