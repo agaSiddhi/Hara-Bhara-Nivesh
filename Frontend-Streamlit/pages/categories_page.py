@@ -24,6 +24,7 @@ data = {
 
 # Create DataFrame from dictionary
 companies_sorted = pd.DataFrame(data)
+# print("companies_sorted",companies_sorted)
 
 # company names from ticker 
 company_mapping = {'AAPL': 'Apple','GOOG':'Google','MSFT':'Microsoft','AMZN':'Amazon','FB':'Facebook','NFLX':'Netflix'}
@@ -91,10 +92,15 @@ def main():
 
     category = st.session_state['category']
     stocks = st.session_state['stocks']
-
+    # print("From categories page")
+    # print(category, stocks)
     companies = get_companies(stocks,category)
+    # print(companies)
 
     ticker_percentages = get_ticker_percentages(companies)
+    # print(ticker_percentages)
+    # print("Companies Sorted DataFrame:")
+    # print(companies_sorted)
 
     if len(ticker_percentages)==0:
         st.subheader(f'There are no {category} funds in your portfolio')
@@ -112,7 +118,7 @@ def main():
         st.write('---')
 
     st.subheader(f"High Scoring {category} funds")
-    for ticker in companies_sorted[{category}].values:
+    for ticker in companies_sorted[f"{category}"].values:
         company_name = company_mapping[ticker[0]]
         company_industry = get_industry(ticker[0])
         score = get_avg(ticker)

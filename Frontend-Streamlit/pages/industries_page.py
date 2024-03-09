@@ -113,7 +113,7 @@ def main():
         st.write('---')
 
     st.subheader(f"High Scoring {industry} funds")
-    for ticker in companies_sorted[{industry}].values:
+    for ticker in companies_sorted[f"{industry}"].values:
         company_name = company_mapping[ticker[0]]
         company_category = get_category(ticker[0])
         score = get_avg(ticker)

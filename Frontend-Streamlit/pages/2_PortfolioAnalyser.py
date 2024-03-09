@@ -26,6 +26,7 @@ def calculate_portfolio_balance(data):
 
     # Create the DataFrame
     df = pd.DataFrame(prices, index=dates, columns=tickers)
+    print(df)
 
     for index, row in data.iterrows():
         current_value = 0
@@ -148,7 +149,7 @@ def main():
         ## ----- Price and Score History
 
         # Price History
-
+        # print(portfolio)
         stocks, portfolio = calculate_portfolio_balance(portfolio)
         fig1 = px.line(portfolio, x='Date', y=['Invested Amount', 'Portfolio Value'], 
                 labels={'Date': 'Date', 'value': 'Amount/Value'}, 
@@ -166,7 +167,7 @@ def main():
         st.plotly_chart(fig2)
         
         ## ----- Distribution of Stock Categories
-
+        # print("Stocks",stocks)
         category_percentage=get_category_percentage(stocks)
 
         # Convert dictionary to lists for plotting
@@ -212,6 +213,7 @@ def main():
 
             button_label = "→"
             button_key = f"{button_label}_{category}"
+            # print(button_key)
 
             # Display more details in col4
             if col4.button(button_label, key=button_key ):
