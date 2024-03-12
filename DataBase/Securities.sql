@@ -19,6 +19,7 @@ currentScore DECIMAL(5, 2),
 foundedYear YEAR,
 industryID INT,
 fundCategory VARCHAR(100),
+wallet DECIMAL(15, 2),
 FOREIGN KEY (industryID) REFERENCES Industry(industryID)
 );
 
@@ -62,15 +63,15 @@ INSERT INTO Industry (keyword, description) VALUES
 ('Consumer Staples', 'Manufacturers and distributors of essential consumer goods like food, beverages, and household products.'),
 ('Other', 'Industries that do not fit into the defined categories or are niche markets.');
 
-INSERT INTO Company (companyID, name, industryID, totalAssets, revenue, employeeCount, currentScore, foundedYear, fundCategory) VALUES
-('AAPL', 'Apple Inc.', 1, 320000000000, 274515000000, 147000, 4.5, 1976, 'Equity'),
-('GOOGL', 'Alphabet Inc.', 1, 318000000000, 182527000000, 144056, 4.6, 1998, 'Equity'),
-('MSFT', 'Microsoft Corporation', 1, 278000000000, 168088000000, 181000, 4.4, 1975, 'Equity'),
-('AMZN', 'Amazon.com, Inc.', 3, 235000000000, 386064000000, 1298000, 4.5, 1994, 'Equity'),
-('JPM', 'JPMorgan Chase & Co.', 2, 2910000000000, 135229000000, 256981, 4.7, 2000, 'Debt'),
-('BRK.A', 'Berkshire Hathaway Inc.', 2, 894000000000, 327212000000, 391500,2.3, 1965, 'Hybrid'), 
-('FB', 'Facebook Inc.', 1, 155000000000, 104880000000, 60654, 4.6, 2004, 'Equity'),
-('NFLX', 'Netflix Inc.', 1, 38000000000, 25747000000, 9400, 4.2, 1997, 'Equity');
+INSERT INTO Company (companyID, name, industryID, totalAssets, revenue, employeeCount, currentScore, foundedYear, fundCategory,wallet) VALUES
+('AAPL', 'Apple Inc.', 1, 320000000000, 274515000000, 147000, 4.5, 1976, 'Equity',100),
+('GOOGL', 'Alphabet Inc.', 1, 318000000000, 182527000000, 144056, 4.6, 1998, 'Equity',200),
+('MSFT', 'Microsoft Corporation', 1, 278000000000, 168088000000, 181000, 4.4, 1975, 'Equity',150),
+('AMZN', 'Amazon.com, Inc.', 3, 235000000000, 386064000000, 1298000, 4.5, 1994, 'Equity',300),
+('JPM', 'JPMorgan Chase & Co.', 2, 2910000000000, 135229000000, 256981, 4.7, 2000, 'Debt',250),
+('BRK.A', 'Berkshire Hathaway Inc.', 2, 894000000000, 327212000000, 391500,2.3, 1965, 'Hybrid',100), 
+('FB', 'Facebook Inc.', 1, 155000000000, 104880000000, 60654, 4.6, 2004, 'Equity',220),
+('NFLX', 'Netflix Inc.', 1, 38000000000, 25747000000, 9400, 4.2, 1997, 'Equity',200);
 
 INSERT INTO CompanyWebsite (companyID, url) VALUES
 ('AAPL', 'https://www.apple.com'),

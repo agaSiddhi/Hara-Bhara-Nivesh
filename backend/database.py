@@ -39,7 +39,10 @@ def return_price_and_date():
 def return_score_and_date():
     return QueryObject.get_score_and_date()
 
+def return_company_details_for_credits():
+    return QueryObject.get_company_details_for_credits()
 
+# print(return_company_details_for_credits())
 # print(return_company_details_from_companyID(1))
 # list_industries_with_details()
 # connector.disconnect()

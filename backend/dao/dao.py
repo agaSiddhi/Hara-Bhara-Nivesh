@@ -2,6 +2,7 @@ import mysql.connector
 # from backend.database import return_price_and_date, return_score_and_date
 import pandas as pd
 import numpy as np
+from datetime import datetime
 
 class CompanyDao:
     def __init__(self, host, user, password, database):
@@ -105,3 +106,66 @@ class CompanyDao:
         result = self.execute_query(query)
         return result
     
+    def get_company_details_for_credits(self):
+        query = f'''SELECT c.companyID AS compID,
+                c.name,
+                c.totalAssets,
+                c.employeeCount,
+                c.revenue,
+                c.wallet,
+                c.fundCategory,
+                i.keyword AS industry,
+                c.foundedYear
+            FROM Company c
+            JOIN Industry i ON c.industryID = i.industryID;'''
+        result = self.execute_query(query)
+        # print(result)
+        return result
+    
+    def update_wallet_balance(self, ticker, updated_wallet_balance):
+        query = f'''UPDATE Company SET wallet = {updated_wallet_balance} WHERE companyID = "{ticker}";'''
+        try:
+            self.execute_query(query)
+            print(f"Wallet balance updated successfully for {ticker}")
+        except Exception as e:
+            print(f"Error updating wallet balance for {ticker}: {e}")
+            raise
+    
+    def get_industry_keyword_from_companyID(self,companyID=None):
+        query = f'''SELECT i.keyword
+                FROM Company c
+                JOIN Industry i ON c.industryID = i.industryID
+                WHERE c.companyID = "{companyID}"; '''
+        result = self.execute_query(query)
+        print(result)
+        return result
+
+    def get_wallet_balance_from_companyID(self,companyID=None):
+        query = f'''SELECT wallet
+                FROM Company
+                WHERE companyID = "{companyID}"; '''
+        result = self.execute_query(query)
+        print(result)
+        return result
+    
+    def add_new_company(self, ticker, name, total_assets, revenue, employee_count, founded_year, industry_id, fund_category):
+        query = """
+            INSERT INTO Company (companyID, name, createdAt, updatedAt, totalAssets, revenue, employeeCount, currentScore, foundedYear, industryID, fundCategory, wallet)
+            VALUES (%s, %s, NOW(), NOW(), %s, %s, %s, 0.00 , %s, %s, %s, 0.00)
+        """
+        # current_datetime = datetime.now()
+        # created_at = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+        # updated_at = created_at
+        params = (ticker.upper(), name, total_assets, revenue, employee_count, founded_year, industry_id, fund_category)
+        try:
+            self.execute_query(query, params)
+            print("New company added successfully.")
+        except Exception as e:
+            print(f"Error adding new company: {e}")
+            raise
+
+    def get_industry_id_by_keyword(self, industry_keyword):
+        query = f'''SELECT industryID FROM Industry WHERE keyword = "{industry_keyword}";'''
+        result = self.execute_query(query)
+        print(result)
+        return result
