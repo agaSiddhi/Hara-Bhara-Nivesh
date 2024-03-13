@@ -5,117 +5,14 @@ import numpy as np
 import plotly.express as px
 import matplotlib.colors as mcolors
 
+from backend.configuration import initialize_system
+company_service = initialize_system()
 
 def load_excel(file):
     df = pd.read_excel(file)
     df['Date'] = pd.to_datetime(df['Date'])
     df = df.sort_values(by='Date')
     return df
-
-# Function to analyze the order history and calculate the portfolio balance over time
-def calculate_portfolio_balance(data):
-    # Initialize portfolio balance
-    portfolio_amount = []
-    portfolio_value = []
-    current_portfolio = 0
-    
-    dates = pd.date_range(start=min(data['Date']), end=max(data['Date']))
-    tickers = ['AAPL', 'GOOG', 'MSFT', 'AMZN', 'FB','NFLX']
-    stocks = {ticker: 0 for ticker in tickers}
-    prices = np.random.randint(100, 500, size=(len(dates), len(tickers)))  # Generating random prices -> this is something we ll get from the database
-
-    # Create the DataFrame
-    df = pd.DataFrame(prices, index=dates, columns=tickers)
-    print(df)
-
-    for index, row in data.iterrows():
-        current_value = 0
-        if row['Order Type'] == 'Buy':
-            current_portfolio += row['Amount'] * row['Price/Quote']
-            stocks[row['Ticker']]+=row['Amount']
-        elif row['Order Type'] == 'Sell':
-            current_portfolio -= row['Amount'] * row['Price/Quote']
-            stocks[row['Ticker']]-=row['Amount']
-        for ticker, value in stocks.items():
-            current_value += value * df.loc[row['Date']][ticker]
-        portfolio_amount.append(current_portfolio)
-        portfolio_value.append(current_value)
-
-    # Add 'Portfolio Amount' column to DataFrame
-    data['Invested Amount'] = portfolio_amount
-    data['Portfolio Value'] = portfolio_value 
-    return stocks,data
-
-def calculate_portfolio_score(data):
-    # Initialize portfolio score
-    portfolio_score = []
-    current_score = 0
-    
-    dates = pd.date_range(start=min(data['Date']), end=max(data['Date']))
-    tickers = ['AAPL', 'GOOG', 'MSFT', 'AMZN', 'FB','NFLX']
-    scores = np.random.randint(100, 500, size=(len(dates), len(tickers)))  # Generating random scores -> this is something we ll get from the database
-
-    # Create the DataFrame
-    df = pd.DataFrame(scores, index=dates, columns=tickers)
-
-    for index, row in data.iterrows():
-        current_value = 0
-        if row['Order Type'] == 'Buy':
-            current_score += row['Amount'] * df.loc[row['Date']][row['Ticker']]
-        elif row['Order Type'] == 'Sell':
-            current_score -= row['Amount'] * df.loc[row['Date']][row['Ticker']]
-        portfolio_score.append(current_score)
-
-
-    # Add 'Portfolio Score' column to DataFrame
-    data['Score'] = portfolio_score
-    return current_score, data    
-
-# Assuming you have a function to map tickers to their categories
-def get_category(ticker):
-    # Implement your logic here to determine the category for a given ticker
-    # This is a placeholder function, you need to replace it with your actual logic
-    if ticker in ['AAPL', 'GOOGL', 'MSFT']:
-        return 'Equity'
-    elif ticker == 'AMZN':
-        return 'Hybrid'
-    elif ticker == 'FB':
-        return 'Debt'
-    else :
-        return 'Others'
-    
-# Assuming you have a function to map tickers to their categories
-def get_industry(ticker):
-    # Implement your logic here to determine the category for a given ticker
-    # This is a placeholder function, you need to replace it with your actual logic
-    if ticker in ['AAPL', 'GOOGL', 'MSFT']:
-        return 'Capital Goods'
-    elif ticker == 'GOOG':
-        return 'HealthCare'
-    elif ticker == 'AMZN':
-        return 'Financial'
-    elif ticker == 'FB':
-        return 'Services'
-    else :
-        return 'Other'
-    
-def get_category_percentage(stocks):
-    # Calculate the percentage of each category
-    total_stocks = sum(stocks.values())
-    category_percentage = {'Equity': 0, 'Debt': 0, 'Hybrid': 0, 'Others': 0}
-    for ticker, amount in stocks.items():
-        category = get_category(ticker)
-        category_percentage[category] += amount / total_stocks
-    return category_percentage
-
-def get_industry_percentage(stocks):
-    total_stocks = sum(stocks.values())
-    # Calculate the percentage of each industry
-    industry_percentage = {'Capital Goods': 0, 'Financial': 0, 'Services': 0, 'HealthCare': 0, 'Consumer Staples':0, 'Other':0}
-    for ticker, amount in stocks.items():
-        industry = get_industry(ticker)
-        industry_percentage[industry] += amount / total_stocks
-    return industry_percentage
 
 @st.cache_data
 def save_uploaded_file(uploaded_file):
@@ -149,8 +46,8 @@ def main():
         ## ----- Price and Score History
 
         # Price History
-        # print(portfolio)
-        stocks, portfolio = calculate_portfolio_balance(portfolio)
+
+        stocks, portfolio = company_service.calculate_portfolio_balance(portfolio)
         fig1 = px.line(portfolio, x='Date', y=['Invested Amount', 'Portfolio Value'], 
                 labels={'Date': 'Date', 'value': 'Amount/Value'}, 
                 title='Portfolio Amount and Value Over Time')
@@ -159,7 +56,7 @@ def main():
 
         # Score History
         
-        current_score, portfolio = calculate_portfolio_score(portfolio)
+        current_score, portfolio = company_service.calculate_portfolio_score(portfolio)
         fig2 = px.line(portfolio, x='Date', y=['Score'], 
                 labels={'Date': 'Date', 'value': 'Score'}, 
                 title='Portfolio Score Over Time')
@@ -167,8 +64,8 @@ def main():
         st.plotly_chart(fig2)
         
         ## ----- Distribution of Stock Categories
-        # print("Stocks",stocks)
-        category_percentage=get_category_percentage(stocks)
+
+        category_percentage= company_service.return_category_percentage(stocks)
 
         # Convert dictionary to lists for plotting
         categories = list(category_percentage.keys())
@@ -224,7 +121,7 @@ def main():
 
         ## ----- Distribution of Stock Industries
                 
-        industry_percentage=get_industry_percentage(stocks)
+        industry_percentage=company_service.return_industry_percentage(stocks)
 
         # Convert dictionary to lists for plotting
         industries = list(industry_percentage.keys())

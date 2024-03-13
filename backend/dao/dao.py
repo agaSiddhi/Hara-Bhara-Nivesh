@@ -63,7 +63,7 @@ class CompanyDao:
         except Exception as e:
             print(e)
         
-        print(result)
+        # print(result)
         return result
     
     def get_industry_description_from_companyID(self,companyID=None):
@@ -89,23 +89,182 @@ class CompanyDao:
         result = self.execute_query(query)
         return result
     
-    def get_price_and_date(self):
+    def get_fund_category_from_ticker(self,companyID=None):
+        query = f'''SELECT fundCategory
+                FROM Company
+                WHERE companyID = "{companyID}";'''
+        result = self.execute_query(query)
+        return result
+    
+    def get_industry(self, companyID=None):
+        query = f'''SELECT Industry.description
+                FROM Company
+                JOIN Industry ON Company.industryID = Industry.industryID
+                WHERE Company.companyID = "{companyID}";'''
+        result = self.execute_query(query)
+        return result[0][0]
+    
+    def get_category_percentage(self,stocks=None):
+    # Calculate the percentage of each category
+        total_stocks = sum(stocks.values())
+        category_percentage = {'Equity': 0, 'Debt': 0, 'Hybrid': 0, 'Others': 0}
+        for ticker, amount in stocks.items():
+            query = f'''SELECT fundCategory
+                FROM Company
+                WHERE companyID = "{ticker}";'''
+            category= self.execute_query(query)
+            # print(category[0][0])
+            category_percentage[category[0][0]] += amount / total_stocks
+        return category_percentage
+    
+    def get_industry_percentage(self,stocks=None):
+        total_stocks = sum(stocks.values())
+        # Calculate the percentage of each industry
+        industry_percentage = {'Capital Goods': 0, 'Financial': 0, 'Services': 0, 'HealthCare': 0, 'Consumer Staples':0, 'Other':0}
+        for ticker, amount in stocks.items():
+            query = f'''SELECT Industry.keyword
+                    FROM Company
+                    JOIN Industry ON Company.industryID = Industry.industryID
+                    WHERE Company.companyID = "{ticker}";'''
+            industry = self.execute_query(query)
+            industry_percentage[industry[0][0]] += amount / total_stocks
+        return industry_percentage
+    
+    def calculate_portfolio_score(self,data=None):
+        # Initialize portfolio score
+        portfolio_score = []
+        current_score = 0
+        
+        query = f'''SELECT companyID, score, updatedAt
+                FROM ScoreHistory;'''
+        scoreData = self.execute_query(query)
+        df = pd.DataFrame(scoreData, columns=['tickers', 'score', 'dates'])
+        df['dates'] = pd.to_datetime(df['dates'])
+        df = df.pivot(index='dates', columns='tickers', values='score')
+        df = df.fillna(0)
+        
+        for index, row in data.iterrows():
+            current_value = 0
+            if row['Order Type'] == 'Buy':
+                current_score += float(row['Amount']) * float(df.loc[row['Date']][row['Ticker']])
+            elif row['Order Type'] == 'Sell':
+                current_score -= float(row['Amount']) * float(df.loc[row['Date']][row['Ticker']])
+            portfolio_score.append(current_score)
+
+        data['Score'] = portfolio_score
+        return current_score, data 
+    
+    
+    def calculate_portfolio_balance(self,data=None):
+        # Initialize portfolio balance
         query = f'''SELECT companyID, price, updatedAt
                 FROM PriceHistory;'''
-        result = self.execute_query(query)
-        return result
+        priceData = self.execute_query(query)
+        df = pd.DataFrame(priceData, columns=['tickers', 'price', 'dates'])
+        df['dates'] = pd.to_datetime(df['dates'])
+        df = df.pivot(index='dates', columns='tickers', values='price')
+        df = df.fillna(0)
+        
+        portfolio_amount = []
+        portfolio_value = []
+        current_portfolio = 0
+        
+        # dates = pd.date_range(start=min(data['Date']), end=max(data['Date']))
+        tickers = df.columns.to_numpy()
+        stocks = {ticker: 0 for ticker in tickers}
+        # prices = np.random.randint(100, 500, size=(len(dates), len(tickers)))  # Generating random prices -> this is something we ll get from the database
+
+        # Create the DataFrame
+        # df = pd.DataFrame(prices, index=dates, columns=tickers)
+
+        for index, row in data.iterrows():
+            current_value = 0
+            if row['Order Type'] == 'Buy':
+                current_portfolio += row['Amount'] * row['Price/Quote']
+                stocks[row['Ticker']]+=row['Amount']
+            elif row['Order Type'] == 'Sell':
+                current_portfolio -= row['Amount'] * row['Price/Quote']
+                stocks[row['Ticker']]-=row['Amount']
+            for ticker, value in stocks.items():
+                # print(type(value))
+                # print(type(df.loc[row['Date']][ticker]))
+                current_value += float(value) * float(df.loc[row['Date']][ticker])
+            portfolio_amount.append(current_portfolio)
+            portfolio_value.append(current_value)
+
+        # Add 'Portfolio Amount' column to DataFrame
+        data['Invested Amount'] = portfolio_amount
+        data['Portfolio Value'] = portfolio_value 
+        return stocks,data
     
-    def get_score_and_date(self):
-        query = f'''SELECT companyID, score, updatedAt
-                FROM ScoreHistory;'''
-        result = self.execute_query(query)
-        return result
-    def get_fund_category_from_ticker(self,companyID=None):
-        query = f'''SELECT companyID, score, updatedAt
-                FROM ScoreHistory;'''
-        result = self.execute_query(query)
-        return result
+    def get_companies_for_fund_category(self):
+        result_dict={}
+        categories=['Equity','Debt','Hybrid','Others']
+        for category in categories:
+            query=f'''SELECT companyID
+                    FROM Company
+                    WHERE fundCategory = "{category}";'''
+            result=self.execute_query(query)
+            result = [tup[0] for tup in result]
+            result_dict[category]=result
+            # print(result_dict)
+        df = pd.DataFrame.from_dict(result_dict, orient='index').transpose()
+        return df
     
+    def get_company_name_from_ticker(self):
+        query=f'SELECT companyID, name  FROM Company;'
+        result=self.execute_query(query)
+        ticker_company_dict = {ticker: company_name for ticker, company_name in result}
+        return ticker_company_dict
+        
+    def get_average_score_from_ticker(self, companyID=None):
+        print(companyID)
+        print(type(companyID))
+        if isinstance(companyID,list):
+            companyID=companyID[0]
+        print(companyID)
+        query=f'SELECT AVG(score) FROM ScoreHistory WHERE companyID="{companyID}";'
+        result=self.execute_query(query)
+        # print(query)
+        
+        print(result)
+        return float(result[0][0])
+
+    def get_companies(self,stocks,category):
+        companies = []
+        
+        for ticker, amount in stocks.items():
+            if not ticker:
+                break
+            fund_category=self.get_fund_category_from_ticker(ticker)
+            print(fund_category)
+            print(category)
+            if category == fund_category[0][0]:
+                companies.append({ticker: amount})
+        return companies
+
+    def get_ticker_percentages(self,companies):
+        # Getting composition of each ticker in out category
+        # print(companies)
+        total_amount = sum(amount for company in companies for amount in company.values())
+        # print(total_amount)
+        ticker_percentages = {}
+        for company in companies:
+            for ticker, amount in company.items():
+                if not ticker:
+                    break
+                percentage = (amount / total_amount) 
+                if percentage!=0:
+                    ticker_percentages[ticker] = percentage
+        return ticker_percentages
+        
+    
+            
+            
+            
+        
+
+            
     def get_company_details_for_credits(self):
         query = f'''SELECT c.companyID AS compID,
                 c.name,
