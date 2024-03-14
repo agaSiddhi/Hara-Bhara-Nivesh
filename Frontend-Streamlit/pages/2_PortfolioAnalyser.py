@@ -192,6 +192,7 @@ def main():
     st.markdown("### Wanna Go Sustainable?")
     if st.button("Set Target", key="target_section"):
         st.session_state['current_score'] = current_score
+        st.session_state['portfolio'] = portfolio
         st.switch_page("pages/target_section.py")
 
 

@@ -71,9 +71,11 @@ def main():
     if st.button("Back to Home"):
         st.switch_page("Landing.py")
 
-    # Page title
-    st.title('Set Your Target!')    
     current_score = st.session_state['current_score']
+    
+    # Page title
+    st.title('Wanna Set Your Target!')    
+    
     # Main function for the target section
     target_score = st.number_input("Enter your score target:")
     if current_score < target_score:

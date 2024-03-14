@@ -99,13 +99,6 @@ credentials:
       name: Rudra Surana
       password: $2b$12$C44avY7wcuDHABtJQTRTQOmUjPeXvtp5SDCyro0kwC1NTnRjhVXQi
       transaction_history: null
-    vidisha99:
-      balance: 10000
-      current_portfolio: null
-      email: vidishaagarwal2003@gmail.com
-      name: Vidisha Agarwal
-      password: $2b$12$pM0CzWgp7ME7HG.rVu1QkuJwYeWymfmvmQ2UfzFGntjshC4yCede2
-      transaction_history: null
 preauthorized:
   emails:
   - o_chopra@ee.iitr.ac.in

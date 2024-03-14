@@ -2,14 +2,45 @@ import streamlit as st
 from streamlit_option_menu import option_menu
 from streamlit_extras.add_vertical_space import add_vertical_space
 
-page_title = "Hara Bhara Nivesh"
+title = "Hara Bhara Nivesh"
 page_icon = ":money_with_wings:"  # emojis: https://www.webfx.com/tools/emoji-cheat-sheet/
 layout = "centered"
 
+selection = None
+
+landing_images = ['/Users/ojaswichopra/Downloads/DESIS/project/DesisSG-2/assets/landing_investor.jpg','/Users/ojaswichopra/Downloads/DESIS/project/DesisSG-2/assets/landing_company.webp']
+
+page_title=["What is Sustainable Investing?","Introduction to Carbon Credit Marketplace"]
+
+content = ["""
+    Sustainable investing, also known as socially responsible investing (SRI) 
+    or ethical investing, aims to generate long-term positive impact alongside 
+    financial returns. It considers environmental, social, and governance (ESG) 
+    criteria to make investment decisions.
+    ""","""
+        Welcome to the Carbon Credit Marketplace, where sustainability meets finance! 
+        Our platform offers a convenient solution for buying and selling carbon credits, 
+        enabling businesses to take tangible steps towards environmental responsibility. 
+        Whether you're a company striving to reduce your carbon footprint or an investor 
+        looking to support sustainability initiatives, our marketplace provides a 
+        transparent and efficient platform for trading carbon credits.
+        """]
+
+process = ["""
+        1. **Sign up for an account.**
+        2. **Browse through our curated list of sustainable investment options.**
+        3. **Choose investments that align with your values and financial goals.**
+        4. **Invest responsibly and track your portfolio's performance.**
+        ""","""
+        1. **Sign up for an account:** Create your account on our platform to get started.
+        2. **Browse carbon credit listings:** Explore our curated list of carbon credit listings.
+        3. **Choose your carbon credits:** Select carbon credits that align with your sustainability goals.
+        4. **Complete your transactions:** Buy or sell carbon credits seamlessly through our platform.
+        """]
 
 def main():
 
-    st.set_page_config(initial_sidebar_state="collapsed",page_title=page_title, page_icon=page_icon, layout=layout)
+    st.set_page_config(initial_sidebar_state="collapsed",page_title=title, page_icon=page_icon, layout=layout)
 
     st.markdown(
         """
@@ -31,22 +62,26 @@ def main():
         orientation="horizontal",
     )
 
-    # Investor Tab
     if selected=="Investor":
-
-        # Header Section
-        st.markdown("<h1 style='text-align: center; color: #FF4B4B'>Welcome to Hara Bhara Nivesh</h1>", unsafe_allow_html=True)
-        st.markdown("<h3 style='text-align: center;'>Invest in a better future!</h3>", unsafe_allow_html=True)
+        selection=0
+    
+    if selected == 'Company':
+        selection=1
         
-        # Sample image URLs
-        image_url = '/Users/ojaswichopra/Downloads/DESIS/project/DesisSG-2/assets/landing.jpg'
+    # Header Section
+    st.markdown("<h1 style='text-align: center; color: #FF4B4B'>Welcome to Hara Bhara Nivesh</h1>", unsafe_allow_html=True)
+    st.markdown("<h3 style='text-align: center;'>Invest in a better future!</h3>", unsafe_allow_html=True)
+    
+    # Sample image URLs
+    image_url = landing_images[selection]
+    
+    # Display image
+    st.image(image_url, caption=None, use_column_width=True)
+
+    st.markdown("---")
+
+    if selected=="Investor":
         
-        # Display image
-        st.image(image_url, caption=None, use_column_width=True)
-
-        st.markdown("---")
-
-
         col1, col2, col3, col4 = st.columns([1.8,2,1.2,0.8])  
 
         with col1:
@@ -72,92 +107,104 @@ def main():
             with col4:
                 if st.button("Signup"):
                     st.switch_page("pages/6_Signup.py")
-
-        
-        add_vertical_space(2)
-        # Introduction to Sustainable Investing
-        st.header("What is Sustainable Investing?")
-        st.write("""
-        Sustainable investing, also known as socially responsible investing (SRI) 
-        or ethical investing, aims to generate long-term positive impact alongside 
-        financial returns. It considers environmental, social, and governance (ESG) 
-        criteria to make investment decisions.
-        """)
-        st.markdown("---")
-
-        add_vertical_space(2)
-        # Featured Investments
-        st.header("Featured Investments")
-        st.write("Explore some of our top sustainable investment options:")
-        # Add images of featured investments
-        images = [
-            '/Users/ojaswichopra/Downloads/DESIS/project/DesisSG-2/assets/apple.jpeg',
-            '/Users/ojaswichopra/Downloads/DESIS/project/DesisSG-2/assets/tesla.jpeg',
-            '/Users/ojaswichopra/Downloads/DESIS/project/DesisSG-2/assets/gs.webp',
-            '/Users/ojaswichopra/Downloads/DESIS/project/DesisSG-2/assets/nike.jpeg'
-        ]
-        col1, col2, col3, col4 = st.columns(4)
-        col1.image(images[0],caption=None)
-        col2.image(images[1],caption=None)
-        col3.image(images[2],caption=None )
-        col4.image(images[3],caption=None )
-        st.markdown("---")
-
-        add_vertical_space(2)
-        # How It Works
-        st.header("How It Works")
-        st.write("""
-        1. **Sign up for an account.**
-        2. **Browse through our curated list of sustainable investment options.**
-        3. **Choose investments that align with your values and financial goals.**
-        4. **Invest responsibly and track your portfolio's performance.**
-        """)
-        st.markdown("---")
-
-        add_vertical_space(2)
-        # Testimonials
-        st.header("Testimonials")
-        # Add some testimonials from satisfied users or partners
-        st.markdown("---")
-
-        add_vertical_space(2)
-        # Footer
-        st.write("Contact us: contact@sustainableinvestments.com")
-
-        # CSS styling
-        st.markdown(
-            """
-            <style>
-            body {
-                background-color: #f5f5f5;
-                color: #333333;
-                font-family: Arial, sans-serif;
-            }
-            .stButton>button {
-                text-align: center;
-                text-decoration: none;
-                display: inline-block;
-                font-size: 16px;
-                border-radius: 8px;
-                cursor: pointer;
-                transition-duration: 0.4s;
-            }
-            </style>
-            """,
-            unsafe_allow_html=True
-        )
-
-        
+                    
     if selected == 'Company':
-        if st.button("Carbon Credit Marketplace"):
-            st.switch_page("pages/3_CarbonCredit.py")
+        
+        col1, col2, col3, col4 = st.columns([1.8,2,1.2,0.8])  
 
-        if st.button("Auction"):
-            st.switch_page("pages/4_AuctionPage.py")
+        with col1:
+            if st.button("List your Credits"):
+                st.switch_page("pages/3_CarbonCredit.py")
+
+        with col2:
+            if st.button("Credits Auction"):
+                st.switch_page("pages/4_AuctionPage.py")
+
+        if 'username' in st.session_state and st.session_state.username is not None:
+            username = st.session_state.get('username')
+            authenticator = st.session_state.get('authenticator')
+            with col3:
+                if st.button("My Account"):
+                    st.switch_page("pages/8_UserAccount.py")
+            with col4:
+                authenticator.logout('Logout', 'main', key='unique_key')     
+        else:            
+            with col3:
+                if st.button("Login"):
+                    st.switch_page("pages/5_Login.py")
+            with col4:
+                if st.button("Signup"):
+                    st.switch_page("pages/6_Signup.py")
+                    
+        
+    add_vertical_space(2)
+        
+    # Introduction 
+    st.header(page_title[selection])
+    st.write(content[selection])
+    st.markdown("---")
+
+    add_vertical_space(2)
+    
+    # Featured Investments
+    st.header("Featured Investments")
+    st.write("Explore some of our top sustainable investment options:")
+    # Add images of featured investments
+    images = [
+        '/Users/ojaswichopra/Downloads/DESIS/project/DesisSG-2/assets/apple.jpeg',
+        '/Users/ojaswichopra/Downloads/DESIS/project/DesisSG-2/assets/tesla.jpeg',
+        '/Users/ojaswichopra/Downloads/DESIS/project/DesisSG-2/assets/gs.webp',
+        '/Users/ojaswichopra/Downloads/DESIS/project/DesisSG-2/assets/nike.jpeg'
+    ]
+    col1, col2, col3, col4 = st.columns(4)
+    col1.image(images[0],caption=None)
+    col2.image(images[1],caption=None)
+    col3.image(images[2],caption=None )
+    col4.image(images[3],caption=None )
+    st.markdown("---")
+
+    add_vertical_space(2)
+    
+    # How It Works
+    st.header("How It Works")
+    st.write(process[selection])
+    st.markdown("---")
+
+    add_vertical_space(2)
+    # Testimonials
+    st.header("Testimonials")
+    # Add some testimonials from satisfied users or partners
+    st.markdown("---")
+
+    add_vertical_space(2)
+    # Footer
+    st.write("Contact us: contact@sustainableinvestments.com")
+
+    # CSS styling
+    st.markdown(
+        """
+        <style>
+        body {
+            background-color: #f5f5f5;
+            color: #333333;
+            font-family: Arial, sans-serif;
+        }
+        .stButton>button {
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition-duration: 0.4s;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
 
         
 
-      
 
 if __name__ == "__main__":
     main()

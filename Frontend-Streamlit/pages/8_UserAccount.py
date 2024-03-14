@@ -75,6 +75,8 @@ def my_account():
     if 'username' in st.session_state and st.session_state.username is not None:
         
         username = st.session_state.get('username')
+        authentication_status = st.session_state.get('authentication_status')
+        authenticator = st.session_state.get('authenticator')
         user_image_url = '/Users/ojaswichopra/Downloads/DESIS/project/DesisSG-2/assets/username.jpeg'
 
         # Display user image and name on the main page
@@ -154,7 +156,7 @@ def my_account():
             # st.write(transaction_history)
         else:
             st.warning("You haven't made any transactions yet!!")
-            
+        
         # Sell stocks functionality
         if st.button("Sell"):
             st.session_state['shares']=shares

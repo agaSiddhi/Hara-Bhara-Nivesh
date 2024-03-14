@@ -40,7 +40,7 @@ def signup():
             if validate_email(email):
                 # Hash the password
                 hashed_password = stauth.Hasher([password]).generate()
-                binary_hashed_password = hashed_password[0].encode()
+                # binary_hashed_password = hashed_password[0].encode()
 
                 # Load existing data or create a new dictionary if the file doesn't exist
                 user_data = read_yaml()
