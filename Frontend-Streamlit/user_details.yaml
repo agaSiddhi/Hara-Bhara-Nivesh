@@ -99,6 +99,48 @@ credentials:
       name: Rudra Surana
       password: $2b$12$C44avY7wcuDHABtJQTRTQOmUjPeXvtp5SDCyro0kwC1NTnRjhVXQi
       transaction_history: null
+    vidishaa99:
+      balance: 10000
+      current_portfolio:
+        Amount:
+        - 10.0
+        - 90.0
+        - 3.0
+        - 50.0
+        - 1.0
+        - 50.0
+        Date:
+        - 29-05-2022
+        - 29-06-2023
+        - 29-07-2023
+        - 29-08-2023
+        - 29-01-2024
+        - 29-02-2024
+        Order Type:
+        - Buy
+        - Buy
+        - Buy
+        - Buy
+        - Buy
+        - Sell
+        Price/Quote:
+        - 133.0
+        - 208.0
+        - 424.0
+        - 435.0
+        - 643.0
+        - 210.0
+        Ticker:
+        - FB
+        - AAPL
+        - AMZN
+        - NFLX
+        - GOOGL
+        - AAPL
+      email: vidishaagarwal2003@gmail.com
+      name: Vidisha Agarwal
+      password: $2b$12$swSKIQ4znKR/oy4LGGGdIuzRJ1pAVKKzE4.DWjPmHVD03XvBp6uw.
+      transaction_history: null
 preauthorized:
   emails:
   - o_chopra@ee.iitr.ac.in

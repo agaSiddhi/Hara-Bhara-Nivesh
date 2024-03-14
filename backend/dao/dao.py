@@ -224,6 +224,7 @@ class CompanyDao:
                 result_dict[category]=result
                 # print(result_dict)
             df = pd.DataFrame.from_dict(result_dict, orient='index').transpose()
+            # print(result_dict)
             return df
     
     def get_company_name_from_ticker(self):
@@ -237,12 +238,12 @@ class CompanyDao:
         print(type(companyID))
         if isinstance(companyID,list):
             companyID=companyID[0]
-        print(companyID)
+        # print(companyID)
         query=f'SELECT AVG(score) FROM ScoreHistory WHERE companyID="{companyID}";'
         result=self.execute_query(query)
         # print(query)
         
-        print(result)
+        # print(result)
         return float(result[0][0])
 
     def get_companies(self,stocks,category):
@@ -252,8 +253,6 @@ class CompanyDao:
             if not ticker:
                 break
             fund_category=self.get_fund_category_from_ticker(ticker)
-            print(fund_category)
-            print(category)
             if category == fund_category[0][0]:
                 companies.append({ticker: amount})
         return companies
@@ -265,13 +264,18 @@ class CompanyDao:
         # print(total_amount)
         ticker_percentages = {}
         for company in companies:
+            # print(company)
             for ticker, amount in company.items():
+                # print(ticker)
                 if not ticker:
                     break
                 percentage = (amount / total_amount) 
                 if percentage!=0:
                     ticker_percentages[ticker] = percentage
+                    
+        ticker_percentages = dict(sorted(ticker_percentages.items(), key=lambda item: item[1], reverse=True))
         return ticker_percentages
+    
 
     def get_company_details_for_credits(self):
         query = f'''SELECT c.companyID AS compID,
@@ -304,7 +308,7 @@ class CompanyDao:
                 JOIN Industry i ON c.industryID = i.industryID
                 WHERE c.companyID = "{companyID}"; '''
         result = self.execute_query(query)
-        print(result)
+        # print(result)
         return result
 
     def get_wallet_balance_from_companyID(self,companyID=None):
@@ -312,7 +316,7 @@ class CompanyDao:
                 FROM Company
                 WHERE companyID = "{companyID}"; '''
         result = self.execute_query(query)
-        print(result)
+        # print(result)
         return result
     
     def add_new_company(self, ticker, name, total_assets, revenue, employee_count, founded_year, industry_id, fund_category):
@@ -334,5 +338,15 @@ class CompanyDao:
     def get_industry_id_by_keyword(self, industry_keyword):
         query = f'''SELECT industryID FROM Industry WHERE keyword = "{industry_keyword}";'''
         result = self.execute_query(query)
-        print(result)
+        # print(result)
         return result
+    
+    def get_companies_by_industry(self,stocks,industry):
+        companies = []
+        for ticker, amount in stocks.items():
+            print(ticker+"  "+str(amount)+"  "+industry)
+            result= self.get_industry_keyword_from_companyID(ticker)
+            if industry == result[0][0]:
+                companies.append({ticker: amount})
+        return companies
+    
