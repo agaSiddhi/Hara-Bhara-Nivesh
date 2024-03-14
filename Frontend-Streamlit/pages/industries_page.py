@@ -7,20 +7,11 @@ import string
 from backend.configuration import initialize_system
 company_service = initialize_system()
 
-# data = {
-#     'Capital Goods': ['A','B'],
-#     'HealthCare':['D','E'],
-#     'Financial':['G','H'],
-#     'Services':['J','K'],
-#     'Other':['C','F'],
-#     'Consumer Staples': ['I','L']
-# }
-
 # Create DataFrame from dictionary
 companies_sorted = company_service.return_companies_for_industry_category()
 company_mapping =company_service.return_company_name_from_ticker()
 
-ratings = {'AAPL': 1,'GOOGL':2,'MSFT':3,'AMZN':3,'FB':4,'NFLX':4.5}
+# ratings = {'AAPL': 1,'GOOGL':2,'MSFT':3,'AMZN':3,'FB':4,'NFLX':4.5}
 
 # Assuming you have a function to map tickers to their categories
 def get_category(ticker):
@@ -78,9 +69,10 @@ def main():
     industry = st.session_state['industry']
     stocks = st.session_state['stocks']
 
-    companies = get_companies(stocks,industry)
-
-    ticker_percentages = get_ticker_percentages(companies)
+    companies = company_service.return_companies_by_industry(stocks,industry)
+    # print(companies)
+    # print("jajaha")
+    ticker_percentages = company_service.return_ticker_percentages(companies)
 
     if len(ticker_percentages)==0:
         st.subheader(f'There are no {industry} funds in your portfolio')
@@ -90,8 +82,8 @@ def main():
         if not ticker:
             break
         company_name = company_mapping[ticker]
-        company_category = company_service.return_fund_category_from_ticker(ticker)
-        rating = ratings[ticker]
+        company_category = company_service.return_fund_category_from_ticker(ticker)[0][0]
+        rating = company_service.return_average_score_from_ticker(ticker)
         col1,col2 = st.columns([3,1])
         col1.markdown(f"### {company_name}")
         col1.write(f"{company_category} ●")
@@ -103,8 +95,8 @@ def main():
     for ticker in companies_sorted[f"{industry}"].values:
         if not ticker:
             break
-        company_name = company_mapping[ticker[0]]
-        company_category = (ticker[0])
+        company_name = company_mapping[ticker]
+        company_category = (ticker)
         score = company_service.return_average_score_from_ticker(ticker)
         st.markdown(f"##### {company_name}")
         col1,col2 =st.columns([3,1])

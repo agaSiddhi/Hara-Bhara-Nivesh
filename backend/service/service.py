@@ -86,3 +86,7 @@ class CompanyService:
 
     def return_industry_id_by_keyword(self, industry_keyword):
         return self.company_dao.get_industry_id_by_keyword(industry_keyword)
+    
+    def return_companies_by_industry(self,stocks,industry):
+        return self.company_dao.get_companies_by_industry(stocks,industry)
+        
