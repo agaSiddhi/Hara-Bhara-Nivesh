@@ -2,6 +2,7 @@ import streamlit as st
 import re
 import yaml
 import streamlit_authenticator as stauth
+import pandas as pd
 
 # Function to validate email format
 def validate_email(email):
@@ -57,7 +58,10 @@ def signup():
                 user_data['credentials']['usernames'][username] = {
                     'email': email,
                     'name': name,
-                    'password': hashed_password[0]
+                    'password': hashed_password[0],
+                    'balance': 10000,
+                    'transaction_history':None,
+                    'current_portfolio': None
                 }
 
                 # Write user details to YAML file

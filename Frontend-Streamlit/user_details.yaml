@@ -5,9 +5,82 @@ cookie:
 credentials:
   usernames:
     chopra_01:
+      balance: 9900
+      current_portfolio:
+        Amount:
+        - 10
+        - 90
+        - 3
+        - 50
+        - 1
+        - 2
+        - 2
+        - 12
+        Date:
+        - 29-05-2022
+        - 29-06-2023
+        - 29-07-2023
+        - 29-08-2023
+        - 29-01-2024
+        - 29-02-2024
+        - 29-02-2024
+        - 29-02-2024
+        Order Type:
+        - Buy
+        - Buy
+        - Buy
+        - Buy
+        - Buy
+        - Sell
+        - Sell
+        - Buy
+        Price/Quote:
+        - 133
+        - 208
+        - 424
+        - 435
+        - 643
+        - 10
+        - 10
+        - 10
+        Ticker:
+        - FB
+        - AAPL
+        - AMZN
+        - NFLX
+        - GOOG
+        - AAPL
+        - AAPL
+        - AAPL
       email: ojaswichopra06@gmail.com
       name: Ojaswi Chopra
       password: $2b$12$eXnheMHl7WT1iyp/v1cuQu/h1iGl2Kt7DybFWPaxlhVqXwfmoPd8O
+      transaction_history:
+        Amount:
+        - 2
+        - 12
+        Date:
+        - 29-02-2024
+        - 29-02-2024
+        Order Type:
+        - Sell
+        - Buy
+        Price/Quote:
+        - 10
+        - 10
+        Ticker:
+        - AAPL
+        - AAPL
+        Wallet Balance:
+        - 10020
+        - 9900
+    rudra1025:
+      balance: 10000
+      current_portfolio: null
+      email: suranarudra1025@gmail.com
+      name: Rudra Surana
+      password: $2b$12$C44avY7wcuDHABtJQTRTQOmUjPeXvtp5SDCyro0kwC1NTnRjhVXQi
+      transaction_history: null
 preauthorized:
   emails:
   - o_chopra@ee.iitr.ac.in
