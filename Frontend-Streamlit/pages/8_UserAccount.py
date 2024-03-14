@@ -7,7 +7,7 @@ from streamlit_extras.add_vertical_space import add_vertical_space
 import streamlit_shadcn_ui as ui
 
 # company names from ticker 
-company_mapping = {'AAPL': 'Apple','GOOG':'Google','MSFT':'Microsoft','AMZN':'Amazon','FB':'Facebook','NFLX':'Netflix'}
+company_mapping = {'AAPL': 'Apple','GOOGL':'Google','MSFT':'Microsoft','AMZN':'Amazon','FB':'Facebook','NFLX':'Netflix'}
 
 # Function to read YAML file
 def read_yaml(filename):
@@ -43,7 +43,7 @@ def calculate_portfolio_balance(data):
     current_portfolio = 0
     
     dates = pd.date_range(start=min(data['Date']), end=max(data['Date']))
-    tickers = ['AAPL', 'GOOG', 'MSFT', 'AMZN', 'FB','NFLX']
+    tickers = ['AAPL', 'GOOGL', 'MSFT', 'AMZN', 'FB','NFLX']
     stocks = {ticker: 0 for ticker in tickers}
     shares = {ticker: 0 for ticker in tickers}
     
