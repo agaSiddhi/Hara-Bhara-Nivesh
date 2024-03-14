@@ -187,3 +187,17 @@ class QueryRunner:
         print(result)
         return result
     
+    def get_company_details_for_credits(self):
+        query = f'''SELECT c.companyID AS compID,
+                c.name,
+                c.totalAssets,
+                c.employeeCount,
+                c.revenue,
+                c.wallet,
+                i.keyword AS industry,
+                c.foundedYear
+            FROM Company c
+            JOIN Industry i ON c.industryID = i.industryID;'''
+        result = self.execute_query(query)
+        # print(result)
+        return result

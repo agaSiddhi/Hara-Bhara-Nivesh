@@ -32,10 +32,10 @@ data = {
 companies_sorted = pd.DataFrame(data)
 
 # company names from ticker 
-company_mapping = {'AAPL': 'Apple','GOOG':'Google','MSFT':'Microsoft','AMZN':'Amazon','FB':'Facebook','NFLX':'Netflix'}
+company_mapping = {'AAPL': 'Apple','GOOGL':'Google','MSFT':'Microsoft','AMZN':'Amazon','FB':'Facebook','NFLX':'Netflix'}
 company_mapping.update(randomm)
 
-ratings = {'AAPL': 1,'GOOG':2,'MSFT':3,'AMZN':3,'FB':4,'NFLX':4.5}
+ratings = {'AAPL': 1,'GOOGL':2,'MSFT':3,'AMZN':3,'FB':4,'NFLX':4.5}
 
 # Assuming you have a function to map tickers to their categories
 def get_category(ticker):
@@ -113,7 +113,7 @@ def main():
         st.write('---')
 
     st.subheader(f"High Scoring {industry} funds")
-    for ticker in companies_sorted[{industry}].values:
+    for ticker in companies_sorted[f"{industry}"].values:
         company_name = company_mapping[ticker[0]]
         company_category = get_category(ticker[0])
         score = get_avg(ticker)

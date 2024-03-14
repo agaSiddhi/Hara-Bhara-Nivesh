@@ -5,7 +5,7 @@ from backend.DatabaseQueries import QueryRunner
 import os
 
 
-filepath= f"/Users/ojaswichopra/Downloads/DESIS/project/DesisSG-2/backend/config.ini"
+filepath= f"/home/agasiddhi/Documents/desis/project/DesisSG-2/backend/config.ini"
 
 
 config_loader = ConfigLoader(filepath)  
@@ -39,7 +39,10 @@ def return_price_and_date():
 def return_score_and_date():
     return QueryObject.get_score_and_date()
 
+def return_company_details_for_credits():
+    return QueryObject.get_company_details_for_credits()
 
+# print(return_company_details_for_credits())
 # print(return_company_details_from_companyID(1))
 # list_industries_with_details()
 # connector.disconnect()
