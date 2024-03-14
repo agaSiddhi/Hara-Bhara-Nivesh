@@ -35,6 +35,9 @@ class CompanyService:
     def return_companies_for_fund_category(self):
         return self.company_dao.get_companies_for_fund_category()
     
+    def return_companies_for_industry_category(self):
+        return self.company_dao.get_companies_for_industry_category()
+    
     def return_company_name_from_ticker(self):
         return self.company_dao.get_company_name_from_ticker()
     

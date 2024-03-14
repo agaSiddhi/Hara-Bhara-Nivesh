@@ -4,36 +4,21 @@ import numpy as np
 import random
 import string
 
+from backend.configuration import initialize_system
+company_service = initialize_system()
 
-def get_avg(ticker):
-    return random.randint(10,20)
-
-# Function to generate random company names
-def generate_random_company_name():
-    name_length = random.randint(5, 10)  # Random length between 5 and 10 characters
-    return ''.join(random.choices(string.ascii_uppercase, k=name_length))  # Random uppercase letters
-
-# Create the dictionary with random company names
-randomm = {chr(65 + i): generate_random_company_name() for i in range(12)}  # A to L
-
-
-# Create a dictionary with categories as keys and top industries as values
-# Sample data for the DataFrame
-data = {
-    'Capital Goods': ['A','B'],
-    'HealthCare':['D','E'],
-    'Financial':['G','H'],
-    'Services':['J','K'],
-    'Other':['C','F'],
-    'Consumer Staples': ['I','L']
-}
+# data = {
+#     'Capital Goods': ['A','B'],
+#     'HealthCare':['D','E'],
+#     'Financial':['G','H'],
+#     'Services':['J','K'],
+#     'Other':['C','F'],
+#     'Consumer Staples': ['I','L']
+# }
 
 # Create DataFrame from dictionary
-companies_sorted = pd.DataFrame(data)
-
-# company names from ticker 
-company_mapping = {'AAPL': 'Apple','GOOGL':'Google','MSFT':'Microsoft','AMZN':'Amazon','FB':'Facebook','NFLX':'Netflix'}
-company_mapping.update(randomm)
+companies_sorted = company_service.return_companies_for_industry_category()
+company_mapping =company_service.return_company_name_from_ticker()
 
 ratings = {'AAPL': 1,'GOOGL':2,'MSFT':3,'AMZN':3,'FB':4,'NFLX':4.5}
 
@@ -102,8 +87,10 @@ def main():
         st.write('---')
 
     for ticker, percent in ticker_percentages.items():
+        if not ticker:
+            break
         company_name = company_mapping[ticker]
-        company_category = get_category(ticker)
+        company_category = company_service.return_fund_category_from_ticker(ticker)
         rating = ratings[ticker]
         col1,col2 = st.columns([3,1])
         col1.markdown(f"### {company_name}")
@@ -114,9 +101,11 @@ def main():
 
     st.subheader(f"High Scoring {industry} funds")
     for ticker in companies_sorted[f"{industry}"].values:
+        if not ticker:
+            break
         company_name = company_mapping[ticker[0]]
-        company_category = get_category(ticker[0])
-        score = get_avg(ticker)
+        company_category = (ticker[0])
+        score = company_service.return_average_score_from_ticker(ticker)
         st.markdown(f"##### {company_name}")
         col1,col2 =st.columns([3,1])
         col1.write(f"{company_category} ●")
