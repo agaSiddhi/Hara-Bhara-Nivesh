@@ -211,6 +211,21 @@ class CompanyDao:
         df = pd.DataFrame.from_dict(result_dict, orient='index').transpose()
         return df
     
+    def get_companies_for_industry_category(self):
+            result_dict={}
+            categories=['Capital Goods','HealthCare','Financial','Services','Other','Consumer Staples']
+            for category in categories:
+                query=f'''SELECT Company.companyID
+                          FROM Company
+                          JOIN Industry ON Company.industryID = Industry.industryID
+                          WHERE Industry.keyword = "{category}";'''
+                result=self.execute_query(query)
+                result = [tup[0] for tup in result]
+                result_dict[category]=result
+                # print(result_dict)
+            df = pd.DataFrame.from_dict(result_dict, orient='index').transpose()
+            return df
+    
     def get_company_name_from_ticker(self):
         query=f'SELECT companyID, name  FROM Company;'
         result=self.execute_query(query)
@@ -257,14 +272,7 @@ class CompanyDao:
                 if percentage!=0:
                     ticker_percentages[ticker] = percentage
         return ticker_percentages
-        
-    
-            
-            
-            
-        
 
-            
     def get_company_details_for_credits(self):
         query = f'''SELECT c.companyID AS compID,
                 c.name,

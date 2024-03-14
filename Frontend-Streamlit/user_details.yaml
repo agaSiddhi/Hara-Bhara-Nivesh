@@ -55,6 +55,7 @@ credentials:
       email: ojaswichopra06@gmail.com
       name: Ojaswi Chopra
       password: $2b$12$eXnheMHl7WT1iyp/v1cuQu/h1iGl2Kt7DybFWPaxlhVqXwfmoPd8O
+<<<<<<< HEAD
       transaction_history:
         Amount:
         - 2
@@ -81,6 +82,12 @@ credentials:
       name: Rudra Surana
       password: $2b$12$C44avY7wcuDHABtJQTRTQOmUjPeXvtp5SDCyro0kwC1NTnRjhVXQi
       transaction_history: null
+=======
+    vidisha99:
+      email: vidishaagarwal2003@gmail.com
+      name: Vidisha Agarwal
+      password: $2b$12$pM0CzWgp7ME7HG.rVu1QkuJwYeWymfmvmQ2UfzFGntjshC4yCede2
+>>>>>>> e0ecaa2 (changes in industries)
 preauthorized:
   emails:
   - o_chopra@ee.iitr.ac.in
