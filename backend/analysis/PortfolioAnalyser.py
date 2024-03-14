@@ -1,6 +1,6 @@
-# from backend.database import return_price_and_date, return_score_and_date
-# import pandas as pd
-# import numpy as np
+from backend.database import return_price_and_date, return_score_and_date
+import pandas as pd
+import numpy as np
 
 
 # def calculate_portfolio_balance(data):
