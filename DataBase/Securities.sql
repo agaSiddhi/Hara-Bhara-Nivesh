@@ -55,6 +55,44 @@ FOREIGN KEY (companyID) REFERENCES Company(companyID),
 CONSTRAINT CHK_Score_Range CHECK (score >= 0)
 );
 
+CREATE TABLE User(
+username VARCHAR(255) PRIMARY KEY,
+balance DECIMAL(15, 2) NOT NULL,
+name VARCHAR(255) NOT NULL,
+password VARCHAR(60) NOT NULL
+);
+
+CREATE TABLE User_mail(
+username VARCHAR(255),
+email VARCHAR(255) NOT NULL ,
+FOREIGN KEY (username) REFERENCES User(username),
+PRIMARY KEY (username,email)
+);
+
+CREATE TABLE Transaction_history(
+transactionID INT PRIMARY KEY AUTO_INCREMENT,
+price_quote DECIMAL(15, 2),
+date DATETIME,
+order_type ENUM('Buy', 'Sell'),
+amount DECIMAL(15, 2),
+Ticker VARCHAR(50),
+username VARCHAR(255),
+FOREIGN KEY (Ticker) REFERENCES Company(companyID),
+FOREIGN KEY (username) REFERENCES User(username)
+);
+
+CREATE TABLE Portfolio_entry(
+portfolioEntryID INT PRIMARY KEY AUTO_INCREMENT,
+price_quote DECIMAL(15, 2),
+date DATETIME,
+order_type ENUM('Buy', 'Sell'),
+amount DECIMAL(15, 2),
+Ticker VARCHAR(50),
+username VARCHAR(255),
+FOREIGN KEY (Ticker) REFERENCES Company(companyID),
+FOREIGN KEY (username) REFERENCES User(username)
+);
+
 INSERT INTO Industry (keyword, description) VALUES
 ('Capital Goods', 'Companies involved in manufacturing and distribution of industrial equipment and machinery.'),
 ('Financial', 'Financial institutions including banks, investment firms, and insurance companies.'),
@@ -531,3 +569,17 @@ SELECT c.companyID, c.name AS companyName, c.createdAt, c.updatedAt, c.totalAsse
 FROM Company c
 LEFT JOIN CompanyWebsite w ON c.companyID = w.companyID
 WHERE c.companyID = 1;
+
+
+-- DELIMITER $$
+-- CREATE TRIGGER validate_email
+-- BEFORE INSERT ON Users
+-- FOR EACH ROW
+-- BEGIN
+--     IF NEW.Email NOT REGEXP '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$' THEN
+--         SIGNAL SQLSTATE '45000'
+--         SET MESSAGE_TEXT = 'Invalid email address';
+--     END IF;
+-- END$$
+-- DELIMITER ;
+
