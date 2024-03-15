@@ -1,5 +1,6 @@
 import streamlit as st
 import random
+import pandas as pd
 
 # Generate a dictionary with keys A to Z and random scores between 100 and 200
 scores_dict = {chr(65 + i): random.randint(100, 200) for i in range(26)}
@@ -23,29 +24,51 @@ data1 = {
     'Others':['J','K','L'],
 }
 
-def filter_companies(selected_categories, selected_sectors):
-    filtered_companies = {}
-    for category in selected_categories:
-        if category in data1:
-            for company in data1[category]:
-                if company not in filtered_companies:
-                    filtered_companies[company] = {'score': scores_dict[company], 'category': category, 'sector': None}
+# Convert dictionaries to DataFrames
+data1_df = pd.DataFrame([(company, category) for category, companies in data1.items() for company in companies], columns=['Company', 'Category'])
+data2_df = pd.DataFrame([(company, sector) for sector, companies in data2.items() for company in companies], columns=['Company', 'Sector'])
+
+# Convert scores_dict to DataFrame
+scores_df = pd.DataFrame(scores_dict.items(), columns=['Company', 'Score'])
+
+# def filter_companies(selected_categories, selected_sectors):
+#     filtered_companies = {}
+#     for category in selected_categories:
+#         if category in data1:
+#             for company in data1[category]:
+#                 if company not in filtered_companies:
+#                     filtered_companies[company] = {'score': scores_dict[company], 'category': category, 'sector': None}
     
-    for sector in selected_sectors:
-        if sector in data2:
-            for company in data2[sector]:
-                if company not in filtered_companies:
-                    # filtered_companies[company] = {'score': scores_dict[company], 'category': None, 'sector': sector}
-                    continue
-                else:
-                    # If the company is already in the dictionary (from data1), update its sector
-                    filtered_companies[company]['sector'] = sector
+#     for sector in selected_sectors:
+#         if sector in data2:
+#             for company in data2[sector]:
+#                 if company not in filtered_companies:
+#                     # filtered_companies[company] = {'score': scores_dict[company], 'category': None, 'sector': sector}
+#                     continue
+#                 else:
+#                     # If the company is already in the dictionary (from data1), update its sector
+#                     filtered_companies[company]['sector'] = sector
 
     
-    filtered_companies = {company: details for company, details in filtered_companies.items() if details['sector'] is not None}
-    # Sort the dictionary in descending order based on scores
-    filtered_companies = dict(sorted(filtered_companies.items(), key=lambda x: x[1]['score'], reverse=True))
-    return filtered_companies
+#     filtered_companies = {company: details for company, details in filtered_companies.items() if details['sector'] is not None}
+#     # Sort the dictionary in descending order based on scores
+#     filtered_companies = dict(sorted(filtered_companies.items(), key=lambda x: x[1]['score'], reverse=True))
+#     return filtered_companies
+
+def filter_companies(selected_categories, selected_sectors):
+    # Merge data1 and data2 on 'Company' column
+    merged_df = pd.merge(data1_df, data2_df, on='Company', how='outer')
+    
+    # Merge merged_df with scores_df
+    merged_df = pd.merge(merged_df, scores_df, on='Company', how='left')
+    
+    # Filter based on selected categories and sectors
+    filtered_df = merged_df[(merged_df['Category'].isin(selected_categories)) | (merged_df['Sector'].isin(selected_sectors))]
+    
+    # Sort the DataFrame in descending order based on scores
+    filtered_df = filtered_df.sort_values(by='Score', ascending=False)
+    
+    return filtered_df[['Company', 'Score', 'Category', 'Sector']]
 
 # Function to get user input for fund categories
 def get_fund_categories():
@@ -91,11 +114,11 @@ def main():
         if suggestions_button:
             placeholder.empty()
             filtered_companies = filter_companies(selected_categories,selected_sectors)
-            for company, details in filtered_companies.items():
-                col1,col2 = st.columns([3,1])
-                col1.markdown(f"#### {company}")
-                col1.write(f"{details['category']} ● {details['sector']}")
-                col2.markdown(f"##### Average score: {details['score']}")
+            for index, row in filtered_companies.iterrows():
+                col1, col2 = st.columns([3, 1])
+                col1.markdown(f"#### {row['Company']}")
+                col1.write(f"{row['Category']} ● {row['Sector']}")
+                col2.markdown(f"##### Average score: {row['Score']}")
                 st.write("---")
 
     else:
