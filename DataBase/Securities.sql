@@ -93,6 +93,24 @@ FOREIGN KEY (Ticker) REFERENCES Company(companyID),
 FOREIGN KEY (username) REFERENCES User(username)
 );
 
+CREATE TABLE Bid(
+bidID INT PRIMARY KEY AUTO_INCREMENT,
+initial_Bid DECIMAL(15, 2),
+minimum_Step DECIMAL(5, 2),
+credits_Listed INT,
+companyID VARCHAR(50),
+FOREIGN KEY (companyID) REFERENCES Company(companyID)
+);
+
+CREATE TABLE Bidding(
+bidder VARCHAR(50),
+bidID INT,
+bid DECIMAL(15, 2),
+FOREIGN KEY (bidder) REFERENCES Company(companyID),
+FOREIGN KEY (bidID) REFERENCES Bid(bidID),
+PRIMARY KEY(bidder,bidID)
+);
+
 INSERT INTO Industry (keyword, description) VALUES
 ('Capital Goods', 'Companies involved in manufacturing and distribution of industrial equipment and machinery.'),
 ('Financial', 'Financial institutions including banks, investment firms, and insurance companies.'),
