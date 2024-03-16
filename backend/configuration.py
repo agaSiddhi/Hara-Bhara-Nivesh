@@ -30,7 +30,7 @@ def read_config(file_path):
     config.read(file_path)
     return config
 
-def initialize_system(config_path="/Users/ojaswichopra/Downloads/DESIS/project/DesisSG-2/backend/config.ini"):
+def initialize_system(config_path="/Users/vidisha/Desktop/DESISProject/DesisSG-2/backend/config.ini"):
     config = read_config(config_path)
     factory = ConcreteFactory()
 

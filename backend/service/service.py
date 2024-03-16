@@ -89,4 +89,6 @@ class CompanyService:
     
     def return_companies_by_industry(self,stocks,industry):
         return self.company_dao.get_companies_by_industry(stocks,industry)
-        
+
+    def filter_companies(self,selected_categories, selected_sectors):
+        return self.company_dao.filter_companies(selected_categories,selected_sectors)       
