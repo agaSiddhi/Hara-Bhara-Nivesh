@@ -8,7 +8,7 @@ layout = "centered"
 
 selection = None
 
-landing_images = ['/Users/ojaswichopra/Downloads/DESIS/project/DesisSG-2/assets/landing_investor.jpg','/Users/ojaswichopra/Downloads/DESIS/project/DesisSG-2/assets/landing_company.webp']
+landing_images = ['assets/landing_investor.jpg','assets/landing_company.webp']
 
 page_title=["What is Sustainable Investing?","Introduction to Carbon Credit Marketplace"]
 
@@ -151,10 +151,10 @@ def main():
     st.write("Explore some of our top sustainable investment options:")
     # Add images of featured investments
     images = [
-        '/Users/ojaswichopra/Downloads/DESIS/project/DesisSG-2/assets/apple.jpeg',
-        '/Users/ojaswichopra/Downloads/DESIS/project/DesisSG-2/assets/tesla.jpeg',
-        '/Users/ojaswichopra/Downloads/DESIS/project/DesisSG-2/assets/gs.webp',
-        '/Users/ojaswichopra/Downloads/DESIS/project/DesisSG-2/assets/nike.jpeg'
+        'assets/apple.jpeg',
+        'assets/tesla.jpeg',
+        'assets/gs.webp',
+        'assets/nike.jpeg'
     ]
     col1, col2, col3, col4 = st.columns(4)
     col1.image(images[0],caption=None)
