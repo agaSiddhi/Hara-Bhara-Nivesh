@@ -3,10 +3,10 @@ import nltk
 nltk.download('vader_lexicon')
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 from textblob import TextBlob
-from abbreviations import abbreviations_to_full_names
-from keywords import  environment_keywords, social_keywords, governance_keywords
+from Scraper.abbreviations import abbreviations_to_full_names
+from Scraper.keywords import  environment_keywords, social_keywords, governance_keywords
 
-def process_articles_and_save(data_filename='Article_data.csv', 
+def process_articles_and_save(data_filename='Scraper/Article_data.csv', 
                                abbreviations_to_full_names=abbreviations_to_full_names, 
                                environment_keywords=environment_keywords, 
                                social_keywords=social_keywords, 

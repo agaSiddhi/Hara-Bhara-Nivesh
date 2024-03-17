@@ -11,7 +11,7 @@ def parse_and_save_to_csv(result, csv_writer):
         score = row.find(class_="col-2").text
         csv_writer.writerow([company_name, esg_risk_rating, score])
 
-def scrape_sustainalytics_data(filename='sustainalytics_data.csv', total_pages=1384):
+def scrape_sustainalytics_data(filename='Scraper/sustainalytics_data.csv', total_pages=1384):
     conn = http.client.HTTPSConnection("www.sustainalytics.com")
 
     headersList = {

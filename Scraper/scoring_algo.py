@@ -7,7 +7,7 @@ def normalize_score(score_series):
     normalized_score = ((score_series - min_value) / (max_value - min_value)) * 10
     return normalized_score
 
-def process_and_save_data(article_data_filename='Article_data.csv', esg_ratings_filename='sustainalytics_data.csv', output_filename='final_data.csv'):
+def process_and_save_data(article_data_filename='Scraper/Article_data.csv', esg_ratings_filename='Scraper/sustainalytics_data.csv', output_filename='Scraper/final_data.csv'):
 
     columns = ["Company Name", "Environment", "Social", "Governance", "ESG", "Year"]
 
