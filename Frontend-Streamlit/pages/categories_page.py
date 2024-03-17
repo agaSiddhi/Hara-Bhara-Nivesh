@@ -12,60 +12,6 @@ companies_sorted=pd.DataFrame.from_dict(companies_sorted, orient='index').transp
 company_mapping = company_service.return_company_name_from_ticker()
 
 
-# ratings = {'AAPL': 1,'GOOG':2,'MSFT':3,'AMZN':3,'FB':4,'NFLX':4.5}
-
-# # Assuming you have a function to map tickers to their categories
-# def get_category(ticker):
-#     # Implement your logic here to determine the category for a given ticker
-#     # This is a placeholder function, you need to replace it with your actual logic
-#     if ticker in ['AAPL', 'GOOGL', 'MSFT']:
-#         return 'Equity'
-#     elif ticker == 'AMZN':
-#         return 'Hybrid'
-#     elif ticker == 'FB':
-#         return 'Debt'
-#     else :
-#         return 'Others'
-
-# # Assuming you have a function to map tickers to their industries
-# def get_industry(ticker):
-#     # Implement your logic here to determine the category for a given ticker
-#     # This is a placeholder function, you need to replace it with your actual logic
-#     if ticker in ['AAPL', 'GOOGL', 'MSFT']:
-#         return 'Capital Goods'
-#     elif ticker == 'GOOG':
-#         return 'HealthCare'
-#     elif ticker == 'AMZN':
-#         return 'Financial'
-#     elif ticker == 'FB':
-#         return 'Services'
-#     else :
-#         return 'Other'
-    
-# def get_avg(ticker):
-#     return random.randint(10,20)
-
-# def get_companies(stocks,category):
-#     companies = []
-#     for ticker, amount in stocks.items():
-#         if category == get_category(ticker):
-#             companies.append({ticker: amount})
-#     return companies
-
-# def get_ticker_percentages(companies):
-#     # Getting composition of each ticker in out category
-#     total_amount = sum(amount for company in companies for amount in company.values())
-#     ticker_percentages = {}
-#     for company in companies:
-#         for ticker, amount in company.items():
-#             percentage = (amount / total_amount) 
-#             if percentage!=0:
-#                 ticker_percentages[ticker] = percentage
-
-#     # presenting current state of portfolio crategory
-#     ticker_percentages = dict(sorted(ticker_percentages.items(), key=lambda item: item[1], reverse=True))
-
-#     return ticker_percentages
 
 def main():
 

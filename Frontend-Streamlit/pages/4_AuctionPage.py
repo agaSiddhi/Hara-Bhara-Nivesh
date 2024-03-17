@@ -1,34 +1,38 @@
 import streamlit as st
 import pandas as pd
 from streamlit_option_menu import option_menu
+import os
 
-# Mock data for demonstration
-data = {
-    'Ticker': ['AAPL', 'GOOGL', 'MSFT'],
-    'Name': ['Apple Inc.', 'Alphabet Inc.', 'Microsoft Corporation'],
-    'Initial Bid': [100, 200, 150],
-    'Minimum Step': [10, 20, 15],
-    'Credits Listed': [5000, 3000, 4000],
-    'Description': ['Description of Apple Inc.','Description of Alphabet Inc.','Description of Microsoft Corporation'],
-    'Bids':[[],[],[]],
-    'Industry':['Capital Goods','Financial','Services']
-}
+def get_current_price(company_ticker):
+    your_listing_file_path = "your_listing_file.csv"  # Replace with the actual path
+    your_listing_df = pd.read_csv(your_listing_file_path)
 
-df = pd.DataFrame(data)
-
-def get_current_price(company):
-    if company['Bids']:
-        return max(company['Bids'], key=lambda x: x['Bid'])['Bid']
+    company_data = your_listing_df[your_listing_df['company_ticker'] == company_ticker]
+    if not company_data.empty:
+        return company_data['initial_bid'].values[0]
     else:
-        return company['Initial Bid']
+        return 0 
 
+def get_maximum_bidding_price(company_ticker):
+    bidding_list_file_path = "bidding_list.csv"  # Replace with the actual path
+    if not os.path.exists(bidding_list_file_path):
+        return get_current_price(company_ticker) 
+    bidding_list_df = pd.read_csv(bidding_list_file_path)
+
+    company_bids = bidding_list_df[bidding_list_df['company_ticker'] == company_ticker]
+    if not company_bids.empty:
+        return company_bids['bid_amount'].max()
+    else:
+        return get_current_price(company_ticker)  # Return the initial bid if no bids are placed
 
 def filter_companies(search_query, data):
     return data[data['Name'].str.contains(search_query, case=False)]
 
 def main():
-    if st.button("Back to Home"):
-        st.switch_page("Landing.py")
+
+    # Load data from CSV file
+    # Replace with the actual path to your CSV file
+    df = pd.read_csv(filename)
     
     # --- HIDE STREAMLIT STYLE ---
     hide_st_style = """
@@ -53,26 +57,21 @@ def main():
 
         # Search bar with search icon
         search_query = st.text_input('Search Companies:', value='', key='search_input')
-        # Dropdown for filtering by industry
-        selected_industries = st.multiselect('Filter by Industry:', options=df['Industry'].unique())
-        filtered_df = filter_companies(search_query, df)
-        # Apply industry filter
-        if selected_industries:
-            filtered_df = filtered_df[filtered_df['Industry'].isin(selected_industries)]
+
         # Display listings
-        if len(filtered_df) == 0:
+        if len(df) == 0:
             st.write('No results found.')
         else:
-            for index, row in filtered_df.iterrows():
-                st.subheader(f"**{row['Name']}**")
-                col1,col2,col3 = st.columns([1,1,0.5])
-                col1.markdown(f"##### Current Price: ${get_current_price(row)}")
-                col2.markdown(f"##### Credits Listed: {row['Credits Listed']}")
+            for index, row in df.iterrows():
+                st.subheader(f"**{row['company_ticker']}**")
+                col1, col2, col3 = st.columns([1, 1, 0.5])
+                col1.markdown(f"##### Current highest bid: ${get_maximum_bidding_price(row['company_ticker'])}")
+                col2.markdown(f"##### Credits Listed: {row['credits_to_list']}")
                 # Add detail button to view company details
                 button_label = "Details"
-                button_key = f"{button_label}_{row['Name']}_CER"
+                button_key = f"{button_label}_{row['company_ticker']}_CER"
                 if col3.button(button_label, key=button_key):
-                    st.session_state['company'] = row
+                    st.session_state['cer_company'] = row
                     st.switch_page("pages/cer_details_page.py") 
                 st.write("---")
 
@@ -81,34 +80,35 @@ def main():
 
         # Search bar with search icon
         search_query = st.text_input('Search Companies:', value='', key='search_input')
-        # Dropdown for filtering by industry
-        selected_industries = st.multiselect('Filter by Industry:', options=df['Industry'].unique())
-        filtered_df = filter_companies(search_query, df)
-        # Apply industry filter
-        if selected_industries:
-            filtered_df = filtered_df[filtered_df['Industry'].isin(selected_industries)]
+
         # Display listings
-        if len(filtered_df) == 0:
+        if len(df) == 0:
             st.write('No results found.')
         else:
-            for index, row in filtered_df.iterrows():
-                st.subheader(f"**{row['Name']}**")
-                col1,col2,col3 = st.columns([1,1,0.5])
-                col1.markdown(f"##### Current Price: ${get_current_price(row)}")
-                col2.markdown(f"##### Credits Listed: {row['Credits Listed']}")
+            for index, row in df.iterrows():
+                st.subheader(f"**{row['company_ticker']}**")
+                col1, col2, col3 = st.columns([1, 1, 0.5])
+                col1.markdown(f"##### Current highest bid: ${get_maximum_bidding_price(row['company_ticker'])}")
+                col2.markdown(f"##### Credits Listed: {row['credits_to_list']}")
                 # Add detail button to view company details
                 button_label = "Details"
-                button_key = f"{button_label}_{row['Name']}_VER"
+                button_key = f"{button_label}_{row['company_ticker']}_CER"
                 if col3.button(button_label, key=button_key):
-                    st.session_state['company'] = row
-                    st.switch_page("pages/ver_details_page.py") 
+                    st.session_state['cer_company'] = row
+                    st.switch_page("pages/cer_details_page.py") 
                 st.write("---")
         
 
 
 
 if __name__ == "__main__":
-    main()
+    if st.button("Back to Home"):
+        st.switch_page("Landing.py")
+    filename = "your_listing_file.csv"
+    if os.path.exists(filename):
+        main()
+    else:
+        st.warning("Auction Market is empty")
 
 
 
