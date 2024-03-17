@@ -209,7 +209,7 @@ class CompanyDao:
             result_dict[category]=result
             # print(result_dict)
         df = pd.DataFrame.from_dict(result_dict, orient='index').transpose()
-        return df
+        return result_dict
     
     def get_companies_for_industry_category(self):
             result_dict={}
@@ -225,7 +225,7 @@ class CompanyDao:
                 # print(result_dict)
             df = pd.DataFrame.from_dict(result_dict, orient='index').transpose()
             # print(result_dict)
-            return df
+            return result_dict
     
     def get_company_name_from_ticker(self):
         query=f'SELECT companyID, name  FROM Company;'
@@ -350,3 +350,39 @@ class CompanyDao:
                 companies.append({ticker: amount})
         return companies
     
+    def get_score_and_ticker_map(self):
+        query=""" SELECT companyID, AVG(score) AS average_score
+            FROM ScoreHistory
+            GROUP BY companyID """
+        result=self.execute_query(query)
+        score_dict = {company_id: average_score for company_id, average_score in result}
+        print(score_dict)
+        return score_dict
+
+    def filter_companies(self,selected_categories, selected_sectors):
+        data1=  self.get_companies_for_fund_category()
+        data2= self.get_companies_for_industry_category()
+        scores_dict=self.get_score_and_ticker_map()
+        print(scores_dict)
+        print(data1)
+        print(data2)
+        filtered_companies = {}
+        for category in selected_categories:
+            if category in data1:
+                for company in data1[category]:
+                    if company not in filtered_companies:
+                        filtered_companies[company] = {'score': scores_dict[company], 'category': category, 'sector': None}
+        
+        for sector in selected_sectors:
+            if sector in data2:
+                for company in data2[sector]:
+                    if company not in filtered_companies:
+                        # filtered_companies[company] = {'score': scores_dict[company], 'category': None, 'sector': sector}
+                        continue
+                    else:
+                        # If the company is already in the dictionary (from data1), update its sector
+                        filtered_companies[company]['sector'] = sector
+        filtered_companies = {company: details for company, details in filtered_companies.items() if details['sector'] is not None}
+        filtered_companies = dict(sorted(filtered_companies.items(), key=lambda x: x[1]['score'], reverse=True))
+        return filtered_companies
+

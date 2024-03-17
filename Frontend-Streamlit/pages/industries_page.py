@@ -9,6 +9,7 @@ company_service = initialize_system()
 
 # Create DataFrame from dictionary
 companies_sorted = company_service.return_companies_for_industry_category()
+companies_sorted= pd.DataFrame.from_dict(companies_sorted, orient='index').transpose()
 company_mapping =company_service.return_company_name_from_ticker()
 
 

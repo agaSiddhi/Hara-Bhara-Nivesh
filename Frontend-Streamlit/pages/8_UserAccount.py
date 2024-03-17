@@ -77,7 +77,7 @@ def my_account():
         username = st.session_state.get('username')
         authentication_status = st.session_state.get('authentication_status')
         authenticator = st.session_state.get('authenticator')
-        user_image_url = '/Users/ojaswichopra/Downloads/DESIS/project/DesisSG-2/assets/username.jpeg'
+        user_image_url = 'assets/username.jpeg'
 
         # Display user image and name on the main page
         col1, col2 = st.columns([1, 3])

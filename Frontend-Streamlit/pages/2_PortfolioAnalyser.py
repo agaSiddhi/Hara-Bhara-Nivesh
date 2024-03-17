@@ -21,6 +21,7 @@ user_data = read_yaml('user_details.yaml')
 
 def get_portfolio(username):
     return user_data['credentials']['usernames'][username]['current_portfolio']
+
 from backend.configuration import initialize_system
 company_service = initialize_system()
 
