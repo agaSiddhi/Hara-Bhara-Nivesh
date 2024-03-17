@@ -31,29 +31,6 @@ data2_df = pd.DataFrame([(company, sector) for sector, companies in data2.items(
 # Convert scores_dict to DataFrame
 scores_df = pd.DataFrame(scores_dict.items(), columns=['Company', 'Score'])
 
-# def filter_companies(selected_categories, selected_sectors):
-#     filtered_companies = {}
-#     for category in selected_categories:
-#         if category in data1:
-#             for company in data1[category]:
-#                 if company not in filtered_companies:
-#                     filtered_companies[company] = {'score': scores_dict[company], 'category': category, 'sector': None}
-    
-#     for sector in selected_sectors:
-#         if sector in data2:
-#             for company in data2[sector]:
-#                 if company not in filtered_companies:
-#                     # filtered_companies[company] = {'score': scores_dict[company], 'category': None, 'sector': sector}
-#                     continue
-#                 else:
-#                     # If the company is already in the dictionary (from data1), update its sector
-#                     filtered_companies[company]['sector'] = sector
-
-    
-#     filtered_companies = {company: details for company, details in filtered_companies.items() if details['sector'] is not None}
-#     # Sort the dictionary in descending order based on scores
-#     filtered_companies = dict(sorted(filtered_companies.items(), key=lambda x: x[1]['score'], reverse=True))
-#     return filtered_companies
 
 def filter_companies(selected_categories, selected_sectors):
     # Merge data1 and data2 on 'Company' column
@@ -63,7 +40,7 @@ def filter_companies(selected_categories, selected_sectors):
     merged_df = pd.merge(merged_df, scores_df, on='Company', how='left')
     
     # Filter based on selected categories and sectors
-    filtered_df = merged_df[(merged_df['Category'].isin(selected_categories)) | (merged_df['Sector'].isin(selected_sectors))]
+    filtered_df = merged_df[(merged_df['Category'].isin(selected_categories)) & (merged_df['Sector'].isin(selected_sectors))]
     
     # Sort the DataFrame in descending order based on scores
     filtered_df = filtered_df.sort_values(by='Score', ascending=False)

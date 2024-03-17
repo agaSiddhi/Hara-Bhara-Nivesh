@@ -40,23 +40,6 @@ def main():
     
     st.title('Investment Portfolio Analyzer')
     
-    # if 'uploaded_file' in st.session_state:
-    #     uploaded_file=st.session_state.get("uploaded_file")
-    #     new_uploaded_file= st.file_uploader('Upload your portfolio here', type=['xlsx'])
-    #     if new_uploaded_file is not None:
-    #         uploaded_file= new_uploaded_file
-    #         st.session_state.uploaded_file = uploaded_file
-    # else:
-    #     uploaded_file= st.file_uploader('Upload your portfolio here', type=['xlsx'])
-     
-    
-     
-    # if uploaded_file is not None:
-    #     # Load excel file
-    #     if 'uploaded_file' not in st.session_state:
-    #         st.session_state.uploaded_file = uploaded_file
-    #     portfolio = load_excel(uploaded_file)
-        
     portfolio = pd.DataFrame(current_portfolio)
     portfolio['Date'] = pd.to_datetime(portfolio['Date'],infer_datetime_format=True)
     ## ----- Price and Score History

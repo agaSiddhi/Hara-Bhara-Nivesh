@@ -103,14 +103,14 @@ def main():
         else:            
             with col3:
                 if st.button("Login"):
-                    st.switch_page("pages/5_Login.py")
+                    st.switch_page("pages/5_LoginUser.py")
             with col4:
                 if st.button("Signup"):
-                    st.switch_page("pages/6_Signup.py")
+                    st.switch_page("pages/6_SignupUser.py")
                     
     if selected == 'Company':
         
-        col1, col2, col3, col4 = st.columns([1.8,2,1.2,0.8])  
+        col1, col2, col3, col4 = st.columns([1.8,2,1.6,1])  
 
         with col1:
             if st.button("List your Credits"):
@@ -125,16 +125,16 @@ def main():
             authenticator = st.session_state.get('authenticator')
             with col3:
                 if st.button("My Account"):
-                    st.switch_page("pages/8_UserAccount.py")
+                    st.switch_page("pages/11_CompanyAccount.py")
             with col4:
                 authenticator.logout('Logout', 'main', key='unique_key')     
         else:            
             with col3:
                 if st.button("Login"):
-                    st.switch_page("pages/5_Login.py")
+                    st.switch_page("pages/9_LoginCompany.py")
             with col4:
                 if st.button("Signup"):
-                    st.switch_page("pages/6_Signup.py")
+                    st.switch_page("pages/10_SignupCompany.py")
                     
         
     add_vertical_space(2)
