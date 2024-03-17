@@ -52,7 +52,7 @@ def save_to_csv(data, filename='articles.csv'):
                 'Datetime': article['datetime']
             })
 
-def scrape_and_save_articles(base_url ='https://www.esginvesting.co.uk/category/news/companies/page/', total_pages = 27, filename='Article_data.csv'):
+def scrape_and_save_articles(base_url ='https://www.esginvesting.co.uk/category/news/companies/page/', total_pages = 27, filename='Scraper/Article_data.csv'):
     all_articles_data = []
     for page_number in range(1, total_pages + 1):
         url = f"{base_url}{page_number}/"
