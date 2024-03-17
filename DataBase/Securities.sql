@@ -601,7 +601,7 @@ WHERE c.companyID = 1;
 -- END$$
 -- DELIMITER ;
 
-CREATE TABLE CompanyUserAccounts (
+CREATE TABLE CompanySignup (
     CompanyName VARCHAR(255) NOT NULL,
     CompanyTicker VARCHAR(10) PRIMARY KEY,
     Password VARCHAR(255) NOT NULL,
