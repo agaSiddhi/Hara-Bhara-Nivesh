@@ -41,7 +41,8 @@ def company_login():
 
 
 if __name__ == "__main__":
+    company_login()
+    
     # back to home
     if st.button("Back to Home"):
         st.switch_page("Landing.py")
-    company_login()

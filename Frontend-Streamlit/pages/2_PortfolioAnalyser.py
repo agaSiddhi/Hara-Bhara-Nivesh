@@ -35,6 +35,23 @@ def load_excel(file):
 def save_uploaded_file(uploaded_file):
     return uploaded_file
 
+# sidebar page links
+def authenticated_menu_user():
+    st.sidebar.empty()
+    st.sidebar.page_link("pages/1_Listings.py", label="Companies List")
+    st.sidebar.page_link("pages/2_PortfolioAnalyser.py", label="Portfolio Analyser")
+    if 'username' in st.session_state and st.session_state.username is not None:
+        authenticator = st.session_state.get('authenticator')
+        st.sidebar.page_link("pages/8_UserAccount.py", label="My Account")
+        st.sidebar.page_link("pages/12_SellStocks.py", label="Sell Shares")
+        st.sidebar.page_link("pages/13_UploadPortfolio.py", label="Upload External Portfolio")
+        st.sidebar.page_link("pages/14_TargetSection.py", label="Set Target")
+        with st.sidebar:
+            authenticator.logout('Logout', 'main', key='unique_key')     
+    else:
+        st.sidebar.page_link("pages/5_LoginUser.py", label="Login")
+        st.sidebar.page_link("pages/6_SignupUser.py", label="Signup")  
+
 # Create a Streamlit app
 def main():
     # Page title
@@ -46,7 +63,6 @@ def main():
     ## ----- Price and Score History
 
     # Price History
-
     stocks, portfolio = company_service.calculate_portfolio_balance(portfolio)
     fig1 = px.line(portfolio, x='Date', y=['Invested Amount', 'Portfolio Value'], 
             labels={'Date': 'Date', 'value': 'Amount/Value'}, 
@@ -55,7 +71,6 @@ def main():
     st.plotly_chart(fig1)
 
     # Score History
-    
     current_score, portfolio = company_service.calculate_portfolio_score(portfolio)
     fig2 = px.line(portfolio, x='Date', y=['Score'], 
             labels={'Date': 'Date', 'value': 'Score'}, 
@@ -64,7 +79,6 @@ def main():
     st.plotly_chart(fig2)
     
     ## ----- Distribution of Stock Categories
-
     category_percentage= company_service.return_category_percentage(stocks)
 
     # Convert dictionary to lists for plotting
@@ -172,17 +186,13 @@ def main():
             st.switch_page("pages/industries_page.py")
 
     st.write("---")
-    # Display the target section on the left sidebar
-    st.markdown("### Wanna Go Sustainable?")
-    if st.button("Set Target", key="target_section"):
-        st.session_state['current_score'] = current_score
-        st.session_state['portfolio'] = portfolio
-        st.switch_page("pages/target_section.py")
 
+    st.session_state['current_score'] = current_score
+
+        
 
 if __name__ == "__main__":
-    if st.button("Back to Home"):
-        st.switch_page("Landing.py")
+
     if 'username' in st.session_state and st.session_state.username is not None:
         username = st.session_state.get('username')
         current_portfolio = get_portfolio(username)
@@ -193,3 +203,7 @@ if __name__ == "__main__":
     else:
         st.warning("Please login to get your portfolio insights")
 
+    authenticated_menu_user()
+    # back to home
+    if st.button("Back to Home"):
+        st.switch_page("Landing.py")

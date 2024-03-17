@@ -1,0 +1,14 @@
+credentials:
+  usernames:
+    AAPL:
+      credits_wallet: 99
+      money_wallet: 976.0
+      name: Apple Inc.
+      password: $2b$12$cmEM4odrQqtPOyC8Fi2NkOeLfWYvSHkIxKI5aNDL8epLXwillrgc6
+      ticker: AAPL
+    GOOGL:
+      credits_wallet: 5
+      money_wallet: 1024.0
+      name: Alphabet Inc.
+      password: $2b$12$vB3UOb2uc81nq6Szjv1uYOf/9XIWEvI7dy/pZLDVy4x1ZKhRK3.MS
+      ticker: GOOGL

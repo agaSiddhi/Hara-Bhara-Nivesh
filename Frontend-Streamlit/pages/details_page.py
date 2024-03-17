@@ -70,7 +70,5 @@ def main():
 
 
 if __name__ == "__main__":
-    # back to home
-    if st.button("Back to Home"):
-        st.switch_page("Landing.py")
     main()
+

@@ -8,9 +8,43 @@ layout = "centered"
 
 selection = None
 
-landing_images = ['assets/landing_investor.jpg','assets/landing_company.webp']
+landing_images = ['../assets/landing_investor.svg','../assets/landing_company.svg']
 
 page_title=["What is Sustainable Investing?","Introduction to Carbon Credit Marketplace"]
+
+st.session_state.role=None
+
+# sidebar page links
+def authenticated_menu_user():
+    st.sidebar.empty()
+    st.sidebar.page_link("pages/1_Listings.py", label="Companies List")
+    st.sidebar.page_link("pages/2_PortfolioAnalyser.py", label="Portfolio Analyser")
+    if 'username' in st.session_state and st.session_state.username is not None:
+        authenticator = st.session_state.get('authenticator')
+        st.sidebar.page_link("pages/8_UserAccount.py", label="My Account")
+        st.sidebar.page_link("pages/12_SellStocks.py", label="Sell Shares")
+        st.sidebar.page_link("pages/13_UploadPortfolio.py", label="Upload External Portfolio")
+        st.sidebar.page_link("pages/14_TargetSection.py", label="Set Target")
+        with st.sidebar:
+            authenticator.logout('Logout', 'main', key='unique_key')     
+    else:
+        st.sidebar.page_link("pages/5_LoginUser.py", label="Login")
+        st.sidebar.page_link("pages/6_SignupUser.py", label="Signup")        
+        
+# sidebar page links
+def authenticated_menu_company():
+    st.sidebar.empty()
+    st.sidebar.page_link("pages/3_CarbonCredit.py", label="List your Credits")
+    st.sidebar.page_link("pages/4_AuctionPage.py", label="Credits Auction")
+    if 'username' in st.session_state and st.session_state.username is not None:
+        authenticator = st.session_state.get('authenticator')
+        st.sidebar.page_link("pages/11_CompanyAccount.py", label="My Account")
+        with st.sidebar:
+            authenticator.logout('Logout', 'main', key='unique_key')     
+    else:
+        st.sidebar.page_link("pages/9_LoginCompany.py", label="Login")
+        st.sidebar.page_link("pages/10_SignupCompany.py", label="Signup")     
+
 
 content = ["""
     Sustainable investing, also known as socially responsible investing (SRI) 
@@ -40,7 +74,7 @@ process = ["""
 
 def main():
 
-    st.set_page_config(initial_sidebar_state="collapsed",page_title=title, page_icon=page_icon, layout=layout)
+    st.set_page_config(page_title=title, page_icon=page_icon, layout=layout)
 
     st.markdown(
         """
@@ -60,16 +94,25 @@ def main():
         options=["Investor", "Company","Insights"],
         icons=["people-fill", "building-fill","bar-chart-fill"],  # https://icons.getbootstrap.com/
         orientation="horizontal",
+        styles={    
+        "nav-link": {"font-size": "20px", "text-align": "center", "margin":"0px", "--hover-color": "#ffffff"},
+        "nav-link-selected": {"background-color": "#2B8C0C"},
+        }   
     )
 
     if selected=="Investor":
+        authenticated_menu_user()
         selection=0
     
     if selected == 'Company':
+        authenticated_menu_company()
         selection=1
         
+    if selected == 'Insights':
+        selection=2
+        
     # Header Section
-    st.markdown("<h1 style='text-align: center; color: #FF4B4B'>Welcome to Hara Bhara Nivesh</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center; color: #2B8C0C'>Welcome to Hara Bhara Nivesh</h1>", unsafe_allow_html=True)
     st.markdown("<h3 style='text-align: center;'>Invest in a better future!</h3>", unsafe_allow_html=True)
     
     # Sample image URLs
@@ -79,64 +122,7 @@ def main():
     st.image(image_url, caption=None, use_column_width=True)
 
     st.markdown("---")
-
-    if selected=="Investor":
-        
-        col1, col2, col3, col4 = st.columns([1.8,2,1.2,0.8])  
-
-        with col1:
-            if st.button("Companies List"):
-                st.switch_page("pages/1_Listings.py")
-
-        with col2:
-            if st.button("Portfolio Analyser"):
-                st.switch_page("pages/2_PortfolioAnalyser.py")
-
-        if 'username' in st.session_state and st.session_state.username is not None:
-            username = st.session_state.get('username')
-            authenticator = st.session_state.get('authenticator')
-            with col3:
-                if st.button("My Account"):
-                    st.switch_page("pages/8_UserAccount.py")
-            with col4:
-                authenticator.logout('Logout', 'main', key='unique_key')     
-        else:            
-            with col3:
-                if st.button("Login"):
-                    st.switch_page("pages/5_LoginUser.py")
-            with col4:
-                if st.button("Signup"):
-                    st.switch_page("pages/6_SignupUser.py")
-                    
-    if selected == 'Company':
-        
-        col1, col2, col3, col4 = st.columns([1.8,2,1.6,1])  
-
-        with col1:
-            if st.button("List your Credits"):
-                st.switch_page("pages/3_CarbonCredit.py")
-
-        with col2:
-            if st.button("Credits Auction"):
-                st.switch_page("pages/4_AuctionPage.py")
-
-        if 'username' in st.session_state and st.session_state.username is not None:
-            username = st.session_state.get('username')
-            authenticator = st.session_state.get('authenticator')
-            with col3:
-                if st.button("My Account"):
-                    st.switch_page("pages/11_CompanyAccount.py")
-            with col4:
-                authenticator.logout('Logout', 'main', key='unique_key')     
-        else:            
-            with col3:
-                if st.button("Login"):
-                    st.switch_page("pages/9_LoginCompany.py")
-            with col4:
-                if st.button("Signup"):
-                    st.switch_page("pages/10_SignupCompany.py")
-                    
-        
+                         
     add_vertical_space(2)
         
     # Introduction 
@@ -151,10 +137,10 @@ def main():
     st.write("Explore some of our top sustainable investment options:")
     # Add images of featured investments
     images = [
-        'assets/apple.jpeg',
-        'assets/tesla.jpeg',
-        'assets/gs.webp',
-        'assets/nike.jpeg'
+        '../assets/apple.jpeg',
+        '../assets/tesla.jpeg',
+        '../assets/gs.webp',
+        '../assets/nike.jpeg'
     ]
     col1, col2, col3, col4 = st.columns(4)
     col1.image(images[0],caption=None)
@@ -202,8 +188,6 @@ def main():
         """,
         unsafe_allow_html=True
     )
-
-        
 
 
 if __name__ == "__main__":

@@ -24,6 +24,7 @@ authenticator = stauth.Authenticate(
     user_data['preauthorized']
 )
 
+
 def main():
     # Render the login module
     name, authentication_status, username = authenticator.login()
@@ -36,8 +37,10 @@ def main():
         st.warning('Please enter your username and password')
 
 if __name__ == "__main__":
+
+    main()
+    
     # back to home
     if st.button("Back to Home"):
         st.switch_page("Landing.py")
-    main()
 

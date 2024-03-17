@@ -5,7 +5,7 @@ cookie:
 credentials:
   usernames:
     chopra_01:
-      balance: 9768
+      balance: 9728
       current_portfolio:
         Amount:
         - 10
@@ -17,12 +17,18 @@ credentials:
         - 2
         - 12
         - 12
+        - 3
+        - 5
+        - 12
         Date:
         - 29-05-2022
         - 29-06-2023
         - 29-07-2023
         - 29-08-2023
         - 29-01-2024
+        - 29-02-2024
+        - 29-02-2024
+        - 29-02-2024
         - 29-02-2024
         - 29-02-2024
         - 29-02-2024
@@ -36,6 +42,9 @@ credentials:
         - Sell
         - Sell
         - Buy
+        - Buy
+        - Sell
+        - Sell
         - Buy
         Price/Quote:
         - 133
@@ -47,6 +56,9 @@ credentials:
         - 10
         - 10
         - 11
+        - 10
+        - 10
+        - 10
         Ticker:
         - FB
         - AAPL
@@ -57,6 +69,9 @@ credentials:
         - AAPL
         - AAPL
         - FB
+        - AAPL
+        - AAPL
+        - AAPL
       email: ojaswichopra06@gmail.com
       name: Ojaswi Chopra
       password: $2b$12$eXnheMHl7WT1iyp/v1cuQu/h1iGl2Kt7DybFWPaxlhVqXwfmoPd8O
@@ -65,7 +80,13 @@ credentials:
         - 2
         - 12
         - 12
+        - 3
+        - 5
+        - 12
         Date:
+        - 29-02-2024
+        - 29-02-2024
+        - 29-02-2024
         - 29-02-2024
         - 29-02-2024
         - 29-02-2024
@@ -73,18 +94,30 @@ credentials:
         - Sell
         - Buy
         - Buy
+        - Sell
+        - Sell
+        - Buy
         Price/Quote:
         - 10
         - 10
         - 11
+        - 10
+        - 10
+        - 10
         Ticker:
         - AAPL
         - AAPL
         - FB
+        - AAPL
+        - AAPL
+        - AAPL
         Wallet Balance:
         - 10020
         - 9900
         - 9768
+        - 9798
+        - 9848
+        - 9728
     mchopra:
       balance: 10000
       current_portfolio: null

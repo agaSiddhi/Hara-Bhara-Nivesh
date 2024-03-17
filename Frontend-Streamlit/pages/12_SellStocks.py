@@ -15,6 +15,23 @@ curr_price = {
 'NFLX':54,
 }
 
+# sidebar page links
+def authenticated_menu_user():
+    st.sidebar.empty()
+    st.sidebar.page_link("pages/1_Listings.py", label="Companies List")
+    st.sidebar.page_link("pages/2_PortfolioAnalyser.py", label="Portfolio Analyser")
+    if 'username' in st.session_state and st.session_state.username is not None:
+        authenticator = st.session_state.get('authenticator')
+        st.sidebar.page_link("pages/8_UserAccount.py", label="My Account")
+        st.sidebar.page_link("pages/12_SellStocks.py", label="Sell Shares")
+        st.sidebar.page_link("pages/13_UploadPortfolio.py", label="Upload External Portfolio")
+        st.sidebar.page_link("pages/14_TargetSection.py", label="Set Target")
+        with st.sidebar:
+            authenticator.logout('Logout', 'main', key='unique_key')     
+    else:
+        st.sidebar.page_link("pages/5_LoginUser.py", label="Login")
+        st.sidebar.page_link("pages/6_SignupUser.py", label="Signup")  
+        
 # Function to read YAML file
 def read_yaml(filename):
     try:
@@ -133,12 +150,14 @@ def main():
         sell_stock(shares, company_details, quantity)
 
 if __name__ == "__main__":
-    # back to home
-    if st.button("Back to Home"):
-        st.switch_page("Landing.py")
     if 'username' in st.session_state and st.session_state.username is not None:
         username = st.session_state.get('username')
         shares = st.session_state.get('shares')
         main()
     else:
         st.warning("Login to buy stocks")
+        
+    authenticated_menu_user()
+    # back to home
+    if st.button("Back to Home"):
+        st.switch_page("Landing.py")

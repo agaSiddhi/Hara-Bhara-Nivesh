@@ -15,9 +15,6 @@ company_mapping = company_service.return_company_name_from_ticker()
 
 def main():
 
-    if st.button("Back to Home"):
-            st.switch_page("Landing.py")
-
     category = st.session_state['category']
     stocks = st.session_state['stocks']
     # print(category)
@@ -54,10 +51,16 @@ def main():
         col2.write(f"Average Score: {score}")
 
     st.write('---')
-    if st.button("Go back"):
-        st.switch_page("pages/2_PortfolioAnalyser.py")
 
 
 if __name__ == "__main__":
     main()
+    col1,col2 = st.columns(2)
+    
+    if col1.button("Back to Home"):
+        st.switch_page("Landing.py")
+        
+    if col2.button("Go back"):
+        st.switch_page("pages/2_PortfolioAnalyser.py")
+
 

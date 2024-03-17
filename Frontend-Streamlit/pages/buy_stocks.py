@@ -140,12 +140,16 @@ def main():
         buy_stock(username, quantity, company_id)
 
 if __name__ == "__main__":
-    # back to home
-    if st.button("Back to Home"):
-        st.switch_page("Landing.py")
+    col1,col2 = st.columns(2)
     if 'username' in st.session_state and st.session_state.username is not None:
         username = st.session_state.get('username')
         company_name = st.session_state.get('company')
         main()
+        if col2.button("Go Back"):
+            st.switch_page("pages/details_page.py")
     else:
         st.warning("Login to buy stocks")
+        # back to home
+    
+    if col1.button("Back to Home"):
+        st.switch_page("Landing.py")

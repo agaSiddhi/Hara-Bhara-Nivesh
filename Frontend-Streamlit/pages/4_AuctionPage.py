@@ -28,6 +28,20 @@ def get_maximum_bidding_price(company_ticker):
 def filter_companies(search_query, data):
     return data[data['Name'].str.contains(search_query, case=False)]
 
+# sidebar page links
+def authenticated_menu_company():
+    st.sidebar.empty()
+    st.sidebar.page_link("pages/3_CarbonCredit.py", label="List your Credits")
+    st.sidebar.page_link("pages/4_AuctionPage.py", label="Credits Auction")
+    if 'username' in st.session_state and st.session_state.username is not None:
+        authenticator = st.session_state.get('authenticator')
+        st.sidebar.page_link("pages/11_CompanyAccount.py", label="My Account")
+        with st.sidebar:
+            authenticator.logout('Logout', 'main', key='unique_key')     
+    else:
+        st.sidebar.page_link("pages/9_LoginCompany.py", label="Login")
+        st.sidebar.page_link("pages/10_SignupCompany.py", label="Signup")    
+
 def main():
 
     # Load data from CSV file
@@ -102,13 +116,16 @@ def main():
 
 
 if __name__ == "__main__":
-    if st.button("Back to Home"):
-        st.switch_page("Landing.py")
     filename = "your_listing_file.csv"
     if os.path.exists(filename):
         main()
     else:
         st.warning("Auction Market is empty")
+    
+    authenticated_menu_company()
+    # back to home
+    if st.button("Back to Home"):
+        st.switch_page("Landing.py")
 
 
 
