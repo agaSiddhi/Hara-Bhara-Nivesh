@@ -153,8 +153,11 @@ def main():
 if __name__ == "__main__":
     if 'username' in st.session_state and st.session_state.username is not None:
         username = st.session_state.get('username')
-        shares = st.session_state.get('shares')
-        main()
+        if 'shares' in st.session_state:
+            shares = st.session_state.get('shares')
+            main()
+        else:
+            st.warning("Your portfolio is empty")
     else:
         st.warning("Login to buy stocks")
         

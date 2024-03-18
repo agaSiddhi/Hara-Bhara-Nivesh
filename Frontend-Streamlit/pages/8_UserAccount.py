@@ -102,7 +102,7 @@ def my_account():
         user_image_url = '../assets/username.jpeg'
         current_portfolio = user_service.get_portfolio_entry_for_user(username)
         stocks=None
-        if current_portfolio is not None:
+        if current_portfolio is not None and len(current_portfolio)>0:
             current_portfolio = pd.DataFrame(current_portfolio)
             current_portfolio['Date'] = pd.to_datetime(current_portfolio['Date'],infer_datetime_format=True)
             shares, stocks, invested, current = user_service.calculate_portfolio_balance(current_portfolio)
@@ -233,3 +233,5 @@ if __name__ == "__main__":
     # back to home
     if st.button("Back to Home"):
         st.switch_page("Landing.py")
+        
+        

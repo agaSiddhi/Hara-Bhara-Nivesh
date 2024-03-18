@@ -209,7 +209,7 @@ if __name__ == "__main__":
     if 'username' in st.session_state and st.session_state.username is not None:
         username = st.session_state.get('username')
         current_portfolio = user_service.get_portfolio_entry_for_user(username)
-        if current_portfolio is not None:
+        if current_portfolio is not None and len(current_portfolio)>0:
             main()
         else:
             st.warning("Your portfolio is empty. Kindly upload external portfolio or make transactions through our app.")

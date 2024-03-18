@@ -81,7 +81,11 @@ def main():
         
 
 if __name__ == "__main__":
-    main()
+    if 'current_score' in st.session_state:
+        main()
+    else:
+        st.warning('Your portfolio is empty. Build your portfolio to set targets.') 
+    
     authenticated_menu_user()
     # back to home
     if st.button("Back to Home"):
