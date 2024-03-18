@@ -42,54 +42,54 @@ def authenticated_menu_user():
         st.sidebar.page_link("pages/5_LoginUser.py", label="Login")
         st.sidebar.page_link("pages/6_SignupUser.py", label="Signup")  
         
-def get_name(username):
-    return user_data['credentials']['usernames'][username]['name']
+# def get_name(username):
+#     return user_data['credentials']['usernames'][username]['name']
 
-def get_mail(username):
-    return user_data['credentials']['usernames'][username]['email']
+# def get_mail(username):
+#     return user_data['credentials']['usernames'][username]['email']
 
-def get_walletBalance(username):
-    return user_data['credentials']['usernames'][username]['balance']
+# def get_walletBalance(username):
+#     return user_data['credentials']['usernames'][username]['balance']
 
 def get_transactionHistory(username):
     return user_data['credentials']['usernames'][username]['transaction_history']
 
-def get_portfolio(username):
-    return user_data['credentials']['usernames'][username]['current_portfolio']
+# def get_portfolio(username):
+#     return user_data['credentials']['usernames'][username]['current_portfolio']
 
-def calculate_portfolio_balance(data):
-    print(data)
-    # Initialize portfolio balance
-    portfolio_amount = []
-    portfolio_value = []
-    current_portfolio = 0
+# def calculate_portfolio_balance(data):
+#     print(data)
+#     # Initialize portfolio balance
+#     portfolio_amount = []
+#     portfolio_value = []
+#     current_portfolio = 0
     
-    dates = pd.date_range(start=min(data['Date']), end=max(data['Date']))
-    tickers = ['AAPL', 'GOOGL', 'MSFT', 'AMZN', 'FB','NFLX']
-    stocks = {ticker: 0 for ticker in tickers}
-    shares = {ticker: 0 for ticker in tickers}
+#     dates = pd.date_range(start=min(data['Date']), end=max(data['Date']))
+#     tickers = ['AAPL', 'GOOGL', 'MSFT', 'AMZN', 'FB','NFLX']
+#     stocks = {ticker: 0 for ticker in tickers}
+#     shares = {ticker: 0 for ticker in tickers}
     
     
-    prices = np.random.randint(100, 500, size=(len(dates), len(tickers)))  # Generating random prices -> this is something we ll get from the database
+#     prices = np.random.randint(100, 500, size=(len(dates), len(tickers)))  # Generating random prices -> this is something we ll get from the database
 
-    # Create the DataFrame
-    df = pd.DataFrame(prices, index=dates, columns=tickers)
+#     # Create the DataFrame
+#     df = pd.DataFrame(prices, index=dates, columns=tickers)
 
-    for index, row in data.iterrows():
-        current_value = 0
-        if row['Order Type'] == 'Buy':
-            current_portfolio += row['Amount'] * row['Price/Quote']
-            shares[row['Ticker']]+=row['Amount']
-        elif row['Order Type'] == 'Sell':
-            current_portfolio -= row['Amount'] * row['Price/Quote']
-            shares[row['Ticker']]-=row['Amount']
-        for ticker, value in shares.items():
-            current_value += value * df.loc[row['Date']][ticker]
+#     for index, row in data.iterrows():
+#         current_value = 0
+#         if row['Order Type'] == 'Buy':
+#             current_portfolio += row['Amount'] * row['Price/Quote']
+#             shares[row['Ticker']]+=row['Amount']
+#         elif row['Order Type'] == 'Sell':
+#             current_portfolio -= row['Amount'] * row['Price/Quote']
+#             shares[row['Ticker']]-=row['Amount']
+#         for ticker, value in shares.items():
+#             current_value += value * df.loc[row['Date']][ticker]
             
-    for ticker, amount in shares.items():
-        stocks[ticker]=amount*df.iloc[-1][ticker]
+#     for ticker, amount in shares.items():
+#         stocks[ticker]=amount*df.iloc[-1][ticker]
 
-    return shares,stocks, current_portfolio, current_value
+#     return shares,stocks, current_portfolio, current_value
 
 
 def my_account():
@@ -100,12 +100,12 @@ def my_account():
         authentication_status = st.session_state.get('authentication_status')
         authenticator = st.session_state.get('authenticator')
         user_image_url = '../assets/username.jpeg'
-        current_portfolio = get_portfolio(username)
+        current_portfolio = user_service.get_portfolio_entry_for_user(username)
         stocks=None
         if current_portfolio is not None:
             current_portfolio = pd.DataFrame(current_portfolio)
             current_portfolio['Date'] = pd.to_datetime(current_portfolio['Date'],infer_datetime_format=True)
-            shares, stocks, invested, current = calculate_portfolio_balance(current_portfolio)
+            shares, stocks, invested, current = user_service.calculate_portfolio_balance(current_portfolio)
         
         # --- NAVIGATION MENU ---
         selected = option_menu(
@@ -127,13 +127,13 @@ def my_account():
             with col1:
                 st.image(user_image_url, caption=username, use_column_width=True)
             
-            st.subheader(f"{get_name(username)}")
+            st.subheader(f"{user_service.get_name_from_username(username)}")
 
             col1, col2 = st.columns(2)
             with col1:
-                st.write(f"Email Address: {get_mail(username)}")
+                st.write(f"Email Address: {user_service.get_mail(username)}")
             with col2:
-                st.write(f"Wallet Balance : {get_walletBalance(username)}")
+                st.write(f"Wallet Balance : {user_service.get_wallet_balance(username)}")
             st.write("---")
             add_vertical_space(2)
             if stocks is not None:
