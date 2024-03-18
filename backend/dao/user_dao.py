@@ -171,6 +171,7 @@ class UserDao(CompanyDao):
             FROM Portfolio_entry WHERE username="{username}"; '''
         result=self.execute_query(query)
         df = pd.DataFrame(result, columns=["Amount", "Date", "Order Type", "Price/Quote", "Ticker"])
+        df = df.sort_values(by='Date')
         print(df)
         return df
     
@@ -197,9 +198,8 @@ class UserDao(CompanyDao):
         stocks = {ticker: 0 for ticker in tickers}
         shares = {ticker: 0 for ticker in tickers}
         
-        
+        current_value=0
         for index, row in data.iterrows():
-            current_value = 0
             if row['Order Type'] == 'Buy':
                 current_portfolio += row['Amount'] * row['Price/Quote']
                 shares[row['Ticker']]+=row['Amount']

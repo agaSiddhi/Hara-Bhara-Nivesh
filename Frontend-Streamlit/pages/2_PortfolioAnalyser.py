@@ -8,22 +8,23 @@ import yaml
 from yaml.loader import SafeLoader
 
 # Function to read YAML file
-def read_yaml(filename):
-    try:
-        with open(filename, 'r') as file:
-            data = yaml.load(file, Loader=SafeLoader)
-        return data
-    except FileNotFoundError:
-        return {}
+# def read_yaml(filename):
+#     try:
+#         with open(filename, 'r') as file:
+#             data = yaml.load(file, Loader=SafeLoader)
+#         return data
+#     except FileNotFoundError:
+#         return {}
     
-# Import the user details into your script
-user_data = read_yaml('user_details.yaml')
+# # Import the user details into your script
+# user_data = read_yaml('user_details.yaml')
 
-def get_portfolio(username):
-    return user_data['credentials']['usernames'][username]['current_portfolio']
+# def get_portfolio(username):
+#     return user_data['credentials']['usernames'][username]['current_portfolio']
 
 from backend.configuration import initialize_system
 company_service = initialize_system()[0]
+user_service= initialize_system()[1]
 
 def load_excel(file):
     df = pd.read_excel(file)
@@ -57,13 +58,25 @@ def main():
     # Page title
     
     st.title('Investment Portfolio Analyzer')
-    
-    portfolio = pd.DataFrame(current_portfolio)
+    portfolio=current_portfolio
+    # portfolio = pd.DataFrame(current_portfolio)
+    print("tralalala")
+    print(portfolio)
+    print("tralaala")
     portfolio['Date'] = pd.to_datetime(portfolio['Date'],infer_datetime_format=True)
     ## ----- Price and Score History
 
     # Price History
     stocks, portfolio = company_service.calculate_portfolio_balance(portfolio)
+    # print(stocks)
+    # print("who let the dogs out")
+    # print(portfolio)
+    # portfolio = portfolio.sort_values(by='Date')
+    portfolio['Invested Amount'] = pd.to_numeric(portfolio['Invested Amount'], errors='coerce')
+    column_dtype = portfolio['Invested Amount'].dtype
+    print("Data type of column 'column_name':", column_dtype)
+    column_dtype = portfolio['Portfolio Value'].dtype
+    print("Data type of column 'column_name':", column_dtype)
     fig1 = px.line(portfolio, x='Date', y=['Invested Amount', 'Portfolio Value'], 
             labels={'Date': 'Date', 'value': 'Amount/Value'}, 
             title='Portfolio Amount and Value Over Time')
@@ -195,7 +208,7 @@ if __name__ == "__main__":
 
     if 'username' in st.session_state and st.session_state.username is not None:
         username = st.session_state.get('username')
-        current_portfolio = get_portfolio(username)
+        current_portfolio = user_service.get_portfolio_entry_for_user(username)
         if current_portfolio is not None:
             main()
         else:

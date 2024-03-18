@@ -139,72 +139,72 @@ class CompanyDao:
         pivot_df = df.pivot(index="Date", columns="Ticker", values="Price")
         return pivot_df    
     
-    # def calculate_portfolio_score(self,data=None):
-    #     # Initialize portfolio score
-    #     portfolio_score = []
-    #     current_score = 0
+    def calculate_portfolio_score(self,data=None):
+        # Initialize portfolio score
+        portfolio_score = []
+        current_score = 0
         
-    #     query = f'''SELECT companyID, score, updatedAt
-    #             FROM ScoreHistory;'''
-    #     scoreData = self.execute_query(query)
-    #     df = pd.DataFrame(scoreData, columns=['tickers', 'score', 'dates'])
-    #     df['dates'] = pd.to_datetime(df['dates'])
-    #     df = df.pivot(index='dates', columns='tickers', values='score')
-    #     df = df.fillna(0)
+        query = f'''SELECT companyID, score, updatedAt
+                FROM ScoreHistory;'''
+        scoreData = self.execute_query(query)
+        df = pd.DataFrame(scoreData, columns=['tickers', 'score', 'dates'])
+        df['dates'] = pd.to_datetime(df['dates'])
+        df = df.pivot(index='dates', columns='tickers', values='score')
+        df = df.fillna(0)
         
-    #     for index, row in data.iterrows():
-    #         current_value = 0
-    #         if row['Order Type'] == 'Buy':
-    #             current_score += float(row['Amount']) * float(df.loc[row['Date']][row['Ticker']])
-    #         elif row['Order Type'] == 'Sell':
-    #             current_score -= float(row['Amount']) * float(df.loc[row['Date']][row['Ticker']])
-    #         portfolio_score.append(current_score)
+        for index, row in data.iterrows():
+            current_value = 0
+            if row['Order Type'] == 'Buy':
+                current_score += float(row['Amount']) * float(df.loc[row['Date']][row['Ticker']])
+            elif row['Order Type'] == 'Sell':
+                current_score -= float(row['Amount']) * float(df.loc[row['Date']][row['Ticker']])
+            portfolio_score.append(current_score)
 
-    #     data['Score'] = portfolio_score
-    #     return current_score, data 
+        data['Score'] = portfolio_score
+        return current_score, data 
     
     
-    # def calculate_portfolio_balance(self,data=None):
-    #     # Initialize portfolio balance
-    #     query = f'''SELECT companyID, price, updatedAt
-    #             FROM PriceHistory;'''
-    #     priceData = self.execute_query(query)
-    #     df = pd.DataFrame(priceData, columns=['tickers', 'price', 'dates'])
-    #     df['dates'] = pd.to_datetime(df['dates'])
-    #     df = df.pivot(index='dates', columns='tickers', values='price')
-    #     df = df.fillna(0)
+    def calculate_portfolio_balance(self,data=None):
+        # Initialize portfolio balance
+        query = f'''SELECT companyID, price, updatedAt
+                FROM PriceHistory;'''
+        priceData = self.execute_query(query)
+        df = pd.DataFrame(priceData, columns=['tickers', 'price', 'dates'])
+        df['dates'] = pd.to_datetime(df['dates'])
+        df = df.pivot(index='dates', columns='tickers', values='price')
+        df = df.fillna(0)
         
-    #     portfolio_amount = []
-    #     portfolio_value = []
-    #     current_portfolio = 0
+        portfolio_amount = []
+        portfolio_value = []
+        current_portfolio = 0
         
-    #     # dates = pd.date_range(start=min(data['Date']), end=max(data['Date']))
-    #     tickers = df.columns.to_numpy()
-    #     stocks = {ticker: 0 for ticker in tickers}
-    #     # prices = np.random.randint(100, 500, size=(len(dates), len(tickers)))  # Generating random prices -> this is something we ll get from the database
+        # dates = pd.date_range(start=min(data['Date']), end=max(data['Date']))
+        tickers = df.columns.to_numpy()
+        stocks = {ticker: 0 for ticker in tickers}
+        # prices = np.random.randint(100, 500, size=(len(dates), len(tickers)))  # Generating random prices -> this is something we ll get from the database
 
-    #     # Create the DataFrame
-    #     # df = pd.DataFrame(prices, index=dates, columns=tickers)
+        # Create the DataFrame
+        # df = pd.DataFrame(prices, index=dates, columns=tickers)
 
-    #     for index, row in data.iterrows():
-    #         current_value = 0
-    #         if row['Order Type'] == 'Buy':
-    #             current_portfolio += row['Amount'] * row['Price/Quote']
-    #             stocks[row['Ticker']]+=row['Amount']
-    #         elif row['Order Type'] == 'Sell':
-    #             current_portfolio -= row['Amount'] * row['Price/Quote']
-    #             stocks[row['Ticker']]-=row['Amount']
-    #         for ticker, value in stocks.items():
-    #             # print(type(value))
-    #             # print(type(df.loc[row['Date']][ticker]))
-    #             current_value += float(value) * float(df.loc[row['Date']][ticker])
-    #         portfolio_amount.append(current_portfolio)
-    #         portfolio_value.append(current_value)
+        for index, row in data.iterrows():
+            current_value = 0
+            if row['Order Type'] == 'Buy':
+                current_portfolio += row['Amount'] * row['Price/Quote']
+                stocks[row['Ticker']]+=row['Amount']
+            elif row['Order Type'] == 'Sell':
+                current_portfolio -= row['Amount'] * row['Price/Quote']
+                stocks[row['Ticker']]-=row['Amount']
+            for ticker, value in stocks.items():
+                # print(type(value))
+                # print(type(df.loc[row['Date']][ticker]))
+                current_value += float(value) * float(df.loc[row['Date']][ticker])
+            portfolio_amount.append(current_portfolio)
+            portfolio_value.append(current_value)
 
-    #     # Add 'Portfolio Amount' column to DataFrame
-    #     data['Invested Amount'] = portfolio_amount
-    #     data['Portfolio Value'] = portfolio_value 
-    #     return stocks,data
+        # Add 'Portfolio Amount' column to DataFrame
+        data['Invested Amount'] = portfolio_amount
+        data['Portfolio Value'] = portfolio_value 
+        return stocks,data
     
     def get_companies_for_fund_category(self):
         result_dict={}
