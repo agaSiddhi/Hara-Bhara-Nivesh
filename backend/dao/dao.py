@@ -386,5 +386,16 @@ class CompanyDao:
         filtered_companies = dict(sorted(filtered_companies.items(), key=lambda x: x[1]['score'], reverse=True))
         return filtered_companies
     
+    def add_company_signup_details(self, company_name, company_ticker, password, initial_money_wallet_balance, initial_credits_wallet_balance):
+        query = """
+            INSERT INTO companysignup (CompanyName, CompanyTicker, Password, InitialMoneyWalletBalance, InitialCreditsWalletBalance)
+            VALUES (%s, %s, %s, %s, %s)
+        """
+        params = (company_name, company_ticker, password, initial_money_wallet_balance, initial_credits_wallet_balance)
+        try:
+            self.execute_query(query, params)
+            print("Company signup details added successfully.")
+        except Exception as e:
+            print(f"Error adding company signup details: {e}")
 
 

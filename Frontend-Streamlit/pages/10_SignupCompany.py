@@ -2,7 +2,7 @@ import streamlit as st
 import re
 import yaml
 import streamlit_authenticator as stauth
-
+from backend.configuration import initialize_system
 
 # sidebar page links
 def authenticated_menu_company():
@@ -36,6 +36,8 @@ def read_yaml(filename):
         return data
     except FileNotFoundError:
         return {}
+
+company_service= initialize_system()[0]
 
 def company_signup():
     st.title("Company Sign Up")
@@ -72,6 +74,7 @@ def company_signup():
             }
 
             # Write company details to YAML file
+            company_service.return_add_new_company_signup(name,ticker, hashed_password[0],initial_money_wallet,initial_credits_wallet)
             write_to_yaml(company_data, 'company_details.yaml')
             st.success("You have successfully signed up as a company!")
         elif password != verify_password:

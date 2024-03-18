@@ -605,7 +605,6 @@ CREATE TABLE CompanySignup (
     CompanyName VARCHAR(255) NOT NULL,
     CompanyTicker VARCHAR(10) PRIMARY KEY,
     Password VARCHAR(255) NOT NULL,
-    VerifyPassword VARCHAR(255) NOT NULL,
     InitialMoneyWalletBalance DECIMAL(18, 2) DEFAULT 0,
     InitialCreditsWalletBalance DECIMAL(18, 2) DEFAULT 0
 );

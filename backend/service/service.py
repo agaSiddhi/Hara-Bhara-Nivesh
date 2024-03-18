@@ -91,7 +91,16 @@ class CompanyService:
         return self.company_dao.get_companies_by_industry(stocks,industry)
 
     def filter_companies(self,selected_categories, selected_sectors):
-        return self.company_dao.filter_companies(selected_categories,selected_sectors)       
+        return self.company_dao.filter_companies(selected_categories,selected_sectors)      
+
+    def return_add_new_company_signup(self, company_name,company_ticker,password,initial_money_wallet_balance,initial_credits_wallet_balance):
+        try:
+            # Call the DAO method to insert the new company into the database
+            self.company_dao.add_company_signup_details(company_name,company_ticker,password,initial_money_wallet_balance,initial_credits_wallet_balance)
+            return True  # Indicate success
+        except Exception as e:
+            print(f"Error adding new company: {e}")
+            return False  # Indicate failure
     
 class UserService:
     def __init__(self, user_dao):
