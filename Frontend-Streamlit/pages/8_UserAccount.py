@@ -148,30 +148,29 @@ def my_account():
 
             transaction_history = user_service.get_transaction_history(username)
             print(transaction_history)
-            if transaction_history is not None:                # Iterate over each transaction
+            if transaction_history is not None and len(transaction_history)>0:                # Iterate over each transaction
                 initial = 10000
                 i=1
-            for index, row in transaction_history.iterrows():
-                ticker = row['Ticker']
-                date = row['Date']
-                qty = row ['Amount']
-                type = row['Order Type']
-                price = row['Price/Quote']
-                if(type=='Buy'):
-                    diff=-qty*price
-                else:
-                    diff=qty*price
-                percent = diff/initial
-                balance=initial+diff
-                company_name = company_mapping[ticker]
-                st.write(date)
-                ui.metric_card(title=company_name, content=f"{qty} shares", description=f"{percent:.2%} Amount Left in Wallet: {balance}", key=f"card{i}")
-                initial=balance
-                add_vertical_space(2)
-                i=i+1
-            # st.write(transaction_history)
-        else:
-            st.warning("You haven't made any transactions yet!!")
+                for index, row in transaction_history.iterrows():
+                    ticker = row['Ticker']
+                    date = row['Date']
+                    qty = row ['Amount']
+                    type = row['Order Type']
+                    price = row['Price/Quote']
+                    if(type=='Buy'):
+                        diff=-qty*price
+                    else:
+                        diff=qty*price
+                    percent = diff/initial
+                    balance=initial+diff
+                    company_name = company_mapping[ticker]
+                    st.write(date)
+                    ui.metric_card(title=company_name, content=f"{qty} shares", description=f"{percent:.2%} Amount Left in Wallet: {balance}", key=f"card{i}")
+                    initial=balance
+                    add_vertical_space(2)
+                    i=i+1
+            else:
+                st.warning("You haven't made any transactions yet!!")
         
         
     else:

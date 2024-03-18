@@ -71,7 +71,7 @@ def main():
                 col1, col2 = st.columns([3, 1])
                 col1.markdown(f"#### {company_name}")
                 col1.write(f"{category} ● {sector}")
-                col2.markdown(f"##### Average score: {average_score}")
+                col2.markdown(f"##### Average score: {round(average_score,2)}")
                 st.write("---")
 
 
