@@ -4,23 +4,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import plotly.express as px
 import matplotlib.colors as mcolors
-import yaml
-from yaml.loader import SafeLoader
-
-# Function to read YAML file
-# def read_yaml(filename):
-#     try:
-#         with open(filename, 'r') as file:
-#             data = yaml.load(file, Loader=SafeLoader)
-#         return data
-#     except FileNotFoundError:
-#         return {}
-    
-# # Import the user details into your script
-# user_data = read_yaml('user_details.yaml')
-
-# def get_portfolio(username):
-#     return user_data['credentials']['usernames'][username]['current_portfolio']
 
 from backend.configuration import initialize_system
 company_service = initialize_system()[0]
@@ -59,24 +42,13 @@ def main():
     
     st.title('Investment Portfolio Analyzer')
     portfolio=current_portfolio
-    # portfolio = pd.DataFrame(current_portfolio)
-    print("tralalala")
-    print(portfolio)
-    print("tralaala")
     portfolio['Date'] = pd.to_datetime(portfolio['Date'],infer_datetime_format=True)
     ## ----- Price and Score History
 
     # Price History
     stocks, portfolio = company_service.calculate_portfolio_balance(portfolio)
-    # print(stocks)
-    # print("who let the dogs out")
-    # print(portfolio)
-    # portfolio = portfolio.sort_values(by='Date')
+
     portfolio['Invested Amount'] = pd.to_numeric(portfolio['Invested Amount'], errors='coerce')
-    column_dtype = portfolio['Invested Amount'].dtype
-    print("Data type of column 'column_name':", column_dtype)
-    column_dtype = portfolio['Portfolio Value'].dtype
-    print("Data type of column 'column_name':", column_dtype)
     fig1 = px.line(portfolio, x='Date', y=['Invested Amount', 'Portfolio Value'], 
             labels={'Date': 'Date', 'value': 'Amount/Value'}, 
             title='Portfolio Amount and Value Over Time')

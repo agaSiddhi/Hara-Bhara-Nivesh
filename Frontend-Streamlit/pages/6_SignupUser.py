@@ -2,7 +2,7 @@ import streamlit as st
 import re
 import yaml
 import streamlit_authenticator as stauth
-import pandas as pd
+
 
 
 # sidebar page links
@@ -70,7 +70,11 @@ def signup():
     email = st.text_input("Email")
     username = st.text_input("Username")
     password = st.text_input("Password", type="password")
-
+    age_options = ['<18','18-29','30-44','45-60','>60']
+    age = st.selectbox('Select your age range:', age_options)
+    country = st.text_input("Country")
+    gender_options = ['Female','Male', 'Others']
+    gender = st.selectbox("Select your Gender:", gender_options)
     # Button to submit the signup form
     if st.button("Sign Up"):
         # Validate if all fields are not empty
@@ -79,35 +83,10 @@ def signup():
             if validate_email(email):
                 # Hash the password
                 hashed_password = stauth.Hasher([password]).generate()
-                # binary_hashed_password = hashed_password[0].encode()
-
-                # Load existing data or create a new dictionary if the file doesn't exist
-                user_data = read_yaml()
-                if user_data is None:
-                    user_data = {}
-
-                if 'credentials' not in user_data:
-                    user_data['credentials'] = {'usernames': {}}
-                    user_data['cookie'] = {'expiry_days': 30,
-                                           'key': 'abc',
-                                           'name': 'cookie'}
-                    user_data['preauthorized'] = {'emails': ['o_chopra@ee.iitr.ac.in']}
                 
-                user_service.add_user_details(username, name, hashed_password[0])
+                user_service.add_user_details(username, name, hashed_password[0], age, country, gender)
                 user_service.add_user_email(username, email)
-                
-                
-                
-                # Add user details to the dictionary
-                user_data['credentials']['usernames'][username] = {
-                    'email': email,
-                    'name': name,
-                    'password': hashed_password[0],
-                    'balance': 10000,
-                }
 
-                # Write user details to YAML file
-                write_to_yaml(user_data)
                 st.success("You have successfully signed up!")
             else:
                 st.error("Please enter a valid email address.")

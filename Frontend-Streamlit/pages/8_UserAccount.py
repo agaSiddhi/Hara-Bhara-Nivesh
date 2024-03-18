@@ -147,7 +147,6 @@ def my_account():
             st.subheader(f"Transaction History")
 
             transaction_history = user_service.get_transaction_history(username)
-            print(transaction_history)
             if transaction_history is not None and len(transaction_history)>0:                # Iterate over each transaction
                 initial = 10000
                 i=1

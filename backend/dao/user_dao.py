@@ -27,8 +27,8 @@ class UserDao(CompanyDao):
             if not self.connection.autocommit:
                 self.connection.commit()
     
-    def add_user_details(self,username,name,password):
-        query= f'''INSERT INTO User (username, name, password, balance) VALUES ("{username}", "{name}", "{password}",{10000});'''
+    def add_user_details(self,username,name,password,age,country,gender):
+        query= f'''INSERT INTO User (username, name, password, balance, age, country, gender) VALUES ("{username}", "{name}", "{password}", {10000}, "{age}", "{country}", "{gender}");'''
         self.execute_query(query)
         
     def add_user_email(self,username,email):
@@ -38,21 +38,23 @@ class UserDao(CompanyDao):
     def get_user_data_dict(self):
         query='''SELECT * FROM User;'''
         user_data= self.execute_query(query)
-        print(user_data)
+
         
         query= '''SELECT * FROM User_mail;'''
-        print(query)
+
         user_mail_data=self.execute_query(query)
-        print("okay_lmao")
-        print(user_mail_data)
+        
         
         user_data_dict={}
         for row in user_data:
-            username, balance, name, password = row
+            username, balance, name, password, age, country, gender = row
             user_data_dict[username] = {
                 'name': name,
                 'password': password,
-                'balance': float(balance)
+                'balance': float(balance),
+                'age': age,
+                'country': country,
+                'gender': gender
             }
         for row in user_mail_data:
             username, email = row
@@ -64,14 +66,13 @@ class UserDao(CompanyDao):
     
     def add_uploaded_file_to_current_portfolio(self,uploaded_file):
         for _, row in uploaded_file.iterrows():
-            print(row)
-            # print(type(row['Date']))
+          
             
             query = f'''
                 INSERT INTO Portfolio_entry (date, order_type, Ticker, amount, price_quote,username)
                 VALUES ("{row['Date'].strftime('%Y-%m-%d')}","{row['Order Type']}", "{row['Ticker']}", {float(row['Amount'])}, {float(row['Price/Quote'])}, "{st.session_state.get('username')}");
             '''
-            # print(query)
+      
             self.execute_query(query)
     
     def get_wallet_balance(self,username):
@@ -79,8 +80,7 @@ class UserDao(CompanyDao):
                 FROM User
                 WHERE username = "{username}";'''
         result=self.execute_query(query)
-        print("wallet")
-        print(result)
+
         return result[0][0]
             
     def update_transaction_history(self,company_id,quantity,price_per_stock,order_type):
@@ -103,8 +103,6 @@ class UserDao(CompanyDao):
             ORDER BY updatedAt DESC
             LIMIT 1;'''
         result=self.execute_query(query)
-        print("curr_price")
-        print(result)
         return result[0][0]
  
     def update_wallet(self,user_wallet):
@@ -172,29 +170,21 @@ class UserDao(CompanyDao):
         result=self.execute_query(query)
         df = pd.DataFrame(result, columns=["Amount", "Date", "Order Type", "Price/Quote", "Ticker"])
         df = df.sort_values(by='Date')
-        print(df)
+
         return df
     
     def get_name_from_username(self,username):
         query=f'''SELECT name FROM User WHERE username="{username}";'''
         result=self.execute_query(query)
     
-    # def get_price_data_for_all_companies(self):
-    #     query = f'''SELECT updatedAt, companyID, price
-    #             FROM PriceHistory;'''
-    #     priceData = self.execute_query(query)
-    #     df = pd.DataFrame(priceData, columns=["Date", "Ticker", "Price"])
-    #     pivot_df = df.pivot(index="Date", columns="Ticker", values="Price")
-    #     return pivot_df
+
     
     def calculate_portfolio_balance(self,data):
         current_portfolio = 0
         
         df=self.get_price_data_for_all_companies()
         tickers = df.columns.to_list()
-        print(df)
-        print("hehe")
-        print(tickers)
+
         stocks = {ticker: 0 for ticker in tickers}
         shares = {ticker: 0 for ticker in tickers}
         

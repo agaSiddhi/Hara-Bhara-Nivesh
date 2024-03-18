@@ -61,7 +61,6 @@ def main():
         if suggestions_button:
             placeholder.empty()
             filtered_companies =company_service.filter_companies(selected_categories,selected_sectors)
-            print(filtered_companies)
             for company_id, company_info in filtered_companies.items():
                 company_name = company_id  # Assuming the company name is the same as the ID
                 category = company_info['category']

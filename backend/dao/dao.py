@@ -39,12 +39,12 @@ class CompanyDao:
         descriptions = {}
         rank = 1
         for row in results:
-            # print(list(row[1:]))
+
             temp = list(row[1:])
             temp.append(rank)
             descriptions[row[0]] = temp
             rank += 1
-            # print(descriptions)
+
         return descriptions
     
     def get_companyID_from_company_name(self,company_name=None):
@@ -63,7 +63,7 @@ class CompanyDao:
         except Exception as e:
             print(e)
         
-        # print(result)
+
         return result
     
     def get_industry_description_from_companyID(self,companyID=None):
@@ -135,7 +135,7 @@ class CompanyDao:
                 FROM PriceHistory;'''
         priceData = self.execute_query(query)
         df = pd.DataFrame(priceData, columns=["Date", "Ticker", "Price"])
-        print(df)
+
         pivot_df = df.pivot(index="Date", columns="Ticker", values="Price")
         return pivot_df    
     
@@ -195,8 +195,7 @@ class CompanyDao:
                 current_portfolio -= row['Amount'] * row['Price/Quote']
                 stocks[row['Ticker']]-=row['Amount']
             for ticker, value in stocks.items():
-                # print(type(value))
-                # print(type(df.loc[row['Date']][ticker]))
+
                 current_value += float(value) * float(df.loc[row['Date']][ticker])
             portfolio_amount.append(current_portfolio)
             portfolio_value.append(current_value)
@@ -216,7 +215,7 @@ class CompanyDao:
             result=self.execute_query(query)
             result = [tup[0] for tup in result]
             result_dict[category]=result
-            # print(result_dict)
+
         df = pd.DataFrame.from_dict(result_dict, orient='index').transpose()
         return result_dict
     
@@ -231,9 +230,9 @@ class CompanyDao:
                 result=self.execute_query(query)
                 result = [tup[0] for tup in result]
                 result_dict[category]=result
-                # print(result_dict)
+
             df = pd.DataFrame.from_dict(result_dict, orient='index').transpose()
-            # print(result_dict)
+
             return result_dict
     
     def get_company_name_from_ticker(self):
@@ -243,16 +242,13 @@ class CompanyDao:
         return ticker_company_dict
         
     def get_average_score_from_ticker(self, companyID=None):
-        print(companyID)
-        print(type(companyID))
+
         if isinstance(companyID,list):
             companyID=companyID[0]
-        # print(companyID)
+
         query=f'SELECT AVG(score) FROM ScoreHistory WHERE companyID="{companyID}";'
         result=self.execute_query(query)
-        # print(query)
-        
-        # print(result)
+
         return float(result[0][0])
 
     def get_companies(self,stocks,category):
@@ -268,14 +264,14 @@ class CompanyDao:
 
     def get_ticker_percentages(self,companies):
         # Getting composition of each ticker in out category
-        # print(companies)
+
         total_amount = sum(amount for company in companies for amount in company.values())
-        # print(total_amount)
+
         ticker_percentages = {}
         for company in companies:
-            # print(company)
+
             for ticker, amount in company.items():
-                # print(ticker)
+
                 if not ticker:
                     break
                 percentage = (amount / total_amount) 
@@ -299,7 +295,7 @@ class CompanyDao:
             FROM Company c
             JOIN Industry i ON c.industryID = i.industryID;'''
         result = self.execute_query(query)
-        # print(result)
+
         return result
     
     def update_wallet_balance(self, ticker, updated_wallet_balance):
@@ -317,7 +313,7 @@ class CompanyDao:
                 JOIN Industry i ON c.industryID = i.industryID
                 WHERE c.companyID = "{companyID}"; '''
         result = self.execute_query(query)
-        # print(result)
+
         return result
 
     def get_wallet_balance_from_companyID(self,companyID=None):
@@ -325,7 +321,7 @@ class CompanyDao:
                 FROM Company
                 WHERE companyID = "{companyID}"; '''
         result = self.execute_query(query)
-        # print(result)
+
         return result
     
     def add_new_company(self, ticker, name, total_assets, revenue, employee_count, founded_year, industry_id, fund_category):
@@ -347,7 +343,7 @@ class CompanyDao:
     def get_industry_id_by_keyword(self, industry_keyword):
         query = f'''SELECT industryID FROM Industry WHERE keyword = "{industry_keyword}";'''
         result = self.execute_query(query)
-        # print(result)
+
         return result
     
     def get_companies_by_industry(self,stocks,industry):
@@ -365,16 +361,14 @@ class CompanyDao:
             GROUP BY companyID """
         result=self.execute_query(query)
         score_dict = {company_id: average_score for company_id, average_score in result}
-        print(score_dict)
+
         return score_dict
 
     def filter_companies(self,selected_categories, selected_sectors):
         data1=  self.get_companies_for_fund_category()
         data2= self.get_companies_for_industry_category()
         scores_dict=self.get_score_and_ticker_map()
-        print(scores_dict)
-        print(data1)
-        print(data2)
+
         filtered_companies = {}
         for category in selected_categories:
             if category in data1:

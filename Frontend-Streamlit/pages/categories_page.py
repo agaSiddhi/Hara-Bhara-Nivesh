@@ -1,8 +1,5 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
-import random
-import string
 
 from backend.configuration import initialize_system
 company_service = initialize_system()[0]
@@ -17,8 +14,7 @@ def main():
 
     category = st.session_state['category']
     stocks = st.session_state['stocks']
-    # print(category)
-    # print(stocks)
+
     companies = company_service.return_companies(stocks,category)
 
     ticker_percentages = company_service.return_ticker_percentages(companies)

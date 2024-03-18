@@ -106,8 +106,8 @@ class UserService:
     def __init__(self, user_dao):
         self.user_dao = user_dao
     
-    def add_user_details(self,username, name,password):
-        return self.user_dao.add_user_details(username,name,password)
+    def add_user_details(self,username, name,password,age, country, gender):
+        return self.user_dao.add_user_details(username,name,password,age, country, gender)
     
     def add_user_email(self,username, email):
         return self.user_dao.add_user_email(username,email)
