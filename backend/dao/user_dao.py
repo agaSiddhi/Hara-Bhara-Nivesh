@@ -4,8 +4,9 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 from datetime import datetime
+from backend.dao.dao import CompanyDao
 
-class UserDao:
+class UserDao(CompanyDao):
     def __init__(self, host, user, password, database):
         self.connection = mysql.connector.connect(
             host=host,
@@ -115,7 +116,8 @@ class UserDao:
     def get_mail(self,username):
         query=f'''SELECT email from User_mail
                 WHERE username="{username}";'''
-        self.execute_query(query)
+        result=self.execute_query(query)
+        return result[0][0]
         
     # Function to handle the buy functionality
     def buy_stock(self,username, quantity, company_id):
@@ -175,24 +177,27 @@ class UserDao:
     def get_name_from_username(self,username):
         query=f'''SELECT name FROM User WHERE username="{username}";'''
         result=self.execute_query(query)
-        
-    def calculate_portfolio_balance(data):
-    # Initialize portfolio balance
-        portfolio_amount = []
-        portfolio_value = []
+    
+    # def get_price_data_for_all_companies(self):
+    #     query = f'''SELECT updatedAt, companyID, price
+    #             FROM PriceHistory;'''
+    #     priceData = self.execute_query(query)
+    #     df = pd.DataFrame(priceData, columns=["Date", "Ticker", "Price"])
+    #     pivot_df = df.pivot(index="Date", columns="Ticker", values="Price")
+    #     return pivot_df
+    
+    def calculate_portfolio_balance(self,data):
         current_portfolio = 0
         
-        dates = pd.date_range(start=min(data['Date']), end=max(data['Date']))
-        tickers = ['AAPL', 'GOOGL', 'MSFT', 'AMZN', 'FB','NFLX']
+        df=self.get_price_data_for_all_companies()
+        tickers = df.columns.to_list()
+        print(df)
+        print("hehe")
+        print(tickers)
         stocks = {ticker: 0 for ticker in tickers}
         shares = {ticker: 0 for ticker in tickers}
         
         
-        prices = np.random.randint(100, 500, size=(len(dates), len(tickers)))  # Generating random prices -> this is something we ll get from the database
-
-        # Create the DataFrame
-        df = pd.DataFrame(prices, index=dates, columns=tickers)
-
         for index, row in data.iterrows():
             current_value = 0
             if row['Order Type'] == 'Buy':
@@ -209,7 +214,5 @@ class UserDao:
 
         return shares,stocks, current_portfolio, current_value
     
-    
-            
-                
-        
+    def get_transaction_history(self,username):
+        pass
