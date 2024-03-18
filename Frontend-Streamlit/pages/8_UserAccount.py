@@ -41,56 +41,6 @@ def authenticated_menu_user():
     else:
         st.sidebar.page_link("pages/5_LoginUser.py", label="Login")
         st.sidebar.page_link("pages/6_SignupUser.py", label="Signup")  
-        
-# def get_name(username):
-#     return user_data['credentials']['usernames'][username]['name']
-
-# def get_mail(username):
-#     return user_data['credentials']['usernames'][username]['email']
-
-# def get_walletBalance(username):
-#     return user_data['credentials']['usernames'][username]['balance']
-
-def get_transactionHistory(username):
-    return user_data['credentials']['usernames'][username]['transaction_history']
-
-# def get_portfolio(username):
-#     return user_data['credentials']['usernames'][username]['current_portfolio']
-
-# def calculate_portfolio_balance(data):
-#     print(data)
-#     # Initialize portfolio balance
-#     portfolio_amount = []
-#     portfolio_value = []
-#     current_portfolio = 0
-    
-#     dates = pd.date_range(start=min(data['Date']), end=max(data['Date']))
-#     tickers = ['AAPL', 'GOOGL', 'MSFT', 'AMZN', 'FB','NFLX']
-#     stocks = {ticker: 0 for ticker in tickers}
-#     shares = {ticker: 0 for ticker in tickers}
-    
-    
-#     prices = np.random.randint(100, 500, size=(len(dates), len(tickers)))  # Generating random prices -> this is something we ll get from the database
-
-#     # Create the DataFrame
-#     df = pd.DataFrame(prices, index=dates, columns=tickers)
-
-#     for index, row in data.iterrows():
-#         current_value = 0
-#         if row['Order Type'] == 'Buy':
-#             current_portfolio += row['Amount'] * row['Price/Quote']
-#             shares[row['Ticker']]+=row['Amount']
-#         elif row['Order Type'] == 'Sell':
-#             current_portfolio -= row['Amount'] * row['Price/Quote']
-#             shares[row['Ticker']]-=row['Amount']
-#         for ticker, value in shares.items():
-#             current_value += value * df.loc[row['Date']][ticker]
-            
-#     for ticker, amount in shares.items():
-#         stocks[ticker]=amount*df.iloc[-1][ticker]
-
-#     return shares,stocks, current_portfolio, current_value
-
 
 def my_account():
 
@@ -196,29 +146,32 @@ def my_account():
             # show transaction history
             st.subheader(f"Transaction History")
 
-            transaction_history = get_transactionHistory(username)
-
-            if transaction_history is not None:
-                transaction_history = pd.DataFrame(transaction_history, columns=['Date','Order Type','Ticker','Amount','Price/Quote','Wallet Balance'])
-                # Iterate over each transaction
+            transaction_history = user_service.get_transaction_history(username)
+            print(transaction_history)
+            if transaction_history is not None:                # Iterate over each transaction
                 initial = 10000
                 i=1
-                for index, row in transaction_history.iterrows():
-                    ticker = row['Ticker']
-                    date = row['Date']
-                    qty = row ['Amount']
-                    wallet = row['Wallet Balance']
-                    diff = wallet-initial
-                    percent = diff/initial
-                    company_name = company_mapping[ticker]
-                    st.write(date)
-                    ui.metric_card(title=company_name, content=f"{qty} shares", description=f"{percent:.2%} Amount Left in Wallet: {wallet}", key=f"card{i}")
-                    initial=wallet
-                    add_vertical_space(2)
-                    i=i+1
-                # st.write(transaction_history)
-            else:
-                st.warning("You haven't made any transactions yet!!")
+            for index, row in transaction_history.iterrows():
+                ticker = row['Ticker']
+                date = row['Date']
+                qty = row ['Amount']
+                type = row['Order Type']
+                price = row['Price/Quote']
+                if(type=='Buy'):
+                    diff=-qty*price
+                else:
+                    diff=qty*price
+                percent = diff/initial
+                balance=initial+diff
+                company_name = company_mapping[ticker]
+                st.write(date)
+                ui.metric_card(title=company_name, content=f"{qty} shares", description=f"{percent:.2%} Amount Left in Wallet: {balance}", key=f"card{i}")
+                initial=balance
+                add_vertical_space(2)
+                i=i+1
+            # st.write(transaction_history)
+        else:
+            st.warning("You haven't made any transactions yet!!")
         
         
     else:
