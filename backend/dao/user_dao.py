@@ -215,4 +215,11 @@ class UserDao(CompanyDao):
         return shares,stocks, current_portfolio, current_value
     
     def get_transaction_history(self,username):
-        pass
+        query = f'''
+        SELECT amount, date, order_type, price_quote, Ticker
+        FROM Transaction_history
+        WHERE username = '{username}';'''
+        result= self.execute_query(query)
+        df = pd.DataFrame(result, columns=["Amount", "Date", "Order Type", "Price/Quote", "Ticker"])
+        df = df.sort_values(by='Date')
+        return df

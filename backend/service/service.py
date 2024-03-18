@@ -132,12 +132,17 @@ class UserService:
     
     def get_wallet_balance(self,username):
         return self.user_dao.get_wallet_balance(username)
+    
     def get_portfolio_entry_for_user(self,username):
         return self.user_dao.get_portfolio_entry_for_user(username)
+    
     def get_name_from_username(self,username):
         return self.user_dao.get_name_from_username(username)
     
     def calculate_portfolio_balance(self,data):
         return self.user_dao.calculate_portfolio_balance(data)
+    
+    def get_transaction_history(self,username):
+        return self.user_dao.get_transaction_history(username)
         
         
