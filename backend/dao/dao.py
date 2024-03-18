@@ -385,4 +385,6 @@ class CompanyDao:
         filtered_companies = {company: details for company, details in filtered_companies.items() if details['sector'] is not None}
         filtered_companies = dict(sorted(filtered_companies.items(), key=lambda x: x[1]['score'], reverse=True))
         return filtered_companies
+    
+
 

@@ -5,7 +5,7 @@ import random
 import string
 
 from backend.configuration import initialize_system
-company_service = initialize_system()
+company_service = initialize_system()[0]
 
 # Create DataFrame from dictionary
 companies_sorted = company_service.return_companies_for_industry_category()

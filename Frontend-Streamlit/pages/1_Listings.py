@@ -2,7 +2,7 @@ import streamlit as st
 
 # Define a list of companies
 from backend.configuration import initialize_system
-company_service = initialize_system()
+company_service = initialize_system()[0]
 details = company_service.return_company_name_and_description()
 
 # sidebar page links

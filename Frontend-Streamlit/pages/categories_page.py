@@ -5,7 +5,7 @@ import random
 import string
 
 from backend.configuration import initialize_system
-company_service = initialize_system()
+company_service = initialize_system()[0]
 
 companies_sorted = company_service.return_companies_for_fund_category()
 companies_sorted=pd.DataFrame.from_dict(companies_sorted, orient='index').transpose()

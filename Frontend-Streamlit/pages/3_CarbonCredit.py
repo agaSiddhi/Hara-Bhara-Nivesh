@@ -6,7 +6,7 @@ from yaml import SafeLoader
 
 
 from backend.configuration import initialize_system
-company_service = initialize_system()
+company_service = initialize_system()[0]
 
 # Mock cap values for industries
 industry_caps = {

@@ -3,6 +3,8 @@ from yaml.loader import SafeLoader
 import streamlit_authenticator as stauth
 import streamlit as st
 
+from backend.configuration import initialize_system
+user_service = initialize_system()[1]
 # Function to read YAML file
 def read_yaml(filename):
     try:
@@ -15,13 +17,16 @@ def read_yaml(filename):
 # Import the YAML file into your script
 user_data=read_yaml('user_details.yaml')
 
+# print(user_data['credentials'])
+# print(user_service.get_user_data_dict())
 # Create the authenticator object
 authenticator = stauth.Authenticate(
-    user_data['credentials'],
-    user_data['cookie']['name'],
-    user_data['cookie']['key'],
-    user_data['cookie']['expiry_days'],
-    user_data['preauthorized']
+    user_service.get_user_data_dict(),
+    # user_data['credentials'],
+    'company_cookie',
+    'company_key',
+   30,
+    {}
 )
 
 

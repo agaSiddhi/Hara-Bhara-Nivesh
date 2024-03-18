@@ -3,6 +3,9 @@ import yaml
 from yaml.loader import SafeLoader
 import pandas as pd
 
+from backend.configuration import initialize_system
+user_service = initialize_system()[1]
+
 # Function to read YAML file
 def read_yaml(filename):
     try:
@@ -35,19 +38,28 @@ def authenticated_menu_user():
 @st.cache_data
 def save_uploaded_file(uploaded_file,username):
     uploaded = pd.read_excel(uploaded_file)
+    # print(uploaded)
+    user_service.add_uploaded_file_to_current_portfolio(uploaded)
     uploaded['Date'] = pd.to_datetime(uploaded['Date'],infer_datetime_format=True)
     current = user_data['credentials']['usernames'][username]['current_portfolio']
+    # print(current)
     current = pd.DataFrame(current, columns=['Date','Order Type','Ticker','Amount','Price/Quote'])
     current['Date'] = pd.to_datetime(current['Date'],infer_datetime_format=True)
     # Concatenate the two DataFrames
     new = pd.concat([current,uploaded])
     df = new.sort_values(by='Date')
+    # print(df)
     #Using dt.strftime() method by passing the specific string format as an argument.
     df['Date'] = df['Date'].dt.strftime('%d-%m-%Y')
     user_data['credentials']['usernames'][username]['current_portfolio']=df.to_dict('list')
     # Save the updated YAML file
     with open('user_details.yaml', 'w') as file:
         yaml.dump(user_data, file)
+        
+    user_service.add_uploaded_file_to_current_portfolio(uploaded)
+    
+    
+    
 
 def main():
 

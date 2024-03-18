@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 from backend.configuration import initialize_system
 
-company_service = initialize_system()
+company_service = initialize_system()[0]
 
 # sidebar page links
 def authenticated_menu_user():

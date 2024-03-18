@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 from backend.configuration import initialize_system
 
 def main():
-        company_service = initialize_system()
+        company_service = initialize_system()[0]
         details = company_service.return_company_name_and_description()
 
         company_name = st.session_state['company']

@@ -23,7 +23,7 @@ def get_portfolio(username):
     return user_data['credentials']['usernames'][username]['current_portfolio']
 
 from backend.configuration import initialize_system
-company_service = initialize_system()
+company_service = initialize_system()[0]
 
 def load_excel(file):
     df = pd.read_excel(file)

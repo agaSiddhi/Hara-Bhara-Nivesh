@@ -22,6 +22,27 @@ def authenticated_menu_user():
         st.sidebar.page_link("pages/5_LoginUser.py", label="Login")
         st.sidebar.page_link("pages/6_SignupUser.py", label="Signup")  
         
+from backend.configuration import initialize_system
+user_service= initialize_system()[1]
+
+
+# sidebar page links
+def authenticated_menu_user():
+    st.sidebar.empty()
+    st.sidebar.page_link("pages/1_Listings.py", label="Companies List")
+    st.sidebar.page_link("pages/2_PortfolioAnalyser.py", label="Portfolio Analyser")
+    if 'username' in st.session_state and st.session_state.username is not None:
+        authenticator = st.session_state.get('authenticator')
+        st.sidebar.page_link("pages/8_UserAccount.py", label="My Account")
+        st.sidebar.page_link("pages/12_SellStocks.py", label="Sell Shares")
+        st.sidebar.page_link("pages/13_UploadPortfolio.py", label="Upload External Portfolio")
+        st.sidebar.page_link("pages/14_TargetSection.py", label="Set Target")
+        with st.sidebar:
+            authenticator.logout('Logout', 'main', key='unique_key')     
+    else:
+        st.sidebar.page_link("pages/5_LoginUser.py", label="Login")
+        st.sidebar.page_link("pages/6_SignupUser.py", label="Signup")  
+        
 # Function to validate email format
 def validate_email(email):
     pattern = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
@@ -71,15 +92,18 @@ def signup():
                                            'key': 'abc',
                                            'name': 'cookie'}
                     user_data['preauthorized'] = {'emails': ['o_chopra@ee.iitr.ac.in']}
-
+                
+                user_service.add_user_details(username, name, hashed_password[0])
+                user_service.add_user_email(username, email)
+                
+                
+                
                 # Add user details to the dictionary
                 user_data['credentials']['usernames'][username] = {
                     'email': email,
                     'name': name,
                     'password': hashed_password[0],
                     'balance': 10000,
-                    'transaction_history':None,
-                    'current_portfolio': None
                 }
 
                 # Write user details to YAML file

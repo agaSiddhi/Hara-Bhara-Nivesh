@@ -92,3 +92,39 @@ class CompanyService:
 
     def filter_companies(self,selected_categories, selected_sectors):
         return self.company_dao.filter_companies(selected_categories,selected_sectors)       
+    
+class UserService:
+    def __init__(self, user_dao):
+        self.user_dao = user_dao
+    
+    def add_user_details(self,username, name,password):
+        return self.user_dao.add_user_details(username,name,password)
+    
+    def add_user_email(self,username, email):
+        return self.user_dao.add_user_email(username,email)
+    
+    def get_user_data_dict(self):
+        return self.user_dao.get_user_data_dict()
+    
+    def add_uploaded_file_to_current_portfolio(self,uploaded_file):
+        return self.user_dao.add_uploaded_file_to_current_portfolio(uploaded_file)
+    
+    def buy_stock(self,username, quantity, company_id):
+        return self.user_dao.buy_stock(username,quantity,company_id)
+    
+    def get_current_price_for_ticker(self,company_id):
+        return self.user_dao.get_current_price_for_ticker(company_id)
+    
+    def sell_stock(self,username, quantity, company_id):
+        return self.user_dao.sell_stock(username,quantity,company_id)
+    
+    def get_mail(self,username):
+        return self.user_dao.get_mail(username)
+    
+    def get_wallet_balance(self,username):
+        return self.user_dao.get_wallet_balance(username)
+    def get_portfolio_entry_for_user(self,username):
+        return self.user_dao.get_portfolio_entry_for_user(username)
+    def get_name_from_username(self,username):
+        return self.user_dao.get_name_from_username(username)
+        

@@ -7,12 +7,25 @@ from streamlit_extras.add_vertical_space import add_vertical_space
 import streamlit_shadcn_ui as ui
 from streamlit_option_menu import option_menu
 from backend.configuration import initialize_system
+# company names from ticker 
+company_service=initialize_system()[0]
+user_service=initialize_system()[1]
+company_mapping = company_service.return_company_name_from_ticker()
 
+# Function to read YAML file
+def read_yaml(filename):
+    try:
+        with open(filename, 'r') as file:
+            data = yaml.load(file, Loader=SafeLoader)
+        return data
+    except FileNotFoundError:
+        return {}
+    
+    
+# Import the user details into your script
 
-company_service = initialize_system()
+user_data = read_yaml('user_details.yaml')
 
-
-# sidebar page links
 def authenticated_menu_user():
     st.sidebar.empty()
     st.sidebar.page_link("pages/1_Listings.py", label="Companies List")
@@ -29,21 +42,6 @@ def authenticated_menu_user():
         st.sidebar.page_link("pages/5_LoginUser.py", label="Login")
         st.sidebar.page_link("pages/6_SignupUser.py", label="Signup")  
         
-# company names from ticker 
-company_mapping = {'AAPL': 'Apple','GOOGL':'Google','MSFT':'Microsoft','AMZN':'Amazon','FB':'Facebook','NFLX':'Netflix'}
-
-# Function to read YAML file
-def read_yaml(filename):
-    try:
-        with open(filename, 'r') as file:
-            data = yaml.load(file, Loader=SafeLoader)
-        return data
-    except FileNotFoundError:
-        return {}
-    
-# Import the user details into your script
-user_data = read_yaml('user_details.yaml')
-
 def get_name(username):
     return user_data['credentials']['usernames'][username]['name']
 
@@ -60,6 +58,7 @@ def get_portfolio(username):
     return user_data['credentials']['usernames'][username]['current_portfolio']
 
 def calculate_portfolio_balance(data):
+    print(data)
     # Initialize portfolio balance
     portfolio_amount = []
     portfolio_value = []
