@@ -1,5 +1,4 @@
 import streamlit as st
-import random
 import pandas as pd
 from backend.configuration import initialize_system
 

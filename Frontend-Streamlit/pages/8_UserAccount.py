@@ -6,6 +6,11 @@ import numpy as np
 from streamlit_extras.add_vertical_space import add_vertical_space
 import streamlit_shadcn_ui as ui
 from streamlit_option_menu import option_menu
+from backend.configuration import initialize_system
+
+
+company_service = initialize_system()
+
 
 # sidebar page links
 def authenticated_menu_user():
@@ -96,8 +101,13 @@ def my_account():
         authentication_status = st.session_state.get('authentication_status')
         authenticator = st.session_state.get('authenticator')
         user_image_url = '../assets/username.jpeg'
-
-                
+        current_portfolio = get_portfolio(username)
+        stocks=None
+        if current_portfolio is not None:
+            current_portfolio = pd.DataFrame(current_portfolio)
+            current_portfolio['Date'] = pd.to_datetime(current_portfolio['Date'],infer_datetime_format=True)
+            shares, stocks, invested, current = calculate_portfolio_balance(current_portfolio)
+        
         # --- NAVIGATION MENU ---
         selected = option_menu(
             menu_title=None,
@@ -127,16 +137,37 @@ def my_account():
                 st.write(f"Wallet Balance : {get_walletBalance(username)}")
             st.write("---")
             add_vertical_space(2)
+            if stocks is not None:
+                st.subheader("Your ideal portfolio should look like this!")
+                add_vertical_space(2)
+                for ticker,amount in stocks.items():
+                    if amount<=0:
+                        continue
+                    category = company_service.return_fund_category_from_ticker(ticker)
+                    sector = company_service.return_industry_keyword_from_companyID(ticker)
+                    selected_category=[category[0][0]]
+                    selected_sector=[sector[0][0]]
+                    filtered_companies =company_service.filter_companies(selected_category,selected_sector)
+                    col1,col2 = st.columns([3,1])
+                    if len(filtered_companies)!=0:
+                        suggested_ticker=next(iter(filtered_companies))
+                        details=filtered_companies[suggested_ticker]
+                        score = round(details[next(iter(details))],2)
+                        col1.markdown(f"### {suggested_ticker}")
+                    else:
+                        score = round(company_service.return_average_score_from_ticker(ticker),2)
+                        col1.markdown(f"#### {suggested_ticker}")
+                        
+                    col2.markdown(f'##### {score}')
+                    st.write('---')
+                        
+                    
         
         if selected=="Investments":
             # show investment summary
             st.subheader(f"Investments")
 
-            current_portfolio = get_portfolio(username)
-            if current_portfolio is not None:
-                current_portfolio = pd.DataFrame(current_portfolio)
-                current_portfolio['Date'] = pd.to_datetime(current_portfolio['Date'],infer_datetime_format=True)
-                shares, stocks, invested, current = calculate_portfolio_balance(current_portfolio)
+            if stocks is not None:
                 st.session_state.shares=shares
                 returns = (current-invested)/invested
                 col1, col2, col3 = st.columns(3)
