@@ -1,8 +1,6 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
-import random
-import string
+
 
 from backend.configuration import initialize_system
 company_service = initialize_system()[0]
@@ -12,41 +10,6 @@ companies_sorted = company_service.return_companies_for_industry_category()
 companies_sorted= pd.DataFrame.from_dict(companies_sorted, orient='index').transpose()
 company_mapping =company_service.return_company_name_from_ticker()
 
-
-# Assuming you have a function to map tickers to their categories
-def get_category(ticker):
-    # Implement your logic here to determine the category for a given ticker
-    # This is a placeholder function, you need to replace it with your actual logic
-    if ticker in ['AAPL', 'GOOGL', 'MSFT']:
-        return 'Equity'
-    elif ticker == 'AMZN':
-        return 'Hybrid'
-    elif ticker == 'FB':
-        return 'Debt'
-    else :
-        return 'Others'
-
-# Assuming you have a function to map tickers to their industries
-def get_industry(ticker):
-    # Implement your logic here to determine the category for a given ticker
-    # This is a placeholder function, you need to replace it with your actual logic
-    if ticker in ['AAPL', 'GOOGL', 'MSFT']:
-        return 'Capital Goods'
-    elif ticker == 'GOOG':
-        return 'HealthCare'
-    elif ticker == 'AMZN':
-        return 'Financial'
-    elif ticker == 'FB':
-        return 'Services'
-    else :
-        return 'Other'
-
-def get_companies(stocks,industry):
-    companies = []
-    for ticker, amount in stocks.items():
-        if industry == get_industry(ticker):
-            companies.append({ticker: amount})
-    return companies
 
 def get_ticker_percentages(companies):
     # Getting composition of each ticker in out industry
@@ -68,8 +31,7 @@ def main():
     stocks = st.session_state['stocks']
 
     companies = company_service.return_companies_by_industry(stocks,industry)
-    # print(companies)
-    # print("jajaha")
+
     ticker_percentages = company_service.return_ticker_percentages(companies)
 
     if len(ticker_percentages)==0:

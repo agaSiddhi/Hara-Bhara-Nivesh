@@ -61,7 +61,6 @@ def main():
         if suggestions_button:
             placeholder.empty()
             filtered_companies =company_service.filter_companies(selected_categories,selected_sectors)
-            print(filtered_companies)
             for company_id, company_info in filtered_companies.items():
                 company_name = company_id  # Assuming the company name is the same as the ID
                 category = company_info['category']
@@ -71,7 +70,7 @@ def main():
                 col1, col2 = st.columns([3, 1])
                 col1.markdown(f"#### {company_name}")
                 col1.write(f"{category} ● {sector}")
-                col2.markdown(f"##### Average score: {average_score}")
+                col2.markdown(f"##### Average score: {round(average_score,2)}")
                 st.write("---")
 
 
@@ -81,7 +80,11 @@ def main():
         
 
 if __name__ == "__main__":
-    main()
+    if 'current_score' in st.session_state:
+        main()
+    else:
+        st.warning('Your portfolio is empty. Build your portfolio to set targets.') 
+    
     authenticated_menu_user()
     # back to home
     if st.button("Back to Home"):

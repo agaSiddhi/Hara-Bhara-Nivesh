@@ -28,6 +28,11 @@ credentials:
       name: Rudra Surana
       password: $2b$12$C44avY7wcuDHABtJQTRTQOmUjPeXvtp5SDCyro0kwC1NTnRjhVXQi
       transaction_history: null
+    rudra_1025:
+      balance: 10000
+      email: suranarudra1025@gmail.com
+      name: Rudra Surana
+      password: $2b$12$7MQUSUgqGkIfi4WRHtCUR.ln7pjcmu/OCGeIdi/vTxUVwQjnQmjj6
     via:
       balance: 10000
       current_portfolio: null

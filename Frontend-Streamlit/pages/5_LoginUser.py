@@ -1,25 +1,9 @@
-import yaml
-from yaml.loader import SafeLoader
 import streamlit_authenticator as stauth
 import streamlit as st
 
 from backend.configuration import initialize_system
 user_service = initialize_system()[1]
-# Function to read YAML file
-def read_yaml(filename):
-    try:
-        with open(filename, 'r') as file:
-            data = yaml.load(file, Loader=SafeLoader)
-        return data
-    except FileNotFoundError:
-        return {}
 
-# Import the YAML file into your script
-user_data=read_yaml('user_details.yaml')
-
-# print(user_data['credentials'])
-# print(user_service.get_user_data_dict())
-# Create the authenticator object
 authenticator = stauth.Authenticate(
     user_service.get_user_data_dict(),
     # user_data['credentials'],

@@ -50,7 +50,6 @@ def get_credits_balance(ticker):
 
 def add_emissions(ticker, emissions):
     industry = company_service.return_industry_keyword_from_companyID(companyID=ticker)
-    # print("industry = ",industry[0][0])
     cap = industry_caps.get(industry[0][0], 0)
 
     if emissions <= cap:

@@ -1,8 +1,5 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
-from datetime import datetime, timedelta
-# from backend.database import return_companyID_from_company_name,return_company_details_from_companyID, return_industry_description_from_companyID,return_score_history_from_companyID,return_price_history_from_companyID
 from backend.configuration import initialize_system
 
 def main():
@@ -49,10 +46,10 @@ def main():
 
         # Sorting merged DataFrame by date
         merged_df.sort_values(by='Date', inplace=True)
-        # print(merged_df)
+
         merged_df = merged_df.fillna(0)
 
-        print(merged_df.columns)
+
 
         # Plotting
         st.line_chart(merged_df, x="Date", y=["Price", "Score"], color=['#FF0000', '#0000FF'])
