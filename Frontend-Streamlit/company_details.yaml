@@ -12,3 +12,15 @@ credentials:
       name: Alphabet Inc.
       password: $2b$12$vB3UOb2uc81nq6Szjv1uYOf/9XIWEvI7dy/pZLDVy4x1ZKhRK3.MS
       ticker: GOOGL
+    MYN:
+      credits_wallet: 199
+      money_wallet: 500000
+      name: MYNTRA
+      password: $2b$12$UalufnLUg2gkfQVAmD8K2uWaQhXz.zU6E7pbeQTGDP2t6yo/h.rey
+      ticker: MYN
+    SIP:
+      credits_wallet: 200
+      money_wallet: 500000
+      name: SID PLAZA
+      password: $2b$12$Vk3wWDQGl.HOv8UGXY16FuVuPyjxrcWlOrEorJrf/0jmYWoXGsJXi
+      ticker: SIP

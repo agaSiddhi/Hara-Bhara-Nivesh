@@ -407,7 +407,7 @@ class CompanyDao:
     
     def add_company_signup_details(self, company_name, company_ticker, password, initial_money_wallet_balance, initial_credits_wallet_balance):
         query = """
-            INSERT INTO companysignup (CompanyName, CompanyTicker, Password, InitialMoneyWalletBalance, InitialCreditsWalletBalance)
+            INSERT INTO CompanySignup (CompanyName, CompanyTicker, Password, InitialMoneyWalletBalance, InitialCreditsWalletBalance)
             VALUES (%s, %s, %s, %s, %s)
         """
         params = (company_name, company_ticker, password, initial_money_wallet_balance, initial_credits_wallet_balance)
