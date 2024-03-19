@@ -14,12 +14,17 @@ def update_final_esg_score(df):
         social = df.loc[i,'Social']
         governance = df.loc[i,'Governance']
         esg_ratings = df.loc[i,'ESG_ratings']
+        count = 0
         w1 = assign_weights(environment)
+        if w1 == 1: count+=1
         w2 = assign_weights(social)
+        if w2 == 1: count+=1
         w3 = assign_weights(governance)
+        if w3 == 1: count+=1
         w4 = assign_weights(esg_ratings)
+        if w4 == 1: count+=1
         final_esg_score = w1 * environment + w2 * social + w3 * governance + w4 * esg_ratings
-        df.loc[i, 'Final_ESG_Score'] = final_esg_score
+        df.loc[i, 'Final_ESG_Score'] = final_esg_score/count
     return df
 
 def update_historical_esg_score(df, last_occurrence):
