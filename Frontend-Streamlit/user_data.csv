@@ -2,9 +2,9 @@ user_id,age,investment_type,country,continent,gender,asset_type
 1,24,A,USA,North America,male,A
 2,30,B,Canada,North America,male,B
 3,35,C,India,Asia,female,C
-4,28,A,France,Europe,female,B
+4,28,A,France,Europe,others,B
 5,42,D,India,Asia,male,B
-6,31,B,Japan,Asia,female,C
+6,31,B,Japan,Asia,others,C
 7,26,C,Australia,Australia,female,D
 8,39,A,Japan,Asia,female,B
 9,22,D,South Africa,Africa,female,D

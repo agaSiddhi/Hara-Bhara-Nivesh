@@ -3,6 +3,7 @@ import mysql.connector
 import pandas as pd
 import numpy as np
 from datetime import datetime
+import yfinance as yf
 
 class CompanyDao:
     def __init__(self, host, user, password, database):
@@ -25,6 +26,20 @@ class CompanyDao:
             if not self.connection.autocommit:
                 self.connection.commit()
             
+    def get_price_at_date(ticker, date):
+        # Fetch historical data for the ticker
+        ticker_data = yf.Ticker(ticker)
+        
+        # Get historical prices for the specific date
+        historical_data = ticker_data.history(start=date, end=date)
+        
+        # Extract the closing price
+        if not historical_data.empty:
+            price = historical_data['Close'].iloc[0]
+            return price
+        else:
+            return None
+    
     def get_industry_descriptions(self):
         query = "SELECT industryID, description FROM Industry;"
         results = self.execute_query(query)

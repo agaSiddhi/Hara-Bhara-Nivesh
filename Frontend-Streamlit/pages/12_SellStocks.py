@@ -1,16 +1,6 @@
 import streamlit as st
 from backend.configuration import initialize_system
 
-curr_price = {
-'AAPL':10,
-'GOOGL':20,
-'MSFT':30,
-'AMZN':40,
-'JPM':50,
-'BRK.A':12,
-'FB':11,
-'NFLX':54,
-}
 
 # sidebar page links
 def authenticated_menu_user():
