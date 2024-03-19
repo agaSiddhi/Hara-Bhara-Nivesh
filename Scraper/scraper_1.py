@@ -50,9 +50,9 @@ def save_to_csv(data, filename='articles.csv'):
                 'Heading': article['heading'],
                 'Text': article['text'],
                 'Datetime': article['datetime']
-            })
+        })
 
-def scrape_and_save_articles(base_url ='https://www.esginvesting.co.uk/category/news/companies/page/', total_pages = 27, filename='Scraper/Article_data.csv'):
+def scrape_and_save_articles_base(base_url ='https://www.esginvesting.co.uk/category/news/companies/page/', total_pages = 27, filename='Scraper/Article_data.csv'):
     all_articles_data = []
     for page_number in range(1, total_pages + 1):
         url = f"{base_url}{page_number}/"
@@ -62,3 +62,19 @@ def scrape_and_save_articles(base_url ='https://www.esginvesting.co.uk/category/
     save_to_csv(all_articles_data, filename)
 
 
+def scrape_and_save_articles_daily(base_url ='https://www.esginvesting.co.uk/category/news/companies/page/', total_pages = 1, filename='Scraper/Article_data.csv'):
+    all_articles_data = []
+    
+    # Get yesterday's date
+    yesterday_date = datetime.datetime.now().date() - datetime.timedelta(days=1)
+
+    for page_number in range(1, total_pages + 1):
+        url = f"{base_url}{page_number}/"
+        articles_data = scrape_articles(url)
+        
+        # Filter articles with yesterday's date
+        yesterday_articles = [article for article in articles_data if article['datetime'].date() == yesterday_date]
+        
+        all_articles_data.extend(yesterday_articles)
+
+    save_to_csv(all_articles_data, filename)

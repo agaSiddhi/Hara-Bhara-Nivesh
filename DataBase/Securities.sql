@@ -608,3 +608,33 @@ CREATE TABLE CompanySignup (
     InitialMoneyWalletBalance DECIMAL(18, 2) DEFAULT 0,
     InitialCreditsWalletBalance DECIMAL(18, 2) DEFAULT 0
 );
+
+CREATE TABLE Article_data (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    Heading VARCHAR(255),
+    Text TEXT,
+    Datetime DATETIME,
+    Company VARCHAR(255),
+    Category VARCHAR(50),
+    Score FLOAT,
+    Score_blob FLOAT
+);
+
+CREATE TABLE esg_ratings (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    Company VARCHAR(255),
+    ESG_Risk_Rating VARCHAR(255),
+    Score FLOAT
+);
+
+CREATE TABLE esg_data (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    company_name VARCHAR(255),
+    date DATE,
+    environment FLOAT,
+    social FLOAT,
+    governance FLOAT,
+    esg_ratings VARCHAR(255),
+    final_esg_score FLOAT,
+    historical_esg_score FLOAT
+);
