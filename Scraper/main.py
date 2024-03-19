@@ -1,43 +1,52 @@
-import pandas as pd
 import schedule
 import time
-import requests
-from bs4 import BeautifulSoup
-import datetime
-import http.client
-from backend.dao.dao import CompanyDao
-import configparser
-import csv
-import os
-from datetime import datetime
-import nltk
-nltk.download('vader_lexicon')
-from nltk.sentiment.vader import SentimentIntensityAnalyzer
-from textblob import TextBlob
-from Scraper.abbreviations import abbreviations_to_full_names
-from Scraper.keywords import  environment_keywords, social_keywords, governance_keywords
-from Scraper.scraper_1 import scrape_and_save_articles , scrape_articles , save_to_csv
-from Scraper.scraper_2 import scrape_sustainalytics_data , parse_and_save_to_csv
-from Scraper.clean import process_articles_and_save 
-from Scraper.scoring_algo import process_and_save_data , normalize_score
-from Scraper.push_to_database import push_esg_data_to_database, read_config
 
-def run_weekly_tasks():
-    print("Running weekly tasks...")
-    #Scrape Articles 
-    scrape_and_save_articles()
-    #Clean the Data and Extract the Sentiment
+from Scraper.scraper_1 import scrape_and_save_articles_daily
+from Scraper.clean import process_articles_and_save
+from Scraper.scraper_2 import scrape_sustainalytics_data
+from Scraper.scoring_algo import scoring_algorithm
+from Scraper.push_to_database import (
+    push_esg_data_to_database,
+    push_article_data_to_database,
+    push_ratings_data_to_database,
+)
+from backend.dao.dao import read_config
+
+
+def run_daily_tasks():
+    print("Running daily tasks...")
+
+    # Scrape Articles
+    scrape_and_save_articles_daily()
+
+    # Clean the Data and Extract the Sentiment
     process_articles_and_save()
-    #Scrape Live ESG Ratings
+
+    # Store these articles in the database
+    push_article_data_to_database()
+
+    # Scrape Live ESG Ratings
     scrape_sustainalytics_data()
-    #Use data in the scoring algorithm
-    process_and_save_data()
-    #Save the data
+
+    # Store these ratings in the database
+    push_ratings_data_to_database()
+
+    # Apply the scoring algorithm
+    scoring_algorithm()
+
+    # Store the Final Scores in the database
     push_esg_data_to_database()
-    print("Weekly tasks completed.")
 
-schedule.every().monday.at("12:00").do(run_weekly_tasks)
+    print("Daily tasks completed.")
 
-while True:
-    schedule.run_pending()
-    time.sleep(1)
+
+def main():
+    schedule.every().day.at("12:00").do(run_daily_tasks)
+
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
+
+
+if __name__ == "__main__":
+    main()
