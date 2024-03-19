@@ -110,6 +110,7 @@ def main():
         
     if selected == 'Insights':
         selection=2
+        st.switch_page("pages/15_Insights.py")
         
     # Header Section
     st.markdown("<h1 style='text-align: center; color: #2B8C0C'>Welcome to Hara Bhara Nivesh</h1>", unsafe_allow_html=True)

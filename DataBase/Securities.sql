@@ -59,7 +59,10 @@ CREATE TABLE User(
 username VARCHAR(255) PRIMARY KEY,
 balance DECIMAL(15, 2) NOT NULL,
 name VARCHAR(255) NOT NULL,
-password VARCHAR(60) NOT NULL
+password VARCHAR(60) NOT NULL,
+age ENUM ('<18', '18-29', '30-44','45-60','>60'),
+country VARCHAR(50),
+gender ENUM ('Female', 'Male', 'Others')
 );
 
 CREATE TABLE User_mail(
@@ -109,6 +112,14 @@ bid DECIMAL(15, 2),
 FOREIGN KEY (bidder) REFERENCES Company(companyID),
 FOREIGN KEY (bidID) REFERENCES Bid(bidID),
 PRIMARY KEY(bidder,bidID)
+);
+
+CREATE TABLE CompanySignup (
+CompanyName VARCHAR(255) NOT NULL,
+CompanyTicker VARCHAR(10) PRIMARY KEY,
+Password VARCHAR(255) NOT NULL,
+InitialMoneyWalletBalance DECIMAL(18, 2) DEFAULT 0,
+InitialCreditsWalletBalance DECIMAL(18, 2) DEFAULT 0
 );
 
 INSERT INTO Industry (keyword, description) VALUES
@@ -601,10 +612,6 @@ WHERE c.companyID = 1;
 -- END$$
 -- DELIMITER ;
 
-CREATE TABLE CompanySignup (
-    CompanyName VARCHAR(255) NOT NULL,
-    CompanyTicker VARCHAR(10) PRIMARY KEY,
-    Password VARCHAR(255) NOT NULL,
-    InitialMoneyWalletBalance DECIMAL(18, 2) DEFAULT 0,
-    InitialCreditsWalletBalance DECIMAL(18, 2) DEFAULT 0
-);
+SELECT * FROM Transaction_history;
+
+
