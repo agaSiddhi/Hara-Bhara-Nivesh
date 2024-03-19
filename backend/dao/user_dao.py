@@ -7,12 +7,13 @@ from datetime import datetime
 from backend.dao.dao import CompanyDao
 
 class UserDao(CompanyDao):
-    def __init__(self, host, user, password, database):
+    def __init__(self, host, user, password, database,port):
         self.connection = mysql.connector.connect(
             host=host,
             user=user,
             password=password,
-            database=database
+            database=database,
+            port = port
         )
         
     def execute_query(self, query, params=None):
