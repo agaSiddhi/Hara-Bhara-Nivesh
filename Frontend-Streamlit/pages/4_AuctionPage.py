@@ -3,27 +3,18 @@ import pandas as pd
 from streamlit_option_menu import option_menu
 import os
 
-def get_current_price(company_ticker):
-    your_listing_file_path = "your_listing_file.csv"  # Replace with the actual path
-    your_listing_df = pd.read_csv(your_listing_file_path)
-
-    company_data = your_listing_df[your_listing_df['company_ticker'] == company_ticker]
-    if not company_data.empty:
-        return company_data['initial_bid'].values[0]
+from backend.configuration import initialize_system
+company_service = initialize_system()[0]
+    
+def get_maximum_bidding_price(company_ticker,ini_bid):
+    max_amount = company_service.return_max_bidding_amount(company_ticker)[0][0]
+    print("max bid price",max_amount)
+    if max_amount:
+        return max_amount
     else:
-        return 0 
-
-def get_maximum_bidding_price(company_ticker):
-    bidding_list_file_path = "bidding_list.csv"  # Replace with the actual path
-    if not os.path.exists(bidding_list_file_path):
-        return get_current_price(company_ticker) 
-    bidding_list_df = pd.read_csv(bidding_list_file_path)
-
-    company_bids = bidding_list_df[bidding_list_df['company_ticker'] == company_ticker]
-    if not company_bids.empty:
-        return company_bids['bid_amount'].max()
-    else:
-        return get_current_price(company_ticker)  # Return the initial bid if no bids are placed
+        # return get_current_price(company_details)
+        print("ini bid",ini_bid)
+        return ini_bid  # Return the initial bid if no bids are placed
 
 def filter_companies(search_query, data):
     return data[data['Name'].str.contains(search_query, case=False)]
@@ -43,10 +34,6 @@ def authenticated_menu_company():
         st.sidebar.page_link("pages/10_SignupCompany.py", label="Signup")    
 
 def main():
-
-    # Load data from CSV file
-    # Replace with the actual path to your CSV file
-    df = pd.read_csv(filename)
     
     # --- HIDE STREAMLIT STYLE ---
     hide_st_style = """
@@ -68,22 +55,26 @@ def main():
 
     # --- CER Tab ---
     if selected == "CER":
-
-        # Search bar with search icon
+        listings = company_service.return_listings_for_auction()
+        df1 = pd.DataFrame(listings, columns=["bidID", "initial_Bid", "minimum_Step", "credits_Listed", "companyID"])
         search_query = st.text_input('Search Companies:', value='', key='search_input')
 
         # Display listings
-        if len(df) == 0:
-            st.write('No results found.')
+        if df1.empty:
+            st.write("Auction Market is empty")
         else:
-            for index, row in df.iterrows():
-                st.subheader(f"**{row['company_ticker']}**")
+            for index, row in df1.iterrows():
+                company_ticker = row['companyID']
+                bidID = row['bidID']
+                st.subheader(f"**{company_ticker}**")
                 col1, col2, col3 = st.columns([1, 1, 0.5])
-                col1.markdown(f"##### Current highest bid: ${get_maximum_bidding_price(row['company_ticker'])}")
-                col2.markdown(f"##### Credits Listed: {row['credits_to_list']}")
+                ini_bid = max(df1[df1['companyID'] == company_ticker]['initial_Bid'])
+                # print(ini_bid)
+                st.write(f"##### Current highest bid: $ {get_maximum_bidding_price(company_ticker,ini_bid)}")
+                st.write(f"##### Credits Listed: {row['credits_Listed']}")
                 # Add detail button to view company details
                 button_label = "Details"
-                button_key = f"{button_label}_{row['company_ticker']}_CER"
+                button_key = f"{button_label}_{bidID}_{company_ticker}_CER"
                 if col3.button(button_label, key=button_key):
                     st.session_state['cer_company'] = row
                     st.switch_page("pages/cer_details_page.py") 
@@ -116,8 +107,8 @@ def main():
 
 
 if __name__ == "__main__":
-    filename = "your_listing_file.csv"
-    if os.path.exists(filename):
+    listings_data = company_service.return_listings_for_auction()
+    if len(listings_data) > 0:
         main()
     else:
         st.warning("Auction Market is empty")
