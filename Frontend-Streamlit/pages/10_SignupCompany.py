@@ -49,6 +49,10 @@ def company_signup():
     verify_password = st.text_input("Verify Password", type="password", key="signup_verify_password")
     initial_money_wallet = st.number_input("Initial Money Wallet Balance", value=0)
     initial_credits_wallet = st.number_input("Initial Credits Wallet Balance", value=0)
+    industry_options = ['Capital Goods','Financial', 'Services','Health Care','Consumer Staples','Others']
+    industry = st.selectbox("Industry Type:", industry_options)
+    fund_category_options = ['Equity', 'Hybrid', 'Debt', 'Others']
+    fund_category = st.selectbox("Fund Category Type:", fund_category_options)
 
     # Button to submit the signup form
     if st.button("Sign Up"):
@@ -59,23 +63,16 @@ def company_signup():
             if company_data is None:
                 company_data = {}
                 
-            if 'credentials' not in company_data:
-                company_data['credentials'] = {'usernames': {}}
+            # if 'credentials' not in company_data:
+            #     company_data['credentials'] = {'usernames': {}}
                 
             hashed_password = stauth.Hasher([password]).generate()
             
             # Add company details to the dictionary
-            company_data['credentials']['usernames'][ticker] = {
-                'name': name,
-                'ticker': ticker,
-                'password': hashed_password[0],
-                'money_wallet': initial_money_wallet,
-                'credits_wallet': initial_credits_wallet
-            }
 
             # Write company details to YAML file
-            company_service.return_add_new_company_signup(name,ticker, hashed_password[0],initial_money_wallet,initial_credits_wallet)
-            write_to_yaml(company_data, 'company_details.yaml')
+            company_service.return_add_new_company_signup(name,ticker, hashed_password[0],initial_money_wallet,initial_credits_wallet,industry,fund_category)
+            # write_to_yaml(company_data, 'company_details.yaml')
             st.success("You have successfully signed up as a company!")
         elif password != verify_password:
             st.error("Passwords do not match. Please verify your password.")
