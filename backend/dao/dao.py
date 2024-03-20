@@ -405,16 +405,174 @@ class CompanyDao:
         filtered_companies = dict(sorted(filtered_companies.items(), key=lambda x: x[1]['score'], reverse=True))
         return filtered_companies
     
-    def add_company_signup_details(self, company_name, company_ticker, password, initial_money_wallet_balance, initial_credits_wallet_balance):
+    def add_company_signup_details(self, company_name, company_ticker, password, initial_money_wallet_balance, initial_credits_wallet_balance,industryID,fund_category):
         query = """
-            INSERT INTO CompanySignup (CompanyName, CompanyTicker, Password, InitialMoneyWalletBalance, InitialCreditsWalletBalance)
-            VALUES (%s, %s, %s, %s, %s)
+            INSERT INTO CompanySignup (CompanyName, CompanyTicker, Password, InitialMoneyWalletBalance, InitialCreditsWalletBalance, fundCategory, industryID)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
         """
-        params = (company_name, company_ticker, password, initial_money_wallet_balance, initial_credits_wallet_balance)
+        params = (company_name, company_ticker, password, initial_money_wallet_balance, initial_credits_wallet_balance,fund_category,industryID)
         try:
             self.execute_query(query, params)
             print("Company signup details added successfully.")
         except Exception as e:
             print(f"Error adding company signup details: {e}")
 
+    def get_company_data_dict(self):
+        query = '''SELECT * FROM CompanySignup;'''
+        company_data = self.execute_query(query)
 
+        company_data_dict = {}
+        for row in company_data:
+            name, ticker,password, initial_money_wallet_balance,initial_credits_wallet_balance,fundCategory, industryID = row
+            company_data_dict[ticker] = {
+                'name' : name,
+                'password': password,
+                'money_wallet' : initial_money_wallet_balance,
+                'credit_wallet' : initial_credits_wallet_balance,
+                'fund_category' : fundCategory,
+                'industry': industryID
+                }
+        company_data_dict= {'usernames': company_data_dict}
+        # print('H',company_data_dict)
+        return company_data_dict 
+    
+    def get_signup_company_data(self, name):
+        query = f'''SELECT * FROM CompanySignup WHERE CompanyTicker = '{name}';'''
+        result = self.execute_query(query)
+        return result
+    
+    def update_credit_wallet_balance(self, ticker, credits):
+        query = f'''UPDATE CompanySignup
+                    SET InitialCreditsWalletBalance = InitialCreditsWalletBalance - {credits}
+                    WHERE CompanyTicker = '{ticker}';'''
+        try:
+            self.execute_query(query)
+            print("updated credit wallet balance successfully.")
+        except Exception as e:
+            print(f"Error updating credit wallet balance : {e}")
+
+    def add_listed_credit_to_bid(self, initial_bid, min_step, credits, ticker):
+        query= f'''INSERT INTO Bid (initial_Bid, minimum_Step, credits_Listed, companyID)
+                VALUES ({initial_bid}, {min_step}, {credits}, '{ticker}');'''
+        try:
+            self.execute_query(query)
+            print("added listed credit to bid successfully")
+        except Exception as e:
+            print(f"Error adding listed credit to bid : {e}")
+
+    def get_industry_keyword_from_companySignup_ticker(self,ticker):
+        query = f'''SELECT i.keyword
+                FROM CompanySignup cs
+                JOIN Industry i ON cs.industryID = i.industryID
+                WHERE cs.CompanyTicker = "{ticker}"; '''
+        result = self.execute_query(query)
+
+        return result
+    
+    def get_wallet_balance_from_companySignup_ticker(self,ticker):
+        query = f'''SELECT InitialCreditsWalletBalance
+                FROM CompanySignup
+                WHERE CompanyTicker = "{ticker}"; '''
+        result = self.execute_query(query)
+
+        return result
+    
+    def add_credits_wallet_balance_from_companySignup_ticker(self, ticker, updated_wallet_balance):
+        query = f'''UPDATE CompanySignup SET InitialCreditsWalletBalance = {updated_wallet_balance} WHERE CompanyTicker = "{ticker}";'''
+        try:
+            self.execute_query(query)
+            print(f"Credits Wallet balance updated successfully for {ticker}")
+        except Exception as e:
+            print(f"Error updating credits wallet balance for {ticker}: {e}")
+            raise
+
+    def get_listings_for_auction(self):
+        query = "SELECT * FROM Bid;"
+        result = self.execute_query(query)
+        return result
+
+    def get_my_biddings(self):
+        query = "SELECT * FROM Bidding;"
+        result = self.execute_query(query)
+        return result
+    
+    def insert_into_bidding_table(self,bidder, bidID, bid):
+        query = f"""INSERT INTO Bidding (bidder, bidID, bid)
+        VALUES ('{bidder}', {bidID}, {bid});"""
+        try:
+            self.execute_query(query)
+            print("added to bidding table successfully")
+        except Exception as e:
+            print(f"Error adding to bidding table : {e}")
+
+    def get_max_bidding_amount(self, ticker):
+        query = f'''SELECT MAX(b.bid) AS max_bid
+                    FROM Bidding b
+                    JOIN Bid bd ON b.bidID = bd.bidID
+                    WHERE bd.companyID = '{ticker}';'''
+        result = self.execute_query(query)
+        return result
+
+    def get_companyID_from_bidID(self, bidID):
+        query = f'''SELECT companyID AS cID
+                    FROM Bid as bd
+                    JOIN Bidding b on b.bidID = bd.bidID
+                    WHERE b.bidID = '{bidID}';'''
+        result = self.execute_query(query)
+        return result
+    
+    def get_bidding_details_from_ticker(self, ticker):
+        query = f'''SELECT b.bidder, b.bid, b.bidID
+                    FROM Bidding as b
+                    JOIN Bid bd on b.bidID = bd.bidID
+                    WHERE bd.companyID = '{ticker}';'''
+        result = self.execute_query(query)
+        return result
+    
+    def get_credits_listed_from_bidID(self, bidID):
+        query = f'''SELECT credits_Listed
+                    FROM Bid
+                    WHERE bidID = '{bidID}';'''
+        result = self.execute_query(query)
+        return result
+    
+    def add_money_to_wallet(self,ticker,money):
+        query = f'''UPDATE CompanySignup
+                    SET InitialMoneyWalletBalance = InitialMoneyWalletBalance + {money}
+                    WHERE CompanyTicker = '{ticker}';'''
+        try:
+            self.execute_query(query)
+            print("added to money wallet balance successfully")
+        except Exception as e:
+            print(f"Error adding to money wallet balance : {e}")
+
+    def add_credit_to_credit_wallet(self,ticker,cred_listed):
+        query = f'''UPDATE CompanySignup
+                    SET InitialCreditsWalletBalance = InitialCreditsWalletBalance + {cred_listed}
+                    WHERE CompanyTicker = '{ticker}';'''
+        try:
+            self.execute_query(query)
+            print("added credit to credit balance successfully")
+        except Exception as e:
+            print(f"Error adding credit to credit wallet balance : {e}")
+
+    def subtract_money_from_wallet(self,ticker,money):
+        query = f'''UPDATE CompanySignup
+                    SET InitialMoneyWalletBalance = InitialMoneyWalletBalance - {money}
+                    WHERE CompanyTicker = '{ticker}';'''
+        try:
+            self.execute_query(query)
+            print("subtracted money from wallet balance successfully")
+        except Exception as e:
+            print(f"Error subtracting money from wallet balance : {e}")
+
+    def remove_bid_from_bidID(self, bidID):
+        query = f'''DELETE B, BD
+                    FROM Bidding B
+                    JOIN Bid BD ON B.bidID = BD.bidID
+                    WHERE B.bidID = {bidID};'''
+        try:
+            self.execute_query(query)
+            print("removed successfully")
+        except Exception as e:
+            print(f"Error removing : {e}")
