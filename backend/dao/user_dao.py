@@ -3,8 +3,9 @@ import mysql.connector
 import streamlit as st
 import pandas as pd
 import numpy as np
-from datetime import datetime
+from datetime import datetime as dt
 from backend.dao.dao import CompanyDao
+
 
 class UserDao(CompanyDao):
     def __init__(self, host, user, password, database):
@@ -85,15 +86,19 @@ class UserDao(CompanyDao):
             
     def update_transaction_history(self,company_id,quantity,price_per_stock,order_type):
     # update user transaction history
-        # new_transaction = [{'Date':'29-02-24','Order Type':'Buy','Ticker':company_id,'Amount':quantity,'Price/Quote':price_per_stock,'Wallet Balance':user_wallet}]
+        today_date = dt.today()
+        today_date_str = today_date.strftime('%Y-%m-%d')
+        
         query=f'''INSERT INTO Transaction_history (order_type, date, amount, ticker, username, price_quote) 
-        VALUES ("{order_type}","2024-02-29",{quantity},"{company_id}","{st.session_state.get('username')}",{price_per_stock});'''
+        VALUES ("{order_type}","{today_date_str}",{quantity},"{company_id}","{st.session_state.get('username')}",{price_per_stock});'''
         self.execute_query(query)
     
     def update_portfolio(self,company_id,quantity,price_per_stock,order_type):
+        today_date = dt.today()
+        today_date_str = today_date.strftime('%Y-%m-%d')
         # update user transaction history)
         query=f'''INSERT INTO Portfolio_entry (order_type, date, amount, ticker, username, price_quote) 
-        VALUES ("{order_type}","2024-02-29",{quantity},"{company_id}","{st.session_state.get('username')}",{price_per_stock});'''
+        VALUES ("{order_type}","{today_date_str}",{quantity},"{company_id}","{st.session_state.get('username')}",{price_per_stock});'''
         self.execute_query(query)
 
     def get_current_price_for_ticker(self,company_id):
@@ -182,14 +187,30 @@ class UserDao(CompanyDao):
     def calculate_portfolio_balance(self,data):
         current_portfolio = 0
         
-        df=self.get_price_data_for_all_companies()
+        start_date = '2023-01-01'
+        end_date = dt.today().strftime('%Y-%m-%d')
+        date_range = pd.date_range(start=start_date, end=end_date, freq='D')
+        
+        query = f'''SELECT companyID, price, updatedAt
+                FROM PriceHistory;'''
+        priceData = self.execute_query(query)
+        df = pd.DataFrame(priceData, columns=['tickers', 'price', 'dates'])
+        df['Date']=pd.to_datetime(df['dates'])
+        df = df.pivot(index="Date", columns="tickers", values="price")
+        df.fillna(method='ffill', inplace=True)
+        df=df.fillna(0)
+        df = df.reindex(date_range)
+        df.fillna(method='ffill',inplace=True)
+        df = df.fillna(0)
+        
         tickers = df.columns.to_list()
 
         stocks = {ticker: 0 for ticker in tickers}
         shares = {ticker: 0 for ticker in tickers}
         
-        current_value=0
+
         for index, row in data.iterrows():
+            current_value=0
             if row['Order Type'] == 'Buy':
                 current_portfolio += row['Amount'] * row['Price/Quote']
                 shares[row['Ticker']]+=row['Amount']
@@ -197,10 +218,13 @@ class UserDao(CompanyDao):
                 current_portfolio -= row['Amount'] * row['Price/Quote']
                 shares[row['Ticker']]-=row['Amount']
             for ticker, value in shares.items():
-                current_value += value * df.loc[row['Date']][ticker]
+                current_value += float(value) * float(df.loc[row['Date']][ticker])
                 
         for ticker, amount in shares.items():
-            stocks[ticker]=amount*df.iloc[-1][ticker]
+            y = df.iloc[-1][ticker]
+            y = float(y)
+            amount = float(amount)
+            stocks[ticker]=amount*y
 
         return shares,stocks, current_portfolio, current_value
     

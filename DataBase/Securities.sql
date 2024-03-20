@@ -122,6 +122,45 @@ InitialMoneyWalletBalance DECIMAL(18, 2) DEFAULT 0,
 InitialCreditsWalletBalance DECIMAL(18, 2) DEFAULT 0
 );
 
+CREATE TABLE ESG (
+ID INT AUTO_INCREMENT PRIMARY KEY,
+Environmental DECIMAL(5, 2),
+Social DECIMAL(5, 2),
+Governance DECIMAL(5, 2),
+companyID VARCHAR(50),
+FOREIGN KEY (companyID) REFERENCES Company(companyID)
+);
+
+CREATE TABLE Article_data (
+ID INT AUTO_INCREMENT PRIMARY KEY,
+Heading VARCHAR(255),
+Text TEXT,
+Datetime DATETIME,
+Company VARCHAR(255),
+Category VARCHAR(50),
+Score FLOAT,
+Score_blob FLOAT
+);
+
+CREATE TABLE esg_ratings (
+ID INT AUTO_INCREMENT PRIMARY KEY,
+Company VARCHAR(255),
+ESG_Risk_Rating VARCHAR(255),
+Score FLOAT
+);
+
+CREATE TABLE esg_data (
+id INT AUTO_INCREMENT PRIMARY KEY,
+company_name VARCHAR(255),
+date DATE,
+environment FLOAT,
+social FLOAT,
+governance FLOAT,
+esg_ratings VARCHAR(255),
+final_esg_score FLOAT,
+historical_esg_score FLOAT
+);
+
 INSERT INTO Industry (keyword, description) VALUES
 ('Capital Goods', 'Companies involved in manufacturing and distribution of industrial equipment and machinery.'),
 ('Financial', 'Financial institutions including banks, investment firms, and insurance companies.'),
@@ -131,474 +170,216 @@ INSERT INTO Industry (keyword, description) VALUES
 ('Other', 'Industries that do not fit into the defined categories or are niche markets.');
 
 INSERT INTO Company (companyID, name, industryID, totalAssets, revenue, employeeCount, currentScore, foundedYear, fundCategory,wallet) VALUES
-('AAPL', 'Apple Inc.', 1, 320000000000, 274515000000, 147000, 4.5, 1976, 'Equity',100),
-('GOOGL', 'Alphabet Inc.', 1, 318000000000, 182527000000, 144056, 4.6, 1998, 'Equity',200),
-('MSFT', 'Microsoft Corporation', 1, 278000000000, 168088000000, 181000, 4.4, 1975, 'Equity',150),
-('AMZN', 'Amazon.com, Inc.', 3, 235000000000, 386064000000, 1298000, 4.5, 1994, 'Equity',300),
-('JPM', 'JPMorgan Chase & Co.', 2, 2910000000000, 135229000000, 256981, 4.7, 2000, 'Debt',250),
-('BRK.A', 'Berkshire Hathaway Inc.', 2, 894000000000, 327212000000, 391500,2.3, 1965, 'Hybrid',100), 
-('FB', 'Facebook Inc.', 1, 155000000000, 104880000000, 60654, 4.6, 2004, 'Equity',220),
-('NFLX', 'Netflix Inc.', 1, 38000000000, 25747000000, 9400, 4.2, 1997, 'Equity',200);
+('CAAMX.SA', 'China Asset Management Co.', 2, 206574520000, 7802380000, 13947, 60.504, 1998, 'Equity', 300),
+('CSMF.PA', 'AXA S.A.', 2, 734040000000, 107831000000, 149000, 74.77, 1946, 'Equity', 300),
+('UBSG.SW', 'UBS Group AG', 2, 1104364000000, 97975000000, 83560, 71.24, 1998, 'Hybrid', 300),
+('JEF', 'Jefferies Financial Group Inc.', 1, 440000000000, 8200000000, 5381, 67.75, 1962, 'Hybrid', 300),
+('HNNMY', 'H&M Hennes & Mauritz AB', 5, 21710000000, 24800000000, 107375, 38.87, 1947, 'Debt', 300),
+('MSCI', 'MSCI Inc.', 3, 5518000000, 530000000, 5794, 64.66, 1969, 'Debt', 300),
+('KPMGY', 'KPMG', 3, 35000000000, 36400000000, 273424, 64.64, 1987, 'Others', 300),
+('EXK', 'Endeavour Silver Corp.', 5, 12000000000, 300000000, 73424, 50.4, 1981, 'Others', 300),
+('PM', 'Philip Morris International Inc.', 4, 21200000000, 3176200000, 123432, 44.74, 1947, 'Equity', 300), 
+('UBP', 'Union Bancaire Privée UBP SA', 2, 140400000000, 145300000, 1960, 61.77, 1969, 'Others', 300),
+('MET', 'MetLife Inc.', 4, 19800000000, 1700000, 430000, 58.16, 1968, 'Debt', 300),
+('BCS', 'Barclays PLC', 3, 188000000000, 32120000000, 81000, 47.76, 1990, 'Hybrid', 300),
+('AMZN', 'Amazon.com Inc.', 6, 527900000000, 30430000000, 1525000, 51.33, 1994, 'Equity', 300),
+('IMPACT.CO', 'Impact Coatings AB', 6, 52000000, 300000, 25000, 50.9, 1997, 'Equity', 300),
+('BLK', 'BlackRock  Inc.', 2, 1000000000000, 17850000000, 19000, 24.62, 1988, 'Debt', 300),
+('XOM', 'Exxon Mobil Corporation', 6, 376300000000, 344600000000, 61500, 62.13, 1999, 'Others', 300),
+('NOVN.SW', 'Novartis International AG', 5, 52000000, 450000, 5000, 59.39, 1996, 'Hybrid', 300);
 
 INSERT INTO CompanyWebsite (companyID, url) VALUES
-('AAPL', 'https://www.apple.com'),
-('GOOGL', 'https://www.google.com'),
-('MSFT', 'https://www.microsoft.com'),
-('AMZN', 'https://www.amazon.com'),
-('JPM', 'https://www.jpmorganchase.com'),
-('BRK.A', 'https://www.berkshirehathaway.com'),
-('FB', 'https://www.facebook.com'),
-('NFLX', 'https://www.netflix.com');
+('CAAMX.SA', 'https://en.chinaamc.com'),
+('CSMF.PA', 'https://www.axa.com'),
+('UBSG.SW', 'https://www.ubs.com/global/en/our-firm/governance/ubs-group-ag.html'),
+('JEF', 'https://www.jefferies.com'),
+('HNNMY', 'https://www2.hm.com/en_in/index.html'),
+('MSCI', 'https://www.msci.com'),
+('KPMGY', 'https://kpmg.com/xx/en/home.html'),
+('EXK', 'https://edrsilver.com'),
+('PM', 'https://www.pmi.com'),
+('UBP', 'https://www.ubp.com/en'),
+('MET', 'https://www.metlife.com'),
+('BCS', 'https://home.barclays'),
+('AMZN', 'https://ir.aboutamazon.com/overview/default.aspx'),
+('IMPACT.CO', 'https://impactcoatings.com'),
+('BLK', 'https://www.blackrock.com/corporate/global-directory'),
+('XOM', 'https://corporate.exxonmobil.com'),
+('NOVN.SW', 'https://www.novartis.com');
 
-INSERT INTO Article (link, companyID) VALUES
-('https://www.example.com/article1', 'AAPL'),
-('https://www.example.com/article2', 'GOOGL'),
-('https://www.example.com/article3', 'MSFT'),
-('https://www.example.com/article4', 'AMZN'),
-('https://www.example.com/article5', 'JPM'),
-('https://www.example.com/article6', 'BRK.A'),
-('https://www.example.com/article7', 'FB'),
-('https://www.example.com/article8', 'NFLX');
-
--- Mock data for ScoreHistory table for AAPL (Apple Inc.)
+-- Data for ScoreHistory table for China Asset Management Co.
 INSERT INTO ScoreHistory (score, updatedAt, companyID)
 VALUES
-(ROUND(RAND() * 5, 2), '2022-05-29', 'AAPL'),
-(ROUND(RAND() * 5, 2), '2022-06-29', 'AAPL'),
-(ROUND(RAND() * 5, 2), '2022-07-29', 'AAPL'),
-(ROUND(RAND() * 5, 2), '2022-08-29', 'AAPL'),
-(ROUND(RAND() * 5, 2), '2022-09-29', 'AAPL'),
-(ROUND(RAND() * 5, 2), '2022-10-29', 'AAPL'),
-(ROUND(RAND() * 5, 2), '2022-11-29', 'AAPL'),
-(ROUND(RAND() * 5, 2), '2022-12-29', 'AAPL'),
-(ROUND(RAND() * 5, 2), '2023-01-29', 'AAPL'),
-(ROUND(RAND() * 5, 2), '2023-02-28', 'AAPL'), -- February 28th for non-leap year
-(ROUND(RAND() * 5, 2), '2023-03-29', 'AAPL'),
-(ROUND(RAND() * 5, 2), '2023-04-29', 'AAPL'),
-(ROUND(RAND() * 5, 2), '2023-05-29', 'AAPL'),
-(ROUND(RAND() * 5, 2), '2023-06-29', 'AAPL'),
-(ROUND(RAND() * 5, 2), '2023-07-29', 'AAPL'),
-(ROUND(RAND() * 5, 2), '2023-08-29', 'AAPL'),
-(ROUND(RAND() * 5, 2), '2023-09-29', 'AAPL'),
-(ROUND(RAND() * 5, 2), '2023-10-29', 'AAPL'),
-(ROUND(RAND() * 5, 2), '2023-11-29', 'AAPL'),
-(ROUND(RAND() * 5, 2), '2023-12-29', 'AAPL'),
-(ROUND(RAND() * 5, 2), '2024-01-29', 'AAPL'),
-(ROUND(RAND() * 5, 2), '2024-02-29', 'AAPL'), -- February 29th for leap year (2024 is a leap year)
-(4.5, '2024-03-29', 'AAPL');
+(56.78, '2023-01-26', 'CAAMX.SA'),
+(59.55, '2024-01-01', 'CAAMX.SA'),
+(60, '2024-02-15', 'CAAMX.SA'),
+(59.54, '2024-03-04', 'CAAMX.SA'),
+(60.5, '2024-03-18', 'CAAMX.SA');
 
--- Mock data for ScoreHistory table for GOOGL (Gooogle Inc.)
+-- Data for ScoreHistory table for AXA S.A. 
 INSERT INTO ScoreHistory (score, updatedAt, companyID)
 VALUES
-(ROUND(RAND() * 5, 2), '2022-05-29', 'GOOGL'),
-(ROUND(RAND() * 5, 2), '2022-06-29', 'GOOGL'),
-(ROUND(RAND() * 5, 2), '2022-07-29', 'GOOGL'),
-(ROUND(RAND() * 5, 2), '2022-08-29', 'GOOGL'),
-(ROUND(RAND() * 5, 2), '2022-09-29', 'GOOGL'),
-(ROUND(RAND() * 5, 2), '2022-10-29', 'GOOGL'),
-(ROUND(RAND() * 5, 2), '2022-11-29', 'GOOGL'),
-(ROUND(RAND() * 5, 2), '2022-12-29', 'GOOGL'),
-(ROUND(RAND() * 5, 2), '2023-01-29', 'GOOGL'),
-(ROUND(RAND() * 5, 2), '2023-02-28', 'GOOGL'), -- February 28th for non-leap year
-(ROUND(RAND() * 5, 2), '2023-03-29', 'GOOGL'),
-(ROUND(RAND() * 5, 2), '2023-04-29', 'GOOGL'),
-(ROUND(RAND() * 5, 2), '2023-05-29', 'GOOGL'),
-(ROUND(RAND() * 5, 2), '2023-06-29', 'GOOGL'),
-(ROUND(RAND() * 5, 2), '2023-07-29', 'GOOGL'),
-(ROUND(RAND() * 5, 2), '2023-08-29', 'GOOGL'),
-(ROUND(RAND() * 5, 2), '2023-09-29', 'GOOGL'),
-(ROUND(RAND() * 5, 2), '2023-10-29', 'GOOGL'),
-(ROUND(RAND() * 5, 2), '2023-11-29', 'GOOGL'),
-(ROUND(RAND() * 5, 2), '2023-12-29', 'GOOGL'),
-(ROUND(RAND() * 5, 2), '2024-01-29', 'GOOGL'),
-(ROUND(RAND() * 5, 2), '2024-02-29', 'GOOGL'), -- February 29th for leap year (2024 is a leap year)
-(4.6, '2024-03-29', 'GOOGL');
+(62.72, '2023-02-26', 'CSMF.PA'),
+(76.23, '2024-01-01', 'CSMF.PA'),
+(72.4, '2024-02-15', 'CSMF.PA'),
+(74.55, '2024-03-04', 'CSMF.PA'),
+(74.76, '2024-03-18', 'CSMF.PA');
 
--- Mock data for ScoreHistory table for MSFT (Microsoft Corporation)
+-- Data for ScoreHistory table for UBS Group AG
 INSERT INTO ScoreHistory (score, updatedAt, companyID)
 VALUES
-(ROUND(RAND() * 5, 2), '2022-05-29', 'MSFT'),
-(ROUND(RAND() * 5, 2), '2022-06-29', 'MSFT'),
-(ROUND(RAND() * 5, 2), '2022-07-29', 'MSFT'),
-(ROUND(RAND() * 5, 2), '2022-08-29', 'MSFT'),
-(ROUND(RAND() * 5, 2), '2022-09-29', 'MSFT'),
-(ROUND(RAND() * 5, 2), '2022-10-29', 'MSFT'),
-(ROUND(RAND() * 5, 2), '2022-11-29', 'MSFT'),
-(ROUND(RAND() * 5, 2), '2022-12-29', 'MSFT'),
-(ROUND(RAND() * 5, 2), '2023-01-29', 'MSFT'),
-(ROUND(RAND() * 5, 2), '2023-02-28', 'MSFT'), -- February 28th for non-leap year
-(ROUND(RAND() * 5, 2), '2023-03-29', 'MSFT'),
-(ROUND(RAND() * 5, 2), '2023-04-29', 'MSFT'),
-(ROUND(RAND() * 5, 2), '2023-05-29', 'MSFT'),
-(ROUND(RAND() * 5, 2), '2023-06-29', 'MSFT'),
-(ROUND(RAND() * 5, 2), '2023-07-29', 'MSFT'),
-(ROUND(RAND() * 5, 2), '2023-08-29', 'MSFT'),
-(ROUND(RAND() * 5, 2), '2023-09-29', 'MSFT'),
-(ROUND(RAND() * 5, 2), '2023-10-29', 'MSFT'),
-(ROUND(RAND() * 5, 2), '2023-11-29', 'MSFT'),
-(ROUND(RAND() * 5, 2), '2023-12-29', 'MSFT'),
-(ROUND(RAND() * 5, 2), '2024-01-29', 'MSFT'),
-(ROUND(RAND() * 5, 2), '2024-02-29', 'MSFT'), -- February 29th for leap year (2024 is a leap year)
-(4.4, '2024-03-29', 'MSFT');
+(62.05, '2023-03-06', 'UBSG.SW'),
+(72.28, '2024-01-01', 'UBSG.SW'),
+(69.53, '2024-02-15', 'UBSG.SW'),
+(72.28, '2024-03-04', 'UBSG.SW'),
+(71.24, '2024-03-18', 'UBSG.SW');
 
--- Mock data for ScoreHistory table for AMZN (Amazon.com, Inc.)
+-- Data for ScoreHistory table for Jefferies Financial Group Inc. 
 INSERT INTO ScoreHistory (score, updatedAt, companyID)
 VALUES
-(ROUND(RAND() * 5, 2), '2022-05-29', 'AMZN'),
-(ROUND(RAND() * 5, 2), '2022-06-29', 'AMZN'),
-(ROUND(RAND() * 5, 2), '2022-07-29', 'AMZN'),
-(ROUND(RAND() * 5, 2), '2022-08-29', 'AMZN'),
-(ROUND(RAND() * 5, 2), '2022-09-29', 'AMZN'),
-(ROUND(RAND() * 5, 2), '2022-10-29', 'AMZN'),
-(ROUND(RAND() * 5, 2), '2022-11-29', 'AMZN'),
-(ROUND(RAND() * 5, 2), '2022-12-29', 'AMZN'),
-(ROUND(RAND() * 5, 2), '2023-01-29', 'AMZN'),
-(ROUND(RAND() * 5, 2), '2023-02-28', 'AMZN'), -- February 28th for non-leap year
-(ROUND(RAND() * 5, 2), '2023-03-29', 'AMZN'),
-(ROUND(RAND() * 5, 2), '2023-04-29', 'AMZN'),
-(ROUND(RAND() * 5, 2), '2023-05-29', 'AMZN'),
-(ROUND(RAND() * 5, 2), '2023-06-29', 'AMZN'),
-(ROUND(RAND() * 5, 2), '2023-07-29', 'AMZN'),
-(ROUND(RAND() * 5, 2), '2023-08-29', 'AMZN'),
-(ROUND(RAND() * 5, 2), '2023-09-29', 'AMZN'),
-(ROUND(RAND() * 5, 2), '2023-10-29', 'AMZN'),
-(ROUND(RAND() * 5, 2), '2023-11-29', 'AMZN'),
-(ROUND(RAND() * 5, 2), '2023-12-29', 'AMZN'),
-(ROUND(RAND() * 5, 2), '2024-01-29', 'AMZN'),
-(ROUND(RAND() * 5, 2), '2024-02-29', 'AMZN'), -- February 29th for leap year (2024 is a leap year)
-(4.5, '2024-03-29', 'AMZN');
+(60.80, '2023-03-24', 'JEF'),
+(67.98, '2024-01-01', 'JEF'),
+(67.66, '2024-02-15', 'JEF'),
+(68.6, '2024-03-04', 'JEF'),
+(67.76, '2024-03-18', 'JEF');
 
--- Mock data for ScoreHistory table for JPM (JPMorgan Chase & Co.)
+-- Data for ScoreHistory table for H&M Hennes & Mauritz AB 
 INSERT INTO ScoreHistory (score, updatedAt, companyID)
 VALUES
-(ROUND(RAND() * 5, 2), '2022-05-29', 'JPM'),
-(ROUND(RAND() * 5, 2), '2022-06-29', 'JPM'),
-(ROUND(RAND() * 5, 2), '2022-07-29', 'JPM'),
-(ROUND(RAND() * 5, 2), '2022-08-29', 'JPM'),
-(ROUND(RAND() * 5, 2), '2022-09-29', 'JPM'),
-(ROUND(RAND() * 5, 2), '2022-10-29', 'JPM'),
-(ROUND(RAND() * 5, 2), '2022-11-29', 'JPM'),
-(ROUND(RAND() * 5, 2), '2022-12-29', 'JPM'),
-(ROUND(RAND() * 5, 2), '2023-01-29', 'JPM'),
-(ROUND(RAND() * 5, 2), '2023-02-28', 'JPM'), -- February 28th for non-leap year
-(ROUND(RAND() * 5, 2), '2023-03-29', 'JPM'),
-(ROUND(RAND() * 5, 2), '2023-04-29', 'JPM'),
-(ROUND(RAND() * 5, 2), '2023-05-29', 'JPM'),
-(ROUND(RAND() * 5, 2), '2023-06-29', 'JPM'),
-(ROUND(RAND() * 5, 2), '2023-07-29', 'JPM'),
-(ROUND(RAND() * 5, 2), '2023-08-29', 'JPM'),
-(ROUND(RAND() * 5, 2), '2023-09-29', 'JPM'),
-(ROUND(RAND() * 5, 2), '2023-10-29', 'JPM'),
-(ROUND(RAND() * 5, 2), '2023-11-29', 'JPM'),
-(ROUND(RAND() * 5, 2), '2023-12-29', 'JPM'),
-(ROUND(RAND() * 5, 2), '2024-01-29', 'JPM'),
-(ROUND(RAND() * 5, 2), '2024-02-29', 'JPM'), -- February 29th for leap year (2024 is a leap year)
-(4.7, '2024-03-29', 'JPM');
+(37.97, '2023-04-03', 'HNNMY'),
+(37.13, '2024-01-01', 'HNNMY'),
+(38.09, '2024-02-15', 'HNNMY'),
+(38.94, '2024-03-04', 'HNNMY'),
+(38.84, '2024-03-18', 'HNNMY');
 
--- Mock data for ScoreHistory table for BRK.A (Berkshire Hathaway Inc.)
+-- Data for ScoreHistory table for MSCI Inc. 
 INSERT INTO ScoreHistory (score, updatedAt, companyID)
 VALUES
-(ROUND(RAND() * 5, 2), '2022-05-29', 'BRK.A'),
-(ROUND(RAND() * 5, 2), '2022-06-29', 'BRK.A'),
-(ROUND(RAND() * 5, 2), '2022-07-29', 'BRK.A'),
-(ROUND(RAND() * 5, 2), '2022-08-29', 'BRK.A'),
-(ROUND(RAND() * 5, 2), '2022-09-29', 'BRK.A'),
-(ROUND(RAND() * 5, 2), '2022-10-29', 'BRK.A'),
-(ROUND(RAND() * 5, 2), '2022-11-29', 'BRK.A'),
-(ROUND(RAND() * 5, 2), '2022-12-29', 'BRK.A'),
-(ROUND(RAND() * 5, 2), '2023-01-29', 'BRK.A'),
-(ROUND(RAND() * 5, 2), '2023-02-28', 'BRK.A'), -- February 28th for non-leap year
-(ROUND(RAND() * 5, 2), '2023-03-29', 'BRK.A'),
-(ROUND(RAND() * 5, 2), '2023-04-29', 'BRK.A'),
-(ROUND(RAND() * 5, 2), '2023-05-29', 'BRK.A'),
-(ROUND(RAND() * 5, 2), '2023-06-29', 'BRK.A'),
-(ROUND(RAND() * 5, 2), '2023-07-29', 'BRK.A'),
-(ROUND(RAND() * 5, 2), '2023-08-29', 'BRK.A'),
-(ROUND(RAND() * 5, 2), '2023-09-29', 'BRK.A'),
-(ROUND(RAND() * 5, 2), '2023-10-29', 'BRK.A'),
-(ROUND(RAND() * 5, 2), '2023-11-29', 'BRK.A'),
-(ROUND(RAND() * 5, 2), '2023-12-29', 'BRK.A'),
-(ROUND(RAND() * 5, 2), '2024-01-29', 'BRK.A'),
-(ROUND(RAND() * 5, 2), '2024-02-29', 'BRK.A'), -- February 29th for leap year (2024 is a leap year)
-(2.3, '2024-03-29', 'BRK.A');
+(64.45, '2023-04-03', 'MSCI'),
+(64.38, '2024-01-01', 'MSCI'),
+(64.63, '2024-02-15', 'MSCI'),
+(64.68, '2024-03-04', 'MSCI'),
+(64.66, '2024-03-18', 'MSCI');
 
--- Mock data for ScoreHistory table for FB (Facebook, Inc.)
+-- Data for ScoreHistory table for KPMG
 INSERT INTO ScoreHistory (score, updatedAt, companyID)
 VALUES
-(ROUND(RAND() * 5, 2), '2022-05-29', 'FB'),
-(ROUND(RAND() * 5, 2), '2022-06-29', 'FB'),
-(ROUND(RAND() * 5, 2), '2022-07-29', 'FB'),
-(ROUND(RAND() * 5, 2), '2022-08-29', 'FB'),
-(ROUND(RAND() * 5, 2), '2022-09-29', 'FB'),
-(ROUND(RAND() * 5, 2), '2022-10-29', 'FB'),
-(ROUND(RAND() * 5, 2), '2022-11-29', 'FB'),
-(ROUND(RAND() * 5, 2), '2022-12-29', 'FB'),
-(ROUND(RAND() * 5, 2), '2023-01-29', 'FB'),
-(ROUND(RAND() * 5, 2), '2023-02-28', 'FB'), -- February 28th for non-leap year
-(ROUND(RAND() * 5, 2), '2023-03-29', 'FB'),
-(ROUND(RAND() * 5, 2), '2023-04-29', 'FB'),
-(ROUND(RAND() * 5, 2), '2023-05-29', 'FB'),
-(ROUND(RAND() * 5, 2), '2023-06-29', 'FB'),
-(ROUND(RAND() * 5, 2), '2023-07-29', 'FB'),
-(ROUND(RAND() * 5, 2), '2023-08-29', 'FB'),
-(ROUND(RAND() * 5, 2), '2023-09-29', 'FB'),
-(ROUND(RAND() * 5, 2), '2023-10-29', 'FB'),
-(ROUND(RAND() * 5, 2), '2023-11-29', 'FB'),
-(ROUND(RAND() * 5, 2), '2023-12-29', 'FB'),
-(ROUND(RAND() * 5, 2), '2024-01-29', 'FB'),
-(ROUND(RAND() * 5, 2), '2024-02-29', 'FB'), -- February 29th for leap year (2024 is a leap year)
-(4.6, '2024-03-29', 'FB');
+(64.07, '2023-04-23', 'KPMGY'),
+(64.71, '2024-01-01', 'KPMGY'),
+(64.77, '2024-02-15', 'KPMGY'),
+(64.73, '2024-03-04', 'KPMGY'),
+(64.64, '2024-03-18', 'KPMGY');
 
--- Mock data for ScoreHistory table for NFLX (Netflix, Inc.)
+-- Data for ScoreHistory table for Endeavour Silver Corp.
 INSERT INTO ScoreHistory (score, updatedAt, companyID)
 VALUES
-(ROUND(RAND() * 5, 2), '2022-05-29', 'NFLX'),
-(ROUND(RAND() * 5, 2), '2022-06-29', 'NFLX'),
-(ROUND(RAND() * 5, 2), '2022-07-29', 'NFLX'),
-(ROUND(RAND() * 5, 2), '2022-08-29', 'NFLX'),
-(ROUND(RAND() * 5, 2), '2022-09-29', 'NFLX'),
-(ROUND(RAND() * 5, 2), '2022-10-29', 'NFLX'),
-(ROUND(RAND() * 5, 2), '2022-11-29', 'NFLX'),
-(ROUND(RAND() * 5, 2), '2022-12-29', 'NFLX'),
-(ROUND(RAND() * 5, 2), '2023-01-29', 'NFLX'),
-(ROUND(RAND() * 5, 2), '2023-02-28', 'NFLX'), -- February 28th for non-leap year
-(ROUND(RAND() * 5, 2), '2023-03-29', 'NFLX'),
-(ROUND(RAND() * 5, 2), '2023-04-29', 'NFLX'),
-(ROUND(RAND() * 5, 2), '2023-05-29', 'NFLX'),
-(ROUND(RAND() * 5, 2), '2023-06-29', 'NFLX'),
-(ROUND(RAND() * 5, 2), '2023-07-29', 'NFLX'),
-(ROUND(RAND() * 5, 2), '2023-08-29', 'NFLX'),
-(ROUND(RAND() * 5, 2), '2023-09-29', 'NFLX'),
-(ROUND(RAND() * 5, 2), '2023-10-29', 'NFLX'),
-(ROUND(RAND() * 5, 2), '2023-11-29', 'NFLX'),
-(ROUND(RAND() * 5, 2), '2023-12-29', 'NFLX'),
-(ROUND(RAND() * 5, 2), '2024-01-29', 'NFLX'),
-(ROUND(RAND() * 5, 2), '2024-02-29', 'NFLX'), -- February 29th for leap year (2024 is a leap year)
-(4.2, '2024-03-29', 'NFLX');
+(49.34, '2023-05-16', 'EXK'),
+(50.13, '2024-01-01', 'EXK'),
+(50.14, '2024-02-15', 'EXK'),
+(50.66, '2024-03-04', 'EXK'),
+(50.41, '2024-03-18', 'EXK');
 
--- Mock data for PriceHistory table for AAPL (Apple Inc.)
-INSERT INTO PriceHistory (price, updatedAt, companyID)
+-- Data for ScoreHistory table for Philip Morris International Inc.
+INSERT INTO ScoreHistory (score, updatedAt, companyID)
 VALUES
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-05-29', 'AAPL'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-06-29', 'AAPL'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-07-29', 'AAPL'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-08-29', 'AAPL'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-09-29', 'AAPL'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-10-29', 'AAPL'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-11-29', 'AAPL'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-12-29', 'AAPL'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-01-29', 'AAPL'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-02-28', 'AAPL'), -- February 28th for non-leap year
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-03-29', 'AAPL'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-04-29', 'AAPL'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-05-29', 'AAPL'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-06-29', 'AAPL'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-07-29', 'AAPL'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-08-29', 'AAPL'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-09-29', 'AAPL'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-10-29', 'AAPL'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-11-29', 'AAPL'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-12-29', 'AAPL'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2024-01-29', 'AAPL'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2024-02-29', 'AAPL'), -- February 29th for leap year (2024 is a leap year)
-(ROUND(RAND() * (500 - 100) + 100, 2), '2024-03-29', 'AAPL');
+(44.23, '2023-06-21', 'PM'),
+(44.87, '2024-01-01', 'PM'),
+(44.90, '2024-02-15', 'PM'),
+(44.84, '2024-03-04', 'PM'),
+(44.74, '2024-03-18', 'PM');
 
--- Mock data for PriceHistory table for GOOGL (Alphabet Inc.)
-INSERT INTO PriceHistory (price, updatedAt, companyID)
+-- Data for ScoreHistory table for Union Bancaire Privée UBP SA
+INSERT INTO ScoreHistory (score, updatedAt, companyID)
 VALUES
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-05-29', 'GOOGL'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-06-29', 'GOOGL'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-07-29', 'GOOGL'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-08-29', 'GOOGL'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-09-29', 'GOOGL'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-10-29', 'GOOGL'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-11-29', 'GOOGL'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-12-29', 'GOOGL'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-01-29', 'GOOGL'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-02-28', 'GOOGL'), -- February 28th for non-leap year
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-03-29', 'GOOGL'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-04-29', 'GOOGL'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-05-29', 'GOOGL'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-06-29', 'GOOGL'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-07-29', 'GOOGL'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-08-29', 'GOOGL'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-09-29', 'GOOGL'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-10-29', 'GOOGL'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-11-29', 'GOOGL'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-12-29', 'GOOGL'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2024-01-29', 'GOOGL'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2024-02-29', 'GOOGL'), -- February 29th for leap year (2024 is a leap year)
-(ROUND(RAND() * (500 - 100) + 100, 2), '2024-03-29', 'GOOGL');
+(61.28, '2023-07-11', 'UBP'),
+(61.85, '2024-01-01', 'UBP'),
+(61.91, '2024-02-15', 'UBP'),
+(61.86, '2024-03-04', 'UBP'),
+(61.78, '2024-03-18', 'UBP');
 
--- Mock data for PriceHistory table for MSFT (Microsoft Corporation)
-INSERT INTO PriceHistory (price, updatedAt, companyID)
+-- Data for ScoreHistory table for MetLife Inc.
+INSERT INTO ScoreHistory (score, updatedAt, companyID)
 VALUES
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-05-29', 'MSFT'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-06-29', 'MSFT'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-07-29', 'MSFT'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-08-29', 'MSFT'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-09-29', 'MSFT'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-10-29', 'MSFT'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-11-29', 'MSFT'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-12-29', 'MSFT'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-01-29', 'MSFT'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-02-28', 'MSFT'), -- February 28th for non-leap year
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-03-29', 'MSFT'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-04-29', 'MSFT'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-05-29', 'MSFT'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-06-29', 'MSFT'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-07-29', 'MSFT'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-08-29', 'MSFT'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-09-29', 'MSFT'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-10-29', 'MSFT'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-11-29', 'MSFT'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-12-29', 'MSFT'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2024-01-29', 'MSFT'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2024-02-29', 'MSFT'), -- February 29th for leap year (2024 is a leap year)
-(ROUND(RAND() * (500 - 100) + 100, 2), '2024-03-29', 'MSFT');
+(57.11, '2023-07-13', 'MET'),
+(59.98, '2024-01-01', 'MET'),
+(58.90, '2024-02-15', 'MET'),
+(58.45, '2024-03-04', 'MET'),
+(58.16, '2024-03-18', 'MET');
 
--- Mock data for PriceHistory table for AMZN (Amazon.com, Inc.)
-INSERT INTO PriceHistory (price, updatedAt, companyID)
+-- Data for ScoreHistory table for Barclays PLC
+INSERT INTO ScoreHistory (score, updatedAt, companyID)
 VALUES
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-05-29', 'AMZN'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-06-29', 'AMZN'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-07-29', 'AMZN'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-08-29', 'AMZN'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-09-29', 'AMZN'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-10-29', 'AMZN'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-11-29', 'AMZN'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-12-29', 'AMZN'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-01-29', 'AMZN'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-02-28', 'AMZN'), -- February 28th for non-leap year
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-03-29', 'AMZN'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-04-29', 'AMZN'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-05-29', 'AMZN'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-06-29', 'AMZN'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-07-29', 'AMZN'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-08-29', 'AMZN'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-09-29', 'AMZN'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-10-29', 'AMZN'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-11-29', 'AMZN'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-12-29', 'AMZN'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2024-01-29', 'AMZN'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2024-02-29', 'AMZN'), -- February 29th for leap year (2024 is a leap year)
-(ROUND(RAND() * (500 - 100) + 100, 2), '2024-03-29', 'AMZN');
+(46.96, '2023-07-18', 'BCS'),
+(48.57, '2024-01-01', 'BCS'),
+(48.22, '2024-02-15', 'BCS'),
+(47.96, '2024-03-04', 'BCS'),
+(47.76, '2024-03-18', 'BCS');
 
--- Mock data for PriceHistory table for JPM (JPMorgan Chase & Co.)
-INSERT INTO PriceHistory (price, updatedAt, companyID)
+-- Data for ScoreHistory table for Amazon.com Inc.
+INSERT INTO ScoreHistory (score, updatedAt, companyID)
 VALUES
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-05-29', 'JPM'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-06-29', 'JPM'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-07-29', 'JPM'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-08-29', 'JPM'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-09-29', 'JPM'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-10-29', 'JPM'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-11-29', 'JPM'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-12-29', 'JPM'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-01-29', 'JPM'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-02-28', 'JPM'), -- February 28th for non-leap year
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-03-29', 'JPM'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-04-29', 'JPM'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-05-29', 'JPM'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-06-29', 'JPM'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-07-29', 'JPM'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-08-29', 'JPM'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-09-29', 'JPM'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-10-29', 'JPM'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-11-29', 'JPM'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-12-29', 'JPM'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2024-01-29', 'JPM'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2024-02-29', 'JPM'), -- February 29th for leap year (2024 is a leap year)
-(ROUND(RAND() * (500 - 100) + 100, 2), '2024-03-29', 'JPM');
+(51.02, '2023-07-29', 'AMZN'),
+(51.19, '2024-01-01', 'AMZN'),
+(51.36, '2024-02-15', 'AMZN'),
+(51.37, '2024-03-04', 'AMZN'),
+(51.34, '2024-03-18', 'AMZN');
 
--- Mock data for PriceHistory table for BRK.A (Berkshire Hathaway Inc.)
-INSERT INTO PriceHistory (price, updatedAt, companyID)
+-- Data for ScoreHistory table for Impact Coatings AB
+INSERT INTO ScoreHistory (score, updatedAt, companyID)
 VALUES
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-05-29', 'BRK.A'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-06-29', 'BRK.A'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-07-29', 'BRK.A'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-08-29', 'BRK.A'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-09-29', 'BRK.A'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-10-29', 'BRK.A'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-11-29', 'BRK.A'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-12-29', 'BRK.A'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-01-29', 'BRK.A'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-02-28', 'BRK.A'), -- February 28th for non-leap year
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-03-29', 'BRK.A'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-04-29', 'BRK.A'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-05-29', 'BRK.A'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-06-29', 'BRK.A'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-07-29', 'BRK.A'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-08-29', 'BRK.A'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-09-29', 'BRK.A'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-10-29', 'BRK.A'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-11-29', 'BRK.A'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-12-29', 'BRK.A'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2024-01-29', 'BRK.A'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2024-02-29', 'BRK.A'), -- February 29th for leap year (2024 is a leap year)
-(ROUND(RAND() * (500 - 100) + 100, 2), '2024-03-29', 'BRK.A');
+(50.45, '2023-11-29', 'IMPACT.CO'),
+(50.65, '2024-01-01', 'IMPACT.CO'),
+(51.02, '2024-02-15', 'IMPACT.CO'),
+(50.93, '2024-03-04', 'IMPACT.CO'),
+(50.90, '2024-03-18', 'IMPACT.CO');
 
--- Mock data for PriceHistory table for FB (Facebook, Inc.)
-INSERT INTO PriceHistory (price, updatedAt, companyID)
+-- Data for ScoreHistory table for BlackRock Inc.
+INSERT INTO ScoreHistory (score, updatedAt, companyID)
 VALUES
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-05-29', 'FB'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-06-29', 'FB'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-07-29', 'FB'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-08-29', 'FB'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-09-29', 'FB'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-10-29', 'FB'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-11-29', 'FB'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-12-29', 'FB'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-01-29', 'FB'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-02-28', 'FB'), -- February 28th for non-leap year
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-03-29', 'FB'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-04-29', 'FB'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-05-29', 'FB'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-06-29', 'FB'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-07-29', 'FB'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-08-29', 'FB'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-09-29', 'FB'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-10-29', 'FB'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-11-29', 'FB'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-12-29', 'FB'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2024-01-29', 'FB'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2024-02-29', 'FB'), -- February 29th for leap year (2024 is a leap year)
-(ROUND(RAND() * (500 - 100) + 100, 2), '2024-03-29', 'FB');
+(23.38, '2023-12-19', 'BLK'),
+(24.75, '2024-01-01', 'BLK'),
+(24.49, '2024-02-15', 'BLK'),
+(24.92, '2024-03-04', 'BLK'),
+(24.62, '2024-03-18', 'BLK');
 
--- Mock data for PriceHistory table for NFLX (Netflix, Inc.)
-INSERT INTO PriceHistory (price, updatedAt, companyID)
+-- Data for ScoreHistory table for Exxon Mobil Corporation
+INSERT INTO ScoreHistory (score, updatedAt, companyID)
 VALUES
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-05-29', 'NFLX'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-06-29', 'NFLX'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-07-29', 'NFLX'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-08-29', 'NFLX'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-09-29', 'NFLX'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-10-29', 'NFLX'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-11-29', 'NFLX'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2022-12-29', 'NFLX'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-01-29', 'NFLX'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-02-28', 'NFLX'), -- February 28th for non-leap year
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-03-29', 'NFLX'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-04-29', 'NFLX'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-05-29', 'NFLX'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-06-29', 'NFLX'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-07-29', 'NFLX'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-08-29', 'NFLX'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-09-29', 'NFLX'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-10-29', 'NFLX'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-11-29', 'NFLX'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2023-12-29', 'NFLX'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2024-01-29', 'NFLX'),
-(ROUND(RAND() * (500 - 100) + 100, 2), '2024-02-29', 'NFLX'), -- February 29th for leap year (2024 is a leap year)
-(ROUND(RAND() * (500 - 100) + 100, 2), '2024-03-29', 'NFLX');
+(61.66, '2024-01-01', 'XOM'),
+(61.88, '2024-02-15', 'XOM'),
+(62.12, '2024-03-04', 'XOM'),
+(62.16, '2024-03-18', 'XOM');
+
+-- Data for ScoreHistory table for Novartis International AG
+INSERT INTO ScoreHistory (score, updatedAt, companyID)
+VALUES
+(59.10, '2024-02-08', 'NOVN.SW'),
+(59.24, '2024-01-01', 'NOVN.SW'),
+(59.42, '2024-02-15', 'NOVN.SW'),
+(59.44, '2024-03-04', 'NOVN.SW'),
+(59.39, '2024-03-18', 'NOVN.SW');
+
+INSERT INTO ESG (Environmental, Social, Governance, companyID) 
+VALUES 
+(95.56, 60.90, 80.78, 'CAAMX.SA'),
+(55.23, 75.57, 70.90, 'CSMF.PA'),
+(70.57, 80.23, 90.68, 'UBSG.SW'),
+(3.68, 65.23, 93.68, 'JEF'),
+(18.57, 61.23, 55.46, 'HNNMY'),
+(87.68, 41.90, 42.46, 'MSCI'),
+(95.90, 80.90, 50.46, 'KPMGY'),
+(49.90, 66.23, 45.46, 'EXK'),
+(65.90, 71.90, 17.68, 'PM'),
+(97.68, 50.23, 30.90, 'UBP'),
+(62.68, 91.90, 57.68, 'MET'),
+(53.23, 93.90, 16.79, 'BCS'),
+(58.68, 31.57, 84.01, 'AMZN'),
+(67.46, 22.46, 53.79, 'IMPACT.CO'),
+(36.90, 6.01, 31.23, 'BLK'),
+(84.90, 44.79, 35.46, 'XOM'),
+(87.90, 50.01, 32.23, 'NOVN.SW');
 
 SELECT name,currentScore, (SELECT description FROM Industry WHERE Company.industryID = Industry.industryID)  FROM Company ORDER BY currentScore DESC;
-
-SELECT c.companyID, c.name AS companyName, c.createdAt, c.updatedAt, c.totalAssets, c.revenue, c.employeeCount, c.currentScore, c.foundedYear, w.url
-FROM Company c
-LEFT JOIN CompanyWebsite w ON c.companyID = w.companyID
-WHERE c.companyID = 1;
-
 
 -- DELIMITER $$
 -- CREATE TRIGGER validate_email
@@ -613,34 +394,4 @@ WHERE c.companyID = 1;
 -- DELIMITER ;
 
 SELECT * FROM Transaction_history;
-
-CREATE TABLE Article_data (
-    ID INT AUTO_INCREMENT PRIMARY KEY,
-    Heading VARCHAR(255),
-    Text TEXT,
-    Datetime DATETIME,
-    Company VARCHAR(255),
-    Category VARCHAR(50),
-    Score FLOAT,
-    Score_blob FLOAT
-);
-
-CREATE TABLE esg_ratings (
-    ID INT AUTO_INCREMENT PRIMARY KEY,
-    Company VARCHAR(255),
-    ESG_Risk_Rating VARCHAR(255),
-    Score FLOAT
-);
-
-CREATE TABLE esg_data (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    company_name VARCHAR(255),
-    date DATE,
-    environment FLOAT,
-    social FLOAT,
-    governance FLOAT,
-    esg_ratings VARCHAR(255),
-    final_esg_score FLOAT,
-    historical_esg_score FLOAT
-);
-
+SELECT * FROM PriceHistory WHERE updatedAt='2024-02-29' and companyID='XOM';

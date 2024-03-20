@@ -2,8 +2,9 @@ import mysql.connector
 # from backend.database import return_price_and_date, return_score_and_date
 import pandas as pd
 import numpy as np
-from datetime import datetime
+from datetime import datetime, timedelta
 import yfinance as yf
+from datetime import datetime as dt
 
 class CompanyDao:
     def __init__(self, host, user, password, database):
@@ -26,6 +27,38 @@ class CompanyDao:
             if not self.connection.autocommit:
                 self.connection.commit()
             
+    def carry_over(self,score_data,field):
+        
+        # Define the start and end dates for the data
+        start_date = '2023-01-01'
+        end_date = dt.today().strftime('%Y-%m-%d')
+
+        # Generate a list of dates from start_date to end_date
+        date_range = pd.date_range(start=start_date, end=end_date, freq='D')
+        # Convert the 'Date' column to datetime format
+        score_data['Date'] = pd.to_datetime(score_data['Date'])
+        
+        # Set 'Date' as the index for score_data
+        score_data.set_index('Date', inplace=True)
+        
+        # Sort the DataFrame by date
+        score_data = score_data.sort_values(by='Date')
+        
+        # Fill missing dates with NaN scores
+        score_data = score_data.reindex(date_range)
+
+        # Carry over the score from the previous available date
+        score_data[field].fillna(method='ffill', inplace=True)
+
+        # Fill missing scores at the beginning with the average of available scores
+        score_data[field].fillna(score_data[field].mean(), inplace=True)
+
+        # Reset the index to have the 'Date' as a column
+        score_data.reset_index(drop=True,inplace=True)
+        score_data['Date']=date_range
+        # Print the interpolated scores DataFrame
+        return score_data
+    
     def get_price_at_date(ticker, date):
         # Fetch historical data for the ticker
         ticker_data = yf.Ticker(ticker)
@@ -96,6 +129,7 @@ class CompanyDao:
                 WHERE companyID = "{companyID}";'''
         result = self.execute_query(query)
         return result
+        
 
     def get_score_history_from_companyID(self, companyID=None):
         query = f'''SELECT score, updatedAt
@@ -145,13 +179,35 @@ class CompanyDao:
             industry_percentage[industry[0][0]] += amount / total_stocks
         return industry_percentage
     
+    def get_price_history_for_tickers(self, tickers=None, start_date=None, end_date=None):
+        if not start_date:
+            start_date = datetime(2022, 1, 1)
+        if not end_date:
+            end_date = datetime.now() - timedelta(days=1)  # Yesterday's date
+        
+        prices_data = {}
+        for ticker in tickers:
+            # Fetch historical data from Yahoo Finance for each ticker
+            ticker_data = yf.Ticker(ticker)
+            historical_data = ticker_data.history(start=start_date, end=end_date)
+
+            # Extract prices
+            prices_data[ticker] = historical_data['Close']
+
+        # Create DataFrame
+        df = pd.DataFrame(prices_data)
+
+        return df
+    
     def get_price_data_for_all_companies(self):
         query = f'''SELECT updatedAt, companyID, price
                 FROM PriceHistory;'''
         priceData = self.execute_query(query)
         df = pd.DataFrame(priceData, columns=["Date", "Ticker", "Price"])
-
+        df['Date']=pd.to_datetime(df['Date'])
         pivot_df = df.pivot(index="Date", columns="Ticker", values="Price")
+        pivot_df.fillna(method='ffill', inplace=True)
+        pivot_df=pivot_df.fillna(0)
         return pivot_df    
     
     def calculate_portfolio_score(self,data=None):
@@ -162,31 +218,57 @@ class CompanyDao:
         query = f'''SELECT companyID, score, updatedAt
                 FROM ScoreHistory;'''
         scoreData = self.execute_query(query)
-        df = pd.DataFrame(scoreData, columns=['tickers', 'score', 'dates'])
-        df['dates'] = pd.to_datetime(df['dates'])
-        df = df.pivot(index='dates', columns='tickers', values='score')
+        df = pd.DataFrame(scoreData, columns=['tickers', 'score', 'Date'])
+        start_date = '2023-01-01'
+        end_date = dt.today().strftime('%Y-%m-%d')
+        date_range = pd.date_range(start=start_date, end=end_date, freq='D')
+        df = df.pivot(index='Date', columns='tickers', values='score')
+        df.fillna(method='ffill',inplace=True)
         df = df.fillna(0)
+        df = df.reindex(date_range)
+        df.fillna(method='ffill',inplace=True)
+        df = df.fillna(0)
+        current_score = 0
+        
+        tickers = df.columns.to_numpy()
+        stocks = {ticker: 0 for ticker in tickers}
         
         for index, row in data.iterrows():
-            current_value = 0
+            
             if row['Order Type'] == 'Buy':
-                current_score += float(row['Amount']) * float(df.loc[row['Date']][row['Ticker']])
+                stocks[row['Ticker']]+=float(row['Amount'])
+                current_score += (float(row['Amount'])/stocks[row['Ticker']]) * float(df.loc[row['Date']][row['Ticker']])
             elif row['Order Type'] == 'Sell':
-                current_score -= float(row['Amount']) * float(df.loc[row['Date']][row['Ticker']])
-            portfolio_score.append(current_score)
+                stocks[row['Ticker']]-=float(row['Amount'])
+                current_score -= (float(row['Amount'])/stocks[row['Ticker']]) * float(df.loc[row['Date']][row['Ticker']])
+                
+            if len((portfolio_score))!=0:
+                portfolio_score.append(current_score/len(portfolio_score))
+            else:
+                portfolio_score.append(current_score)
 
         data['Score'] = portfolio_score
-        return current_score, data 
+        if len((portfolio_score))!=0:
+            return current_score/len(portfolio_score), data 
+        else:
+            return current_score, data 
     
     
     def calculate_portfolio_balance(self,data=None):
+        start_date = '2023-01-01'
+        end_date = dt.today().strftime('%Y-%m-%d')
+        date_range = pd.date_range(start=start_date, end=end_date, freq='D')
         # Initialize portfolio balance
         query = f'''SELECT companyID, price, updatedAt
                 FROM PriceHistory;'''
         priceData = self.execute_query(query)
         df = pd.DataFrame(priceData, columns=['tickers', 'price', 'dates'])
-        df['dates'] = pd.to_datetime(df['dates'])
-        df = df.pivot(index='dates', columns='tickers', values='price')
+        df['Date']=pd.to_datetime(df['dates'])
+        df = df.pivot(index="Date", columns="tickers", values="price")
+        df.fillna(method='ffill', inplace=True)
+        df=df.fillna(0)
+        df = df.reindex(date_range)
+        df.fillna(method='ffill',inplace=True)
         df = df.fillna(0)
         
         portfolio_amount = []
@@ -196,10 +278,7 @@ class CompanyDao:
         # dates = pd.date_range(start=min(data['Date']), end=max(data['Date']))
         tickers = df.columns.to_numpy()
         stocks = {ticker: 0 for ticker in tickers}
-        # prices = np.random.randint(100, 500, size=(len(dates), len(tickers)))  # Generating random prices -> this is something we ll get from the database
 
-        # Create the DataFrame
-        # df = pd.DataFrame(prices, index=dates, columns=tickers)
 
         for index, row in data.iterrows():
             current_value = 0
@@ -210,7 +289,6 @@ class CompanyDao:
                 current_portfolio -= row['Amount'] * row['Price/Quote']
                 stocks[row['Ticker']]-=row['Amount']
             for ticker, value in stocks.items():
-
                 current_value += float(value) * float(df.loc[row['Date']][ticker])
             portfolio_amount.append(current_portfolio)
             portfolio_value.append(current_value)

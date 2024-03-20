@@ -118,14 +118,14 @@ def my_account():
 
             if stocks is not None:
                 st.session_state.shares=shares
-                returns = (current-invested)/invested
+                returns = (float(current)-float(invested))/float(invested)
                 col1, col2, col3 = st.columns(3)
-                col1.info(f"Current: ${current}")
+                col1.info(f"Current: ${current:.7}")
                 if returns>0:
                     col2.success(f"Total Returns: {returns:.2%}")
                 else:
                     col2.warning(f"Total Returns: {returns:.2%}")
-                col3.info(f"Invested: ${invested}")
+                col3.info(f"Invested: ${invested:.6}")
                 add_vertical_space(2)
                 for ticker, amount in stocks.items():
                     if amount==0:
@@ -133,7 +133,7 @@ def my_account():
                     company_name = company_mapping[ticker]
                     col1,col2 = st.columns([3,1])
                     col1.markdown(f"### {company_name}")
-                    col2.markdown(f'### ${amount}')
+                    col2.markdown(f'### ${amount:.6}')
                     st.write('---')
                 # st.write(current_portfolio)
             else:

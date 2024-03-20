@@ -48,7 +48,7 @@ def main():
         col1.markdown(f"### {company_name}")
         col1.write(f"{company_category} ●")
         col2.markdown(f'### {percent:.2%}')
-        col2.write(f"{rating}★")
+        col2.write(f"score: {rating}")
         st.write('---')
 
     st.subheader(f"High Scoring {industry} funds")

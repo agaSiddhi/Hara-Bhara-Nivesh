@@ -59,6 +59,9 @@ class CompanyService:
     def return_company_details_for_credits(self):
         return self.company_dao.get_company_details_for_credits()
     
+    def carry_over(self,score_data=None,field=None):
+        return self.company_dao.carry_over(score_data,field)
+    
     def return_update_wallet_balance(self, ticker, updated_wallet_balance):
         try:
             # Call the DAO method to update the wallet balance in the database

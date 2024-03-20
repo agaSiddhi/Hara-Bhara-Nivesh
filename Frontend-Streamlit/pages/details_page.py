@@ -1,10 +1,10 @@
 import streamlit as st
 import pandas as pd
 from backend.configuration import initialize_system
+import plotly.graph_objects as go
 
 def main():
         company_service = initialize_system()[0]
-        details = company_service.return_company_name_and_description()
 
         company_name = st.session_state['company']
         company_id = company_service.return_companyID_from_company_name(company_name)[0][0]
@@ -12,8 +12,6 @@ def main():
         company_description = company_service.return_industry_description_from_companyID(company_id)[0][0]
         score_history = company_service.return_score_history_from_companyID(company_id)
         price_history = company_service.return_price_history_from_companyID(company_id)
-
-
         st.markdown(f"# Details for {company_name}")
 
         col1,col2 = st.columns(2)
@@ -28,7 +26,6 @@ def main():
                 st.write("**Founded Year :**", company_details[2].date())
                 st.write("**Company ID :**", company_details[0])
                 st.write("**Description :**",company_description)
-                st.write("**Rating :**")
 
         # Extracting dates, scores, and prices from the history data
         score_dates = [entry[1] for entry in score_history]
@@ -36,11 +33,12 @@ def main():
 
         price_dates = [entry[1] for entry in price_history]
         prices = [float(entry[0]) for entry in price_history]
-
+        
         # Creating DataFrames
         score_df = pd.DataFrame({'Date': score_dates, 'Score': scores})
+        score_df = company_service.carry_over(score_df,'Score')
         price_df = pd.DataFrame({'Date': price_dates, 'Price': prices})
-
+        price_df = company_service.carry_over(price_df,'Price')
         # Merging DataFrames on date
         merged_df = pd.merge(score_df, price_df, on='Date', how='outer')
 
@@ -48,16 +46,32 @@ def main():
         merged_df.sort_values(by='Date', inplace=True)
 
         merged_df = merged_df.fillna(0)
+        
+        # Create a Plotly figure
+        fig = go.Figure()
+        
+        # Add traces for each set of data with different y-axes
+        fig.add_trace(go.Scatter(x=merged_df['Date'], y=merged_df['Price'], name='Price', yaxis='y1'))
+        fig.add_trace(go.Scatter(x=merged_df['Date'], y=merged_df['Score'], name='Score', yaxis='y2'))
 
-
-
+        # Update layout to show two y-axes
+        fig.update_layout(
+            yaxis=dict(title='Price', side='left', showgrid=False),
+            yaxis2=dict(title='Score', side='right', overlaying='y', showgrid=False)
+        )
+        
+        # Apply custom CSS styling to change the color of y2 tick labels
+        fig.update_layout(
+            template='plotly',
+            yaxis2_color='red'
+        )
+        
         # Plotting
-        st.line_chart(merged_df, x="Date", y=["Price", "Score"], color=['#FF0000', '#0000FF'])
+        st.plotly_chart(fig)
 
 
         col1, col2 = st.columns(2)
         with col1:
-                st.link_button("Latest Articles", "https://streamlit.io/gallery")
                 if st.button("Go back"):
                         st.switch_page("pages/1_Listings.py")
 
@@ -67,5 +81,6 @@ def main():
 
 
 if __name__ == "__main__":
+    
     main()
 
