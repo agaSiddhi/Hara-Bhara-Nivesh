@@ -3,27 +3,20 @@ import pandas as pd
 import os
 from datetime import datetime
 
+from backend.configuration import initialize_system
+company_service = initialize_system()[0]
 def get_current_price(company_ticker):
-    your_listing_file_path = "your_listing_file.csv"  # Replace with the actual path
-    your_listing_df = pd.read_csv(your_listing_file_path)
+    listings = company_service.return_listings_for_auction()
+    df1 = pd.DataFrame(listings, columns=["bidID", "initial_Bid", "minimum_Step", "credits_Listed", "companyID"])
+    ini_bid = max(df1[df1['companyID'] == company_ticker]['initial_Bid'])
+    return ini_bid 
 
-    company_data = your_listing_df[your_listing_df['company_ticker'] == company_ticker]
-    if not company_data.empty:
-        return company_data['initial_bid'].values[0]
+def get_maximum_bidding_price(company_ticker,company_details):
+    max_amount = company_service.return_max_bidding_amount(company_ticker)[0][0]
+    if max_amount:
+        return max_amount
     else:
-        return 0 
-
-def get_maximum_bidding_price(company_ticker):
-    bidding_list_file_path = "bidding_list.csv"  # Replace with the actual path
-    if not os.path.exists(bidding_list_file_path):
-        return get_current_price(company_ticker) 
-    bidding_list_df = pd.read_csv(bidding_list_file_path)
-
-    company_bids = bidding_list_df[bidding_list_df['company_ticker'] == company_ticker]
-    if not company_bids.empty:
-        return company_bids['bid_amount'].max()
-    else:
-        return get_current_price(company_ticker)  # Return the initial bid if no bids are placed
+        return get_current_price(company_details.get('companyID'))  # Return the initial bid if no bids are placed
 
 def get_step_size(company_ticker):
     your_listing_file_path = "your_listing_file.csv"  # Replace with the actual path
@@ -43,14 +36,21 @@ def bid_price():
 
         # Form to list credits
         st.subheader("Bid Price:")
-        mini = float(get_maximum_bidding_price(company_details.get('company_ticker')))
-        step_size = get_step_size(company_details.get('company_ticker'))
+        print(get_maximum_bidding_price(company_details.get('companyID'),company_details))
+        mini = float(get_maximum_bidding_price(company_details.get('companyID'),company_details))
+        # step_size = get_step_size(company_details.get('company_ticker'))
+        step_size = float(company_details.get('minimum_Step',0))
+
         credits_to_bid = st.number_input("Enter Bidding price", min_value=mini,step=step_size) 
 
         col1,col2=st.columns(2)
         if col1.button("Bid Price"):
+            bidder = st.session_state.company_ticker.upper()
+            bidID = company_details.get('bidID')
+            bid = credits_to_bid
+            company_service.return_insert_into_bidding_table(bidder, bidID, bid)
             data = {
-                    'company_ticker': [company_details.get('company_ticker', 'N/A')],
+                    'company_ticker': [company_details.get('companyID', 'N/A')],
                     'bid_amount': [credits_to_bid],
                     'bidder_company': [st.session_state.company_ticker.upper()],
                     'bid_time': [datetime.now().strftime("%Y-%m-%d %H:%M:%S")]
