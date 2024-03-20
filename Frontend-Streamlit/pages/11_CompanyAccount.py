@@ -6,7 +6,8 @@ from streamlit_option_menu import option_menu
 import os
 import pandas as pd
 import streamlit_shadcn_ui as ui
-
+from backend.configuration import initialize_system
+company_service= initialize_system()[0]
 
 # sidebar page links
 def authenticated_menu_company():
@@ -34,82 +35,65 @@ def read_yaml(filename):
 # Import the company details into your script
 company_data = read_yaml('company_details.yaml')
 
-def update_wallets(company_ticker, bidder_company, bid_amount):
+def update_wallets(company_ticker, bidder_company, bid_amount,bidID):
 
     company_ticker = str(company_ticker)
-    credits_listed = 0
-    listing_file = pd.read_csv("your_listing_file.csv")
-    matching_data = listing_file[listing_file['company_ticker'] == company_ticker]
-    if not matching_data.empty:
-        # st.write(matching_data)   
-        credits_listed = int(matching_data.iloc[0].credits_to_list)
+    # credits_listed = 0
+    credits_listed = company_service.return_credits_listed_from_bidID(bidID)[0][0]
     
     money = bid_amount * credits_listed
 
     # Update credits_wallet and money_wallet for the company_ticker
-    company_data['credentials']['usernames'][company_ticker]['money_wallet'] += money
+    company_service.return_add_money_to_wallet(company_ticker, money)
+    company_service.return_add_credit_to_credit_wallet(bidder_company, money)
+    company_service.return_subtract_money_from_wallet(bidder_company, money)
+    # company_data['credentials']['usernames'][company_ticker]['money_wallet'] += money
 
-    company_data['credentials']['usernames'][bidder_company]['credits_wallet'] += credits_listed
-    company_data['credentials']['usernames'][bidder_company]['money_wallet'] -= money
+    # company_data['credentials']['usernames'][bidder_company]['credits_wallet'] += credits_listed
+    # company_data['credentials']['usernames'][bidder_company]['money_wallet'] -= money
  
     # Write the updated company_data back to the YAML file
-    with open("company_details.yaml", 'w') as file:
-        yaml.dump(company_data, file)
-
-
+    # with open("company_details.yaml", 'w') as file:
+    #     yaml.dump(company_data, file)
+        
 def display_bids_by_company(company_ticker):
     # Load the bidding company_data from the CSV file
-    bidding_data = pd.read_csv("bidding_list.csv")
+    # bidding_data = pd.read_csv("bidding_list.csv")
     company_ticker = str(company_ticker)
-    matching_bids = bidding_data[bidding_data['company_ticker'] == company_ticker]
+    bidding_details_from_ticker = company_service.return_bidding_details_from_ticker(company_ticker)
+    matching_bids= pd.DataFrame(bidding_details_from_ticker, columns=['bidder','bid_amnt','bidID'])
+
+    # matching_bids = bidding_details_from_ticker_df[bidding_details_from_ticker_df['company_ticker'] == company_ticker]
 
     if not matching_bids.empty:
         for index, row in matching_bids.iterrows():
-            Bidder_company=row['bidder_company']
-            amount=row['bid_amount']
-            time=row['bid_time']
-            ui.metric_card(title=Bidder_company, content=f"Bid: ${amount}", description=f"{time}")
+            Bidder_company=row['bidder']
+            amount=row['bid_amnt']
+            # time=row['bid_time']
+            ui.metric_card(title=Bidder_company, content=f"Bid: ${amount}")
             if st.button(f"Process Bid"):
-                process_bid(row)
+                process_bid(row,company_ticker)
                 st.success("Bid processed!")
                 # st.switch_page('pages/5_Login.py')
     else:
         st.warning("No biddings done yet")
                 
-def remove_company_ticker(company_ticker):
+def remove_company_ticker(company_ticker, bidID):
     # Load company_data from CSV file
-    filename1 = "bidding_list.csv"
-
-    df1 = pd.read_csv(filename1)
-    
-    # Filter out the row with the given company_ticker
-    df1 = df1[df1['company_ticker'] != company_ticker]
-    
-    # Save the updated DataFrame back to the CSV file
-    df1.to_csv(filename1, index=False)
-    filename2 = "your_listing_file.csv"
-
-    df2 = pd.read_csv(filename2)
-    
-    # Filter out the row with the given company_ticker
-    df2 = df2[df2['company_ticker'] != company_ticker]
-    
-    # Save the updated DataFrame back to the CSV file
-    df2.to_csv(filename2, index=False)
+    company_service.return_remove_bid_from_bidID(bidID)
 
 
-def process_bid(row):
-    update_wallets(row.company_ticker, row.bidder_company, row.bid_amount)
-    remove_company_ticker(row.company_ticker)
+def process_bid(row,company_ticker):
+    update_wallets(company_ticker, row.bidder, row.bid_amnt,row.bidID)
+    remove_company_ticker(company_ticker,row.bidID)
 
 def get_company_name(ticker):
-    return company_data['credentials']['usernames'][ticker]['name']
+    return st.session_state.company[0][0]
 
 def get_wallet_balance(ticker):
-    return company_data['credentials']['usernames'][ticker]['money_wallet']
-
+    return st.session_state.company[0][3]
 def get_credit_balance(ticker):
-    return company_data['credentials']['usernames'][ticker]['credits_wallet']
+    return st.session_state.company[0][4]
 
 def update_wallet(company_ticker,credits_to_list):
     company_data['credentials']['usernames'][company_ticker]['credits_wallet'] -= credits_to_list
@@ -184,24 +168,9 @@ def my_account():
                 # Validate if the company has enough credits in the wallet
                 if credits_to_list <= get_credit_balance(company_ticker):
                     # Prepare company_data for CSV
-                    company_data = {
-                        'company_ticker': [company_ticker],
-                        'credits_to_list': [credits_to_list],
-                        'initial_bid': [initial_bid],
-                        'minimum_step': [minimum_step]
-                    }
-
-                    # Create DataFrame
-                    df = pd.DataFrame(company_data)
-
-                    # Save to CSV file
-                    csv_filename = "your_listing_file.csv"
-                    if os.path.exists(csv_filename):
-                        existing_df = pd.read_csv(csv_filename)
-                        df = pd.concat([existing_df, df], ignore_index=True)
-
-                    df.to_csv(csv_filename, index=False)
-                    update_wallet(company_ticker,credits_to_list)
+                    company_service.add_listed_credit_to_bid(initial_bid,minimum_step,credits_to_list,company_ticker)
+                   
+                    company_service.return_update_credit_wallet_balance(company_ticker, credits_to_list)
                     st.success("Credits listed successfully!")
                 else:
                     st.error("Insufficient credits in the wallet.")
@@ -212,22 +181,29 @@ def my_account():
     # my biddings     
     if selected=="My Biddings":
         if 'company_ticker' in st.session_state:
-            if not os.path.exists("bidding_list.csv"):
+            biddings_data1 = company_service.return_my_biddings()
+            if len(biddings_data1) == 0:
+            # if not os.path.exists("bidding_list.csv"):
                 st.warning("No biddings done yet")
+
+            
             else:
                 company_ticker = st.session_state.company_ticker# Replace with the desired company ticker
                 company_ticker = company_ticker.upper()
                 # Load the bidding company_data from the CSV file
-                bidding_data = pd.read_csv("bidding_list.csv")
-                filtered_bids = bidding_data[bidding_data['bidder_company'] == company_ticker]
+                # print(biddings_data1)
+                biddings_data1_df= pd.DataFrame(biddings_data1, columns=['bidder', 'bidID', 'bid_amnt'])
+                
+                filtered_bids = biddings_data1_df[biddings_data1_df['bidder'] == company_ticker]
 
                 if not filtered_bids.empty:
                     # Display the filtered bidding company_data
                     for index,row in filtered_bids.iterrows():
-                        Bidder_ticker=row['company_ticker']
-                        time = row['bid_time']
-                        amount = row['bid_amount']
-                        ui.metric_card(title=Bidder_ticker, content=f"Bid: ${amount}", description=f"{time}")
+                        # Bidder_ticker=row['company_ticker']
+                        Bidder_ticker = company_service.return_companyID_from_bidID(row['bidID'])
+                        # time = row['bid_time']
+                        amount = row['bid_amnt']
+                        ui.metric_card(title=Bidder_ticker, content=f"Bid: ${amount}")
                 else:
                     st.warning("No biddings done yet")
         else:
@@ -237,7 +213,10 @@ def my_account():
     if selected=="My Bids":
         if 'company_ticker' in st.session_state:
             company_ticker = st.session_state.company_ticker.upper()
-            if not os.path.exists("bidding_list.csv"):
+            # if not os.path.exists("bidding_list.csv"):
+            #     st.warning("No biddings done yet")
+            biddings_data1 = company_service.return_my_biddings()
+            if len(biddings_data1) == 0:
                 st.warning("No biddings done yet")
             else:
                 display_bids_by_company(company_ticker)

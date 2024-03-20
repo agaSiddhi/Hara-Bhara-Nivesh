@@ -102,14 +102,14 @@ initial_Bid DECIMAL(15, 2),
 minimum_Step DECIMAL(5, 2),
 credits_Listed INT,
 companyID VARCHAR(50),
-FOREIGN KEY (companyID) REFERENCES Company(companyID)
+FOREIGN KEY (CompanyID) REFERENCES CompanySignup(CompanyTicker)
 );
 
 CREATE TABLE Bidding(
 bidder VARCHAR(50),
 bidID INT,
 bid DECIMAL(15, 2),
-FOREIGN KEY (bidder) REFERENCES Company(companyID),
+FOREIGN KEY (bidder) REFERENCES CompanySignup(CompanyTicker),
 FOREIGN KEY (bidID) REFERENCES Bid(bidID),
 PRIMARY KEY(bidder,bidID)
 );
@@ -119,7 +119,10 @@ CompanyName VARCHAR(255) NOT NULL,
 CompanyTicker VARCHAR(10) PRIMARY KEY,
 Password VARCHAR(255) NOT NULL,
 InitialMoneyWalletBalance DECIMAL(18, 2) DEFAULT 0,
-InitialCreditsWalletBalance DECIMAL(18, 2) DEFAULT 0
+InitialCreditsWalletBalance DECIMAL(18, 2) DEFAULT 0,
+fundCategory VARCHAR(100),
+industryID INT,
+FOREIGN KEY (industryID) REFERENCES Industry(industryID)
 );
 
 CREATE TABLE ESG (

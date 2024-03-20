@@ -16,4 +16,7 @@ class ConfigLoader:
 
     def get_database(self):
         return self.config['DATABASE']['database']
+    
+    def get_port(self):
+        return self.config['DATABASE']['port']
  

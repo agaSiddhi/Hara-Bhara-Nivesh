@@ -96,15 +96,118 @@ class CompanyService:
     def filter_companies(self,selected_categories, selected_sectors):
         return self.company_dao.filter_companies(selected_categories,selected_sectors)      
 
-    def return_add_new_company_signup(self, company_name,company_ticker,password,initial_money_wallet_balance,initial_credits_wallet_balance):
+    def return_add_new_company_signup(self, company_name,company_ticker,password,initial_money_wallet_balance,initial_credits_wallet_balance,industry,fund_category):
+        industryID = self.return_industry_id_by_keyword(industry)[0][0]
+        # print(industryID)
         try:
             # Call the DAO method to insert the new company into the database
-            self.company_dao.add_company_signup_details(company_name,company_ticker,password,initial_money_wallet_balance,initial_credits_wallet_balance)
+            self.company_dao.add_company_signup_details(company_name,company_ticker,password,initial_money_wallet_balance,initial_credits_wallet_balance,industryID,fund_category)
             return True  # Indicate success
         except Exception as e:
             print(f"Error adding new company: {e}")
             return False  # Indicate failure
     
+    def get_company_data_dict(self):
+        return self.company_dao.get_company_data_dict()
+    
+    def return_signup_company_data(self, name):
+        return self.company_dao.get_signup_company_data(name)
+    
+    def return_update_credit_wallet_balance(self, ticker, credits):
+        try:
+            # Call the DAO method to update the wallet balance in the database
+            self.company_dao.update_credit_wallet_balance(ticker, credits)
+            return True  # Indicate success
+        except Exception as e:
+            print(f"Error updating credit wallet balance for {ticker}: {e}")
+            return False  # Indicate failure
+
+    def add_listed_credit_to_bid(self, initial_bid, min_step, credits, ticker):
+        try:
+            # Call the DAO method to update the wallet balance in the database
+            self.company_dao.add_listed_credit_to_bid(initial_bid, min_step, credits, ticker)
+            return True  # Indicate success
+        except Exception as e:
+            print(f"Error adding listed credit to bid for {ticker}: {e}")
+            return False  # Indicate failure
+        
+    def return_industry_keyword_from_companySignup_ticker(self,ticker):
+        return self.company_dao.get_industry_keyword_from_companySignup_ticker(ticker)
+    
+    def return_wallet_balance_from_companySignup_ticker(self,ticker):
+        return self.company_dao.get_wallet_balance_from_companySignup_ticker(ticker)
+    
+    def add_credits_wallet_balance_from_companySignup_ticker(self, ticker, updated_wallet_balance):
+        try:
+            # Call the DAO method to update the wallet balance in the database
+            self.company_dao.add_credits_wallet_balance_from_companySignup_ticker(ticker, updated_wallet_balance)
+            return True  # Indicate success
+        except Exception as e:
+            print(f"Error adding credits wallet balance for {ticker}: {e}")
+            return False  # Indicate failure
+        
+    def return_listings_for_auction(self):
+        return self.company_dao.get_listings_for_auction()
+    
+    def return_my_biddings(self):
+        return self.company_dao.get_my_biddings()
+    
+    def return_insert_into_bidding_table(self,bidder, bidID, bid):
+        try:
+            # Call the DAO method to update the wallet balance in the database
+            self.company_dao.insert_into_bidding_table(bidder, bidID, bid)
+            return True  # Indicate success
+        except Exception as e:
+            print(f"Error adding to bidding table: {e}")
+            return False  # Indicate failure
+
+    def return_max_bidding_amount(self, ticker):
+        return self.company_dao.get_max_bidding_amount(ticker)
+    
+    def return_companyID_from_bidID(self, bidID):
+        return self.company_dao.get_companyID_from_bidID(bidID)
+    
+    def return_bidding_details_from_ticker(self, ticker):
+        return self.company_dao.get_bidding_details_from_ticker(ticker)
+    
+    def return_credits_listed_from_bidID(self, bidID):
+        return self.company_dao.get_credits_listed_from_bidID(bidID)
+    
+    def return_add_money_to_wallet(self,ticker,money):
+        try:
+            # Call the DAO method to update the wallet balance in the database
+            self.company_dao.add_money_to_wallet(ticker,money)
+            return True  # Indicate success
+        except Exception as e:
+            print(f"Error  adding to money wallet balance for {ticker}: {e}")
+            return False  # Indicate failure
+    def return_add_credit_to_credit_wallet(self,ticker,cred_listed):
+        try:
+            # Call the DAO method to update the wallet balance in the database
+            self.company_dao.add_credit_to_credit_wallet(ticker,cred_listed)
+            return True  # Indicate success
+        except Exception as e:
+            print(f"Error adding credit to credit wallet balance for {ticker}: {e}")
+            return False  # Indicate failure
+    
+    def return_subtract_money_from_wallet(self,ticker,money):
+        try:
+            # Call the DAO method to update the wallet balance in the database
+            self.company_dao.subtract_money_from_wallet(ticker,money)
+            return True  # Indicate success
+        except Exception as e:
+            print(f"Error subtracting money from wallet balance for {ticker}: {e}")
+            return False  # Indicate failure
+        
+    def return_remove_bid_from_bidID(self, bidID):
+        try:
+            # Call the DAO method to update the wallet balance in the database
+            self.company_dao.remove_bid_from_bidID( bidID)
+            return True  # Indicate success
+        except Exception as e:
+            print(f"Error removing for {bidID}: {e}")
+            return False  # Indicate failure
+
 class UserService:
     def __init__(self, user_dao):
         self.user_dao = user_dao

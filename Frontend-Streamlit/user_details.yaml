@@ -4,6 +4,13 @@ cookie:
   name: cookie
 credentials:
   usernames:
+    agaSiddhi:
+      balance: 10000
+      current_portfolio: null
+      email: siddhiagarwal1703@gmail.com
+      name: Siddhi Agarwal
+      password: $2b$12$hEC/Pt/Ayg4BxZIqjINVc.tzahX1Z7NTgS4IlYJJLxuoZ36HNnGky
+      transaction_history: null
     chopra_01:
       balance: 10000
       email: ojaswichopra06@gmail.com
@@ -142,7 +149,21 @@ credentials:
       name: Vidisha Agarwal
       password: $2b$12$swSKIQ4znKR/oy4LGGGdIuzRJ1pAVKKzE4.DWjPmHVD03XvBp6uw.
       transaction_history: null
-    vim:
+    rudra1025:
+      balance: 10000
+      current_portfolio: null
+      email: suranarudra1025@gmail.com
+      name: Rudra Surana
+      password: $2b$12$C44avY7wcuDHABtJQTRTQOmUjPeXvtp5SDCyro0kwC1NTnRjhVXQi
+      transaction_history: null
+    siddhiag:
+      balance: 10000
+      current_portfolio: null
+      email: siddhiag@iitbhili.ac.in
+      name: Siddhi Agarwal
+      password: $2b$12$1r9yfeOEs4IbKWr19ZLcJeEsShjdqjhlLcH4SQcHka8CtD.1Hew6S
+      transaction_history: null
+    vidishaa99:
       balance: 10000
       current_portfolio:
         Amount:
