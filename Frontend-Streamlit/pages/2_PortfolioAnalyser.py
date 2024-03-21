@@ -46,7 +46,7 @@ def main():
     ## ----- Price and Score History
 
     # Price History
-    stocks, portfolio = company_service.calculate_portfolio_balance(portfolio)
+    shares,stocks, current_p, current_value,portfolio= user_service.calculate_portfolio_balance(portfolio)
 
     portfolio['Invested Amount'] = pd.to_numeric(portfolio['Invested Amount'], errors='coerce')
     fig1 = px.line(portfolio, x='Date', y=['Invested Amount', 'Portfolio Value'], 
@@ -56,7 +56,7 @@ def main():
     st.plotly_chart(fig1)
 
     # Score History
-    current_score, portfolio = company_service.calculate_portfolio_score(portfolio)
+    current_score, portfolio = user_service.calculate_portfolio_score(portfolio)
     fig2 = px.line(portfolio, x='Date', y=['Score'], 
             labels={'Date': 'Date', 'value': 'Score'}, 
             title='Portfolio Score Over Time')
