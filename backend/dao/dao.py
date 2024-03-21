@@ -7,13 +7,13 @@ import yfinance as yf
 from datetime import datetime as dt
 
 class CompanyDao:
-    def __init__(self, host, user, password, database,port):
+    def __init__(self, host, user, password, database):
         self.connection = mysql.connector.connect(
             host=host,
             user=user,
             password=password,
             database=database,
-            port = port
+            # port = port
         )
         
     def execute_query(self, query, params=None):

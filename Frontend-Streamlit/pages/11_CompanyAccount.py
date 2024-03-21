@@ -95,11 +95,11 @@ def get_wallet_balance(ticker):
 def get_credit_balance(ticker):
     return st.session_state.company[0][4]
 
-def update_wallet(company_ticker,credits_to_list):
-    company_data['credentials']['usernames'][company_ticker]['credits_wallet'] -= credits_to_list
-        # Write the updated company_data back to the YAML file
-    with open("company_details.yaml", 'w') as file:
-        yaml.dump(company_data, file)
+# def update_wallet(company_ticker,credits_to_list):
+#     company_data['credentials']['usernames'][company_ticker]['credits_wallet'] -= credits_to_list
+#         # Write the updated company_data back to the YAML file
+#     with open("company_details.yaml", 'w') as file:
+#         yaml.dump(company_data, file)
 
 def my_account():
     # --- NAVIGATION MENU ---
