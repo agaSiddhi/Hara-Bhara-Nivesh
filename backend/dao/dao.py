@@ -102,6 +102,17 @@ class CompanyDao:
         result = self.execute_query(query)
         
         return result
+    
+    def get_ESG_score_from_companyID(self,companyID):
+        query = f'''SELECT c.Environmental, c.Social , c.Governance
+                FROM ESG c WHERE c.companyID = {f"'{companyID}'"};'''
+        try:
+            result = self.execute_query(query)
+            return result
+        except Exception as e:
+            print(e)
+    
+        
 
     def get_company_details_from_companyID(self, companyID):
         query = f'''SELECT c.companyID, c.name AS companyName, c.createdAt, c.updatedAt, c.totalAssets, c.revenue, c.employeeCount, c.currentScore, c.foundedYear, w.url 

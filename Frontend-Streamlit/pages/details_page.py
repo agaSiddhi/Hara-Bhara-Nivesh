@@ -2,18 +2,27 @@ import streamlit as st
 import pandas as pd
 from backend.configuration import initialize_system
 import plotly.graph_objects as go
+from streamlit_extras.add_vertical_space import add_vertical_space
 
 def main():
         company_service = initialize_system()[0]
 
         company_name = st.session_state['company']
         company_id = company_service.return_companyID_from_company_name(company_name)[0][0]
+        ESG = company_service.return_ESG_score_from_companyID(company_id)
         company_details = company_service.return_company_details_from_companyID(company_id)[0]
         company_description = company_service.return_industry_description_from_companyID(company_id)[0][0]
         score_history = company_service.return_score_history_from_companyID(company_id)
         price_history = company_service.return_price_history_from_companyID(company_id)
         st.markdown(f"# Details for {company_name}")
-
+        
+        add_vertical_space(2)
+        c1,c2,c3 = st.columns(3)
+        c1.markdown(f"##### Environmental: {ESG[0][0]}")
+        c2.markdown(f"##### Social: {ESG[0][1]}")
+        c3.markdown(f"##### Governance: {ESG[0][2]}")
+        add_vertical_space(2)
+        
         col1,col2 = st.columns(2)
         with col1:
                 st.write("**Last Updated At :**", company_details[3])

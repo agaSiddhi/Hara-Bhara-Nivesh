@@ -10,6 +10,9 @@ class CompanyService:
 
     def return_company_details_from_companyID(self,companyID=None):
         return self.company_dao.get_company_details_from_companyID(companyID=companyID)
+    
+    def return_ESG_score_from_companyID(self,companyID=None):
+        return self.company_dao.get_ESG_score_from_companyID(companyID=companyID)
 
     def return_industry_description_from_companyID(self,companyID=None):
         return self.company_dao.get_industry_description_from_companyID(companyID=companyID)
