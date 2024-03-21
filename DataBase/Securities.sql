@@ -398,3 +398,352 @@ SELECT name,currentScore, (SELECT description FROM Industry WHERE Company.indust
 
 SELECT * FROM Transaction_history;
 SELECT * FROM PriceHistory WHERE updatedAt='2024-02-29' and companyID='XOM';
+
+-- Inserting 20 mock entries into User table
+INSERT INTO User (username, balance, name, password, age, country, gender)
+VALUES 
+    ('user1', 1000.00, 'John Doe', 'password1', '30-44', 'United States', 'Male'),
+    ('user2', 500.50, 'Jane Smith', 'password2', '<18', 'Canada', 'Female'),
+    ('user3', 750.25, 'Michael Johnson', 'password3', '18-29', 'Australia', 'Male'),
+    ('user4', 1500.75, 'Emma Brown', 'password4', '>60', 'United Kingdom', 'Female'),
+    ('user5', 200.00, 'Alex Lee', 'password5', '45-60', 'Germany', 'Others'),
+    ('user6', 1200.00, 'Emily White', 'password6', '30-44', 'France', 'Female'),
+    ('user7', 700.50, 'David Lee', 'password7', '18-29', 'Japan', 'Male'),
+    ('user8', 850.25, 'Sophia Miller', 'password8', '<18', 'Brazil', 'Female'),
+    ('user9', 1300.75, 'William Taylor', 'password9', '>60', 'Italy', 'Male'),
+    ('user10', 150.00, 'Olivia Brown', 'password10', '45-60', 'Spain', 'Female'),
+    ('user11', 1800.00, 'Daniel Wilson', 'password11', '30-44', 'Mexico', 'Male'),
+    ('user12', 950.50, 'Mia Garcia', 'password12', '<18', 'Argentina', 'Female'),
+    ('user13', 550.25, 'James Martinez', 'password13', '18-29', 'South Africa', 'Male'),
+    ('user14', 1400.75, 'Ava Rodriguez', 'password14', '>60', 'India', 'Female'),
+    ('user15', 300.00, 'Logan Hernandez', 'password15', '45-60', 'China', 'Male'),
+    ('user16', 1600.00, 'Ella Gonzalez', 'password16', '30-44', 'Russia', 'Female'),
+    ('user17', 1050.50, 'Noah Lopez', 'password17', '<18', 'Nigeria', 'Male'),
+    ('user18', 650.25, 'Charlotte Perez', 'password18', '18-29', 'Egypt', 'Female'),
+    ('user19', 1700.75, 'Liam Sanchez', 'password19', '>60', 'Germany', 'Male'),
+    ('user20', 400.00, 'Harper Ramirez', 'password20', '45-60', 'Canada', 'Female');
+
+-- Inserting 20 mock entries into User_mail table
+INSERT INTO User_mail (username, email)
+VALUES
+    ('user1', 'user1@example.com'),
+    ('user2', 'user2@example.com'),
+    ('user3', 'user3@example.com'),
+    ('user4', 'user4@example.com'),
+    ('user5', 'user5@example.com'),
+    ('user6', 'user6@example.com'),
+    ('user7', 'user7@example.com'),
+    ('user8', 'user8@example.com'),
+    ('user9', 'user9@example.com'),
+    ('user10', 'user10@example.com'),
+    ('user11', 'user11@example.com'),
+    ('user12', 'user12@example.com'),
+    ('user13', 'user13@example.com'),
+    ('user14', 'user14@example.com'),
+    ('user15', 'user15@example.com'),
+    ('user16', 'user16@example.com'),
+    ('user17', 'user17@example.com'),
+    ('user18', 'user18@example.com'),
+    ('user19', 'user19@example.com'),
+    ('user20', 'user20@example.com');
+    
+    
+-- Inserting transaction history for user1
+INSERT INTO Transaction_history (price_quote, date, order_type, amount, Ticker, username)
+VALUES
+    (100.00, '2024-03-21 10:00:00', 'Buy', 10, 'CAAMX.SA', 'user1'),
+    (110.00, '2024-03-21 11:30:00', 'Sell', 5, 'CSMF.PA', 'user1'),
+    (90.00, '2024-03-21 13:45:00', 'Buy', 8, 'UBSG.SW', 'user1');
+    
+-- Inserting portfolio entry for user1
+INSERT INTO Portfolio_entry (price_quote, date, order_type, amount, Ticker, username)
+VALUES
+    (100.00, '2024-03-21 10:00:00', 'Buy', 10, 'CAAMX.SA', 'user1'),
+    (110.00, '2024-03-21 11:30:00', 'Sell', 5, 'CSMF.PA', 'user1'),
+    (90.00, '2024-03-21 13:45:00', 'Buy', 8, 'UBSG.SW', 'user1');
+
+-- Inserting transaction history for user2
+INSERT INTO Transaction_history (price_quote, date, order_type, amount, Ticker, username)
+VALUES
+    (50.00, '2024-03-21 09:30:00', 'Buy', 5, 'JEF', 'user2'),
+    (55.00, '2024-03-21 14:00:00', 'Sell', 3, 'HNNMY', 'user2');
+    
+-- Inserting portfolio entry for user2
+INSERT INTO Portfolio_entry (price_quote, date, order_type, amount, Ticker, username)
+VALUES
+    (50.00, '2024-03-21 09:30:00', 'Buy', 5, 'JEF', 'user2'),
+    (55.00, '2024-03-21 14:00:00', 'Sell', 3, 'HNNMY', 'user2');
+
+-- Inserting transaction history for user3
+INSERT INTO Transaction_history (price_quote, date, order_type, amount, Ticker, username)
+VALUES
+    (120.00, '2024-03-21 10:45:00', 'Buy', 12, 'MSCI', 'user3'),
+    (130.00, '2024-03-21 12:15:00', 'Sell', 7, 'KPMGY', 'user3'),
+    (115.00, '2024-03-21 14:30:00', 'Buy', 10, 'EXK', 'user3');
+    
+-- Inserting portfolio entry for user3
+INSERT INTO Portfolio_entry (price_quote, date, order_type, amount, Ticker, username)
+VALUES
+    (120.00, '2024-03-21 10:45:00', 'Buy', 12, 'MSCI', 'user3'),
+    (130.00, '2024-03-21 12:15:00', 'Sell', 7, 'KPMGY', 'user3'),
+    (115.00, '2024-03-21 14:30:00', 'Buy', 10, 'EXK', 'user3');
+
+-- Inserting transaction history for user4
+INSERT INTO Transaction_history (price_quote, date, order_type, amount, Ticker, username)
+VALUES
+    (75.00, '2024-03-21 11:00:00', 'Buy', 8, 'PM', 'user4');
+    
+-- Inserting portfolio entry for user4
+INSERT INTO Portfolio_entry (price_quote, date, order_type, amount, Ticker, username)
+VALUES
+    (75.00, '2024-03-21 11:00:00', 'Buy', 8, 'PM', 'user4');
+
+-- Inserting transaction history for user5
+INSERT INTO Transaction_history (price_quote, date, order_type, amount, Ticker, username)
+VALUES
+    (200.00, '2024-03-21 10:30:00', 'Buy', 2, 'UBP', 'user5'),
+    (190.00, '2024-03-21 12:00:00', 'Sell', 1, 'MET', 'user5');
+    
+-- Inserting portfolio entry for user5
+INSERT INTO Portfolio_entry (price_quote, date, order_type, amount, Ticker, username)
+VALUES
+    (200.00, '2024-03-21 10:30:00', 'Buy', 2, 'UBP', 'user5'),
+    (190.00, '2024-03-21 12:00:00', 'Sell', 1, 'MET', 'user5');
+
+-- Inserting transaction history for user6
+INSERT INTO Transaction_history (price_quote, date, order_type, amount, Ticker, username)
+VALUES
+    (80.00, '2024-03-21 09:00:00', 'Buy', 7, 'BCS', 'user6'),
+    (85.00, '2024-03-21 11:30:00', 'Sell', 4, 'AMZN', 'user6'),
+    (75.00, '2024-03-21 13:45:00', 'Buy', 5, 'IMPACT.CO', 'user6');
+    
+-- Inserting portfolio entry for user6
+INSERT INTO Portfolio_entry (price_quote, date, order_type, amount, Ticker, username)
+VALUES
+    (80.00, '2024-03-21 09:00:00', 'Buy', 7, 'BCS', 'user6'),
+    (85.00, '2024-03-21 11:30:00', 'Sell', 4, 'AMZN', 'user6'),
+    (75.00, '2024-03-21 13:45:00', 'Buy', 5, 'IMPACT.CO', 'user6');
+
+-- Inserting transaction history for user7
+INSERT INTO Transaction_history (price_quote, date, order_type, amount, Ticker, username)
+VALUES
+    (120.00, '2024-03-21 09:30:00', 'Buy', 12, 'BLK', 'user7'),
+    (125.00, '2024-03-21 12:00:00', 'Sell', 6, 'XOM', 'user7');
+    
+-- Inserting portfolio entry for user7
+INSERT INTO Portfolio_entry (price_quote, date, order_type, amount, Ticker, username)
+VALUES
+    (120.00, '2024-03-21 09:30:00', 'Buy', 12, 'BLK', 'user7'),
+    (125.00, '2024-03-21 12:00:00', 'Sell', 6, 'XOM', 'user7');
+
+-- Inserting transaction history for user8
+INSERT INTO Transaction_history (price_quote, date, order_type, amount, Ticker, username)
+VALUES
+    (95.00, '2024-03-21 10:45:00', 'Buy', 8, 'NOVN.SW', 'user8'),
+    (100.00, '2024-03-21 13:15:00', 'Sell', 4, 'MSCI', 'user8'),
+    (90.00, '2024-03-21 14:30:00', 'Buy', 6, 'KPMGY', 'user8');
+    
+-- Inserting portfolio entry for user8
+INSERT INTO Portfolio_entry (price_quote, date, order_type, amount, Ticker, username)
+VALUES
+    (95.00, '2024-03-21 10:45:00', 'Buy', 8, 'NOVN.SW', 'user8'),
+    (100.00, '2024-03-21 13:15:00', 'Sell', 4, 'MSCI', 'user8'),
+    (90.00, '2024-03-21 14:30:00', 'Buy', 6, 'KPMGY', 'user8');
+
+-- Inserting transaction history for user9
+INSERT INTO Transaction_history (price_quote, date, order_type, amount, Ticker, username)
+VALUES
+    (150.00, '2024-03-21 11:00:00', 'Buy', 10, 'EXK', 'user9'),
+    (155.00, '2024-03-21 13:30:00', 'Sell', 5, 'PM', 'user9'),
+    (145.00, '2024-03-21 14:45:00', 'Buy', 8, 'UBP', 'user9');
+    
+-- Inserting portfolio entry for user9
+INSERT INTO Portfolio_entry (price_quote, date, order_type, amount, Ticker, username)
+VALUES
+    (150.00, '2024-03-21 11:00:00', 'Buy', 10, 'EXK', 'user9'),
+    (155.00, '2024-03-21 13:30:00', 'Sell', 5, 'PM', 'user9'),
+    (145.00, '2024-03-21 14:45:00', 'Buy', 8, 'UBP', 'user9');
+
+-- Inserting transaction history for user10
+INSERT INTO Transaction_history (price_quote, date, order_type, amount, Ticker, username)
+VALUES
+    (70.00, '2024-03-21 10:00:00', 'Buy', 6, 'MET', 'user10'),
+    (75.00, '2024-03-21 12:30:00', 'Sell', 3, 'BCS', 'user10'),
+    (65.00, '2024-03-21 14:15:00', 'Buy', 5, 'AMZN', 'user10');
+    
+-- Inserting portfolio entry for user10
+INSERT INTO Portfolio_entry (price_quote, date, order_type, amount, Ticker, username)
+VALUES
+    (70.00, '2024-03-21 10:00:00', 'Buy', 6, 'MET', 'user10'),
+    (75.00, '2024-03-21 12:30:00', 'Sell', 3, 'BCS', 'user10'),
+    (65.00, '2024-03-21 14:15:00', 'Buy', 5, 'AMZN', 'user10');
+
+-- Inserting transaction history for user11
+INSERT INTO Transaction_history (price_quote, date, order_type, amount, Ticker, username)
+VALUES
+    (80.00, '2024-03-21 09:00:00', 'Buy', 7, 'IMPACT.CO', 'user11'),
+    (85.00, '2024-03-21 11:30:00', 'Sell', 4, 'BLK', 'user11'),
+    (75.00, '2024-03-21 13:45:00', 'Buy', 5, 'XOM', 'user11');
+    
+-- Inserting portfolio entry for user11
+INSERT INTO Portfolio_entry (price_quote, date, order_type, amount, Ticker, username)
+VALUES
+    (80.00, '2024-03-21 09:00:00', 'Buy', 7, 'IMPACT.CO', 'user11'),
+    (85.00, '2024-03-21 11:30:00', 'Sell', 4, 'BLK', 'user11'),
+    (75.00, '2024-03-21 13:45:00', 'Buy', 5, 'XOM', 'user11');
+
+-- Inserting transaction history for user12
+INSERT INTO Transaction_history (price_quote, date, order_type, amount, Ticker, username)
+VALUES
+    (120.00, '2024-03-21 09:30:00', 'Buy', 12, 'NOVN.SW', 'user12'),
+    (125.00, '2024-03-21 12:00:00', 'Sell', 6, 'MSCI', 'user12');
+    
+-- Inserting portfolio entry for user12
+INSERT INTO Portfolio_entry (price_quote, date, order_type, amount, Ticker, username)
+VALUES
+    (120.00, '2024-03-21 09:30:00', 'Buy', 12, 'NOVN.SW', 'user12'),
+    (125.00, '2024-03-21 12:00:00', 'Sell', 6, 'MSCI', 'user12');
+
+-- Inserting transaction history for user13
+INSERT INTO Transaction_history (price_quote, date, order_type, amount, Ticker, username)
+VALUES
+    (95.00, '2024-03-21 10:45:00', 'Buy', 8, 'KPMGY', 'user13'),
+    (100.00, '2024-03-21 13:15:00', 'Sell', 4, 'EXK', 'user13'),
+    (90.00, '2024-03-21 14:30:00', 'Buy', 6, 'PM', 'user13');
+    
+-- Inserting portfolio entry for user13
+INSERT INTO Portfolio_entry (price_quote, date, order_type, amount, Ticker, username)
+VALUES
+    (95.00, '2024-03-21 10:45:00', 'Buy', 8, 'KPMGY', 'user13'),
+    (100.00, '2024-03-21 13:15:00', 'Sell', 4, 'EXK', 'user13'),
+    (90.00, '2024-03-21 14:30:00', 'Buy', 6, 'PM', 'user13');
+
+-- Inserting transaction history for user14
+INSERT INTO Transaction_history (price_quote, date, order_type, amount, Ticker, username)
+VALUES
+    (150.00, '2024-03-21 11:00:00', 'Buy', 10, 'UBP', 'user14'),
+    (155.00, '2024-03-21 13:30:00', 'Sell', 5, 'MET', 'user14'),
+    (145.00, '2024-03-21 14:45:00', 'Buy', 8, 'BCS', 'user14');
+
+-- Inserting portfolio entry for user14
+INSERT INTO Portfolio_entry (price_quote, date, order_type, amount, Ticker, username)
+VALUES
+    (150.00, '2024-03-21 11:00:00', 'Buy', 10, 'UBP', 'user14'),
+    (155.00, '2024-03-21 13:30:00', 'Sell', 5, 'MET', 'user14'),
+    (145.00, '2024-03-21 14:45:00', 'Buy', 8, 'BCS', 'user14');
+
+-- Inserting transaction history for user15
+INSERT INTO Transaction_history (price_quote, date, order_type, amount, Ticker, username)
+VALUES
+    (70.00, '2024-03-21 10:00:00', 'Buy', 6, 'AMZN', 'user15'),
+    (75.00, '2024-03-21 12:30:00', 'Sell', 3, 'IMPACT.CO', 'user15'),
+    (65.00, '2024-03-21 14:15:00', 'Buy', 5, 'BLK', 'user15');
+    
+-- Inserting portfolio entry for user15
+INSERT INTO Portfolio_entry (price_quote, date, order_type, amount, Ticker, username)
+VALUES
+    (70.00, '2024-03-21 10:00:00', 'Buy', 6, 'AMZN', 'user15'),
+    (75.00, '2024-03-21 12:30:00', 'Sell', 3, 'IMPACT.CO', 'user15'),
+    (65.00, '2024-03-21 14:15:00', 'Buy', 5, 'BLK', 'user15');
+
+-- Inserting transaction history for user16
+INSERT INTO Transaction_history (price_quote, date, order_type, amount, Ticker, username)
+VALUES
+    (80.00, '2024-03-21 09:00:00', 'Buy', 7, 'XOM', 'user16'),
+    (85.00, '2024-03-21 11:30:00', 'Sell', 4, 'NOVN.SW', 'user16'),
+    (75.00, '2024-03-21 13:45:00', 'Buy', 5, 'KPMGY', 'user16');
+    
+-- Inserting portfolio entry for user16
+INSERT INTO Portfolio_entry (price_quote, date, order_type, amount, Ticker, username)
+VALUES
+    (80.00, '2024-03-21 09:00:00', 'Buy', 7, 'XOM', 'user16'),
+    (85.00, '2024-03-21 11:30:00', 'Sell', 4, 'NOVN.SW', 'user16'),
+    (75.00, '2024-03-21 13:45:00', 'Buy', 5, 'KPMGY', 'user16');
+
+-- Inserting transaction history for user17
+INSERT INTO Transaction_history (price_quote, date, order_type, amount, Ticker, username)
+VALUES
+    (120.00, '2024-03-21 09:30:00', 'Buy', 12, 'EXK', 'user17'),
+    (125.00, '2024-03-21 12:00:00', 'Sell', 6, 'PM', 'user17');
+    
+-- Inserting portfolio entry for user17
+INSERT INTO Portfolio_entry (price_quote, date, order_type, amount, Ticker, username)
+VALUES
+    (120.00, '2024-03-21 09:30:00', 'Buy', 12, 'EXK', 'user17'),
+    (125.00, '2024-03-21 12:00:00', 'Sell', 6, 'PM', 'user17');
+
+-- Inserting transaction history for user18
+INSERT INTO Transaction_history (price_quote, date, order_type, amount, Ticker, username)
+VALUES
+    (95.00, '2024-03-21 10:45:00', 'Buy', 8, 'UBP', 'user18'),
+    (100.00, '2024-03-21 13:15:00', 'Sell', 4, 'MET', 'user18'),
+    (90.00, '2024-03-21 14:30:00', 'Buy', 6, 'BCS', 'user18');
+    
+-- Inserting portfolio entry for user18
+INSERT INTO Portfolio_entry (price_quote, date, order_type, amount, Ticker, username)
+VALUES
+    (95.00, '2024-03-21 10:45:00', 'Buy', 8, 'UBP', 'user18'),
+    (100.00, '2024-03-21 13:15:00', 'Sell', 4, 'MET', 'user18'),
+    (90.00, '2024-03-21 14:30:00', 'Buy', 6, 'BCS', 'user18');
+
+-- Inserting transaction history for user19
+INSERT INTO Transaction_history (price_quote, date, order_type, amount, Ticker, username)
+VALUES
+    (150.00, '2024-03-21 11:00:00', 'Buy', 10, 'AMZN', 'user19'),
+    (155.00, '2024-03-21 13:30:00', 'Sell', 5, 'IMPACT.CO', 'user19'),
+    (145.00, '2024-03-21 14:45:00', 'Buy', 8, 'BLK', 'user19');
+    
+-- Inserting portfolio entry for user19
+INSERT INTO Portfolio_entry (price_quote, date, order_type, amount, Ticker, username)
+VALUES
+    (150.00, '2024-03-21 11:00:00', 'Buy', 10, 'AMZN', 'user19'),
+    (155.00, '2024-03-21 13:30:00', 'Sell', 5, 'IMPACT.CO', 'user19'),
+    (145.00, '2024-03-21 14:45:00', 'Buy', 8, 'BLK', 'user19');
+
+-- Inserting transaction history for user20
+INSERT INTO Transaction_history (price_quote, date, order_type, amount, Ticker, username)
+VALUES
+    (70.00, '2024-03-21 10:00:00', 'Buy', 6, 'XOM', 'user20'),
+    (75.00, '2024-03-21 12:30:00', 'Sell', 3, 'NOVN.SW', 'user20'),
+    (65.00, '2024-03-21 14:15:00', 'Buy', 5, 'KPMGY', 'user20');
+    
+-- Inserting portfolio entry for user20
+INSERT INTO Portfolio_entry (price_quote, date, order_type, amount, Ticker, username)
+VALUES
+    (70.00, '2024-03-21 10:00:00', 'Buy', 6, 'XOM', 'user20'),
+    (75.00, '2024-03-21 12:30:00', 'Sell', 3, 'NOVN.SW', 'user20'),
+    (65.00, '2024-03-21 14:15:00', 'Buy', 5, 'KPMGY', 'user20');
+
+-- Inserting diverse transaction history data with dates before today
+INSERT INTO Transaction_history (price_quote, date, order_type, amount, Ticker, username)
+VALUES
+    (100.00, '2024-03-19 10:00:00', 'Buy', 10, 'CAAMX.SA', 'user1'),
+    (110.00, '2024-03-20 11:30:00', 'Sell', 5, 'CSMF.PA', 'user1'),
+    (90.00, '2024-03-18 13:45:00', 'Buy', 8, 'UBSG.SW', 'user1'),
+    (50.00, '2024-03-19 09:30:00', 'Buy', 5, 'JEF', 'user2'),
+    (55.00, '2024-03-20 14:00:00', 'Sell', 3, 'HNNMY', 'user2'),
+    (120.00, '2024-03-18 10:45:00', 'Buy', 12, 'MSCI', 'user3'),
+    (130.00, '2024-03-19 12:15:00', 'Sell', 7, 'KPMGY', 'user3'),
+    (115.00, '2024-03-17 14:30:00', 'Buy', 10, 'EXK', 'user3'),
+    (75.00, '2024-03-18 11:00:00', 'Buy', 8, 'PM', 'user4'),
+    (200.00, '2024-03-20 10:30:00', 'Buy', 2, 'UBP', 'user5'),
+    (190.00, '2024-03-17 12:00:00', 'Sell', 1, 'MET', 'user5');
+    
+-- Inserting diverse portfolio entry data with dates before today
+INSERT INTO Portfolio_entry (price_quote, date, order_type, amount, Ticker, username)
+VALUES
+    (100.00, '2024-03-19 10:00:00', 'Buy', 10, 'CAAMX.SA', 'user1'),
+    (110.00, '2024-03-20 11:30:00', 'Sell', 5, 'CSMF.PA', 'user1'),
+    (90.00, '2024-03-18 13:45:00', 'Buy', 8, 'UBSG.SW', 'user1'),
+    (50.00, '2024-03-19 09:30:00', 'Buy', 5, 'JEF', 'user2'),
+    (55.00, '2024-03-20 14:00:00', 'Sell', 3, 'HNNMY', 'user2'),
+    (120.00, '2024-03-18 10:45:00', 'Buy', 12, 'MSCI', 'user3'),
+    (130.00, '2024-03-19 12:15:00', 'Sell', 7, 'KPMGY', 'user3'),
+    (115.00, '2024-03-17 14:30:00', 'Buy', 10, 'EXK', 'user3'),
+    (75.00, '2024-03-18 11:00:00', 'Buy', 8, 'PM', 'user4'),
+    (200.00, '2024-03-20 10:30:00', 'Buy', 2, 'UBP', 'user5'),
+    (190.00, '2024-03-17 12:00:00', 'Sell', 1, 'MET', 'user5');
+
+
+
+SELECT * FROM User;

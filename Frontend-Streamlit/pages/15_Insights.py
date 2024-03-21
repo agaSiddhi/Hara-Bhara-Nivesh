@@ -10,18 +10,6 @@ user_service = initialize_system()[1]
 def load_data():
     return user_service.get_user_data_frame_for_insights()
 
-user_data = load_data()
-user_data_investment=unique_df = user_data.drop_duplicates(subset=['age', 'username', 'investment_type'])
-
-# Display the data
-st.write("### Age and Investment Distribution of Users")
-
-# Plot the age distribution and investment type distribution using Plotly
-fig = px.histogram(user_data_investment, x='age', color='investment_type', title='Age and Investment Distribution of Users', labels={'age_group': 'Age Group', 'investment_type': 'Investment Type', 'count': 'Number of Users'})
-fig.update_layout(barmode='group')
-st.plotly_chart(fig)
-
-
 def plot_continent_country_distribution(data):
     # Group users by continent and country
     grouped_data = data.groupby(['continent', 'country']).size().reset_index(name='count')
@@ -34,15 +22,6 @@ def plot_continent_country_distribution(data):
 
     st.plotly_chart(fig)
 
-
-# Display the continent and country distribution
-st.write("### Continent and Country Distribution of Users")
-user_data_continent_country= user_data.drop_duplicates(subset=['continent', 'username', 'country'])
-plot_continent_country_distribution(user_data_continent_country)
-
-
-
-
 def plot_gender_distribution(data):
     # Group users by gender
     
@@ -53,12 +32,6 @@ def plot_gender_distribution(data):
 
     st.plotly_chart(fig)
 
-
-# Display the gender distribution
-st.write("### Gender Distribution of Users")
-
-user_data_gender= user_data.drop_duplicates(subset=['gender', 'username'])
-plot_gender_distribution(user_data_gender)
 
 
 
@@ -73,10 +46,7 @@ def plot_asset_distribution(data):
     st.plotly_chart(fig)
 
 
-# Display the asset type distribution
-st.write("### Asset Type Distribution of Users")
-user_data_asset=unique_df = user_data.drop_duplicates(subset=['age', 'username', 'asset_type'])
-plot_asset_distribution(user_data_asset)
+
 def load_transaction_data():
     return pd.read_csv('transaction_data.csv')
 
@@ -92,11 +62,7 @@ def plot_time_distribution():
 
     st.plotly_chart(fig)
 
-transaction_data = load_transaction_data()
 
-# Display the time distribution of investments
-st.write("### Time Distribution of User Investments")
-plot_time_distribution()
 
 def plot_average_amount_invested():
     # Convert 'date' column to datetime
@@ -119,9 +85,7 @@ def plot_average_amount_invested():
     st.plotly_chart(fig)
 
 
-# Display the average amount invested over time
-st.write("### Average Amount Invested Over Time")
-plot_average_amount_invested()
+
 
 def plot_monthly_invested_amount(data):
     # Convert 'date' column to datetime
@@ -140,7 +104,54 @@ def plot_monthly_invested_amount(data):
 
     st.plotly_chart(fig)
 
-# Display the month-wise invested amount
-st.write("### Month-wise Invested Amount")
-plot_monthly_invested_amount(transaction_data)
 
+
+def main():
+    user_data = load_data()
+    user_data_investment=unique_df = user_data.drop_duplicates(subset=['age', 'username', 'investment_type'])
+
+    # Display the data
+    st.write("### Age and Investment Distribution of Users")
+
+    # Plot the age distribution and investment type distribution using Plotly
+    fig = px.histogram(user_data_investment, x='age', color='investment_type', title='Age and Investment Distribution of Users', labels={'age_group': 'Age Group', 'investment_type': 'Investment Type', 'count': 'Number of Users'})
+    fig.update_layout(barmode='group')
+    st.plotly_chart(fig)
+    
+    # Display the continent and country distribution
+    st.write("### Continent and Country Distribution of Users")
+    user_data_continent_country= user_data.drop_duplicates(subset=['continent', 'username', 'country'])
+    plot_continent_country_distribution(user_data_continent_country)
+
+    # Display the gender distribution
+    st.write("### Gender Distribution of Users")
+
+    user_data_gender= user_data.drop_duplicates(subset=['gender', 'username'])
+    plot_gender_distribution(user_data_gender)
+
+        
+    # Display the asset type distribution
+    st.write("### Asset Type Distribution of Users")
+    user_data_asset=unique_df = user_data.drop_duplicates(subset=['age', 'username', 'asset_type'])
+    plot_asset_distribution(user_data_asset)
+    
+    transaction_data = load_transaction_data()
+
+    # Display the time distribution of investments
+    st.write("### Time Distribution of User Investments")
+    plot_time_distribution()
+    
+    # Display the average amount invested over time
+    st.write("### Average Amount Invested Over Time")
+    plot_average_amount_invested()
+
+    # Display the month-wise invested amount
+    st.write("### Month-wise Invested Amount")
+    plot_monthly_invested_amount(transaction_data)
+    
+    
+if __name__ == "__main__":
+    main()
+    # back to home
+    if st.button("Back to Home"):
+        st.switch_page("Landing.py")
