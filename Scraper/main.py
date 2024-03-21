@@ -1,9 +1,9 @@
 import schedule
 import time
 
-from Scraper.scraper_1 import scrape_and_save_articles_daily
+from Scraper.scraper_esg_investing import scrape_and_save_articles_daily
 from Scraper.clean import process_articles_and_save
-from Scraper.scraper_2 import scrape_sustainalytics_data
+from Scraper.scraper_sustainalytics import scrape_sustainalytics_data
 from Scraper.scoring_algo import scoring_algorithm
 from Scraper.push_to_database import (
     push_esg_data_to_database,
