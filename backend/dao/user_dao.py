@@ -9,12 +9,13 @@ import pycountry_convert as pc
 
 
 class UserDao(CompanyDao):
-    def __init__(self, host, user, password, database):
+    def __init__(self, host, user, password, database,port):
         self.connection = mysql.connector.connect(
             host=host,
             user=user,
             password=password,
             database=database,
+            port=port
         )
         
     def execute_query(self, query, params=None):
@@ -278,6 +279,22 @@ class UserDao(CompanyDao):
         df['country']= df['username'].apply(self.get_country_from_username)
         df['continent']=df['country'].apply(self.get_continent_from_country)
         print(df)
+        return df
+    
+    def get_time_frequency_of_user(self):
+        query = f'''SELECT date, COUNT(transactionID) AS num_transactions
+                    FROM Transaction_history
+                    GROUP BY date;'''
+        result=self.execute_query(query)
+        df = pd.DataFrame(result, columns=['date', 'num_transactions'])
+        print("time distribution",df)
+        return df
+    
+    def get_date_amount_for_avg_insights(self):
+        query = f'''SELECT date, amount FROM Transaction_history;'''
+        result=self.execute_query(query)
+        df = pd.DataFrame(result, columns=['date', 'amount'])
+        print("amount distribution",df)
         return df
     
 

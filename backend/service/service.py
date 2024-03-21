@@ -254,5 +254,10 @@ class UserService:
     def get_user_data_frame_for_insights(self):
         return self.user_dao.get_user_data_frame_for_insights()
     
+    def get_time_frequency_of_user(self):
+        return self.user_dao.get_time_frequency_of_user()
+    
+    def get_date_amount_for_avg_insights(self):
+        return self.user_dao.get_date_amount_for_avg_insights()
         
         

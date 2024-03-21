@@ -83,12 +83,12 @@ def load_transaction_data():
     return pd.read_csv('transaction_data.csv')
 
 
-def plot_time_distribution(data):
+def plot_time_distribution():
     # Convert 'date' column to datetime
-    data['date'] = pd.to_datetime(data['date'])
+    time_distribution_data = user_service.get_time_frequency_of_user()
 
     # Create a line plot for time distribution of investments
-    fig = px.histogram(data, x='date', nbins=20, title='Time Distribution of User Investments')
+    fig = px.histogram(time_distribution_data, x='date',y='num_transactions', nbins=20, title='Time Distribution of User Investments')
     fig.update_xaxes(title='Date')
     fig.update_yaxes(title='Number of Transactions')
 
@@ -98,11 +98,11 @@ transaction_data = load_transaction_data()
 
 # Display the time distribution of investments
 st.write("### Time Distribution of User Investments")
-plot_time_distribution(transaction_data)
+plot_time_distribution()
 
-def plot_average_amount_invested(data):
+def plot_average_amount_invested():
     # Convert 'date' column to datetime
-    data['date'] = pd.to_datetime(data['date'])
+    data= user_service.get_date_amount_for_avg_insights()
 
     # Calculate the total amount invested per day
     daily_total = data.groupby(data['date'].dt.date)['amount'].sum().cumsum()
@@ -123,7 +123,7 @@ def plot_average_amount_invested(data):
 
 # Display the average amount invested over time
 st.write("### Average Amount Invested Over Time")
-plot_average_amount_invested(transaction_data)
+plot_average_amount_invested()
 
 def plot_monthly_invested_amount(data):
     # Convert 'date' column to datetime
