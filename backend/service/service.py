@@ -376,7 +376,7 @@ class UserService:
         total_price = quantity*price_per_stock
         
         if total_price > user_wallet:
-            st.warning("Not enough balance in your wallet. Current wallet balance: ${user_wallet}")
+            st.warning(f"Not enough balance in your wallet. Current wallet balance: ${user_wallet}")
         else:
             user_wallet -= total_price
             st.success(f"Successfully bought {quantity} stocks of {st.session_state.get('company')} for ${total_price}.")

@@ -26,15 +26,7 @@ class CompanyDao:
         finally:
             if not self.connection.autocommit:
                 self.connection.commit()
-    
-    def get_industry_descriptions(self):
-        query = "SELECT industryID, description FROM Industry;"
-        results = self.execute_query(query)
-        descriptions = {}
-        for row in results:
-            descriptions[row[0]] = row[1]
-        return descriptions
-    
+                
     def get_company_name_and_description(self):
         query = "SELECT name,currentScore, (SELECT description FROM Industry WHERE Company.industryID = Industry.industryID)  FROM Company ORDER BY currentScore DESC;"
         results = self.execute_query(query)
