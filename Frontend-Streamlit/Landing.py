@@ -1,6 +1,7 @@
 import streamlit as st
 from streamlit_option_menu import option_menu
 from streamlit_extras.add_vertical_space import add_vertical_space
+import streamlit_shadcn_ui as ui
 
 title = "Hara Bhara Nivesh"
 page_icon = ":money_with_wings:"  # emojis: https://www.webfx.com/tools/emoji-cheat-sheet/
@@ -71,6 +72,10 @@ process = ["""
         3. **Choose your carbon credits:** Select carbon credits that align with your sustainability goals.
         4. **Complete your transactions:** Buy or sell carbon credits seamlessly through our platform.
         """]
+
+testimonials = [""" I used to have a better chance of finding a unicorn in my backyard than understanding the stock market. But thanks to this app, I'm now investing like a wizard with a crystal ball!" - Harry "The Unicorn Whisperer""","""Who knew investing could be as easy as ordering pizza? With this app, I'm choosing my stocks faster than I can decide on toppings!""","""I thought ESG stood for 'Extra Spicy Guacamole' until I stumbled upon this app. Now, I'm proudly investing in companies that are as environmentally friendly as my vegan avocado toast!"""]
+
+testi_name = ["""Harry "The Unicorn Whisperer" Potter""","""Pepperoni Pete""","""Avocado Andy"""]
 
 def main():
 
@@ -161,6 +166,8 @@ def main():
     # Testimonials
     st.header("Testimonials")
     # Add some testimonials from satisfied users or partners
+    for i in range(3):
+        ui.metric_card(title=testimonials[i], content=testi_name[i],description="")
     st.markdown("---")
 
     add_vertical_space(2)

@@ -73,6 +73,7 @@ def main():
     st.title('Carbon Credit Marketplace')
     ticker = st.session_state['company_ticker'].upper()
     emissions = st.number_input('Enter Carbon Emissions (in tons):')
+    file = st.file_uploader("Upload your SEC/ Other Regulatory filing for proof.")
     if st.button('Add Emissions'):
         add_emissions(ticker, emissions)
             

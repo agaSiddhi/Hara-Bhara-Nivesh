@@ -45,9 +45,10 @@ def main():
     
     # Page title
     st.title('Wanna Set Your Target!')    
-    
+    st.markdown(f"##### Your current score is: {current_score:.4}")
     # Main function for the target section
     target_score = st.number_input("Enter your score target:")
+    
     if current_score < target_score:
         placeholder = st.empty()
         suggestions_button = None

@@ -260,10 +260,7 @@ class CompanyDao:
                 portfolio_score.append(current_score)
 
         data['Score'] = portfolio_score
-        if len((portfolio_score))!=0:
-            return current_score/len(portfolio_score), data 
-        else:
-            return current_score, data 
+        return portfolio_score[-1], data 
     
     
     def calculate_portfolio_balance(self,data=None):

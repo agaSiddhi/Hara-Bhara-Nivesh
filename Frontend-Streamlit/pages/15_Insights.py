@@ -14,12 +14,13 @@ def plot_continent_country_distribution(data):
     # Group users by continent and country
     grouped_data = data.groupby(['continent', 'country']).size().reset_index(name='count')
 
-    # Create a pivot table for easier plotting
-    pivot_data = grouped_data.pivot(index='continent', columns='country', values='count').fillna(0)
-    
-    # Create a heatmap
-    fig = px.imshow(pivot_data, labels=dict(color="Number of Users"), title='Continent and Country Distribution of Users')
+    # Plot the data using Plotly Express
+    fig = px.scatter_geo(grouped_data, locations="country", locationmode="country names", color="continent",
+                         hover_name="country", size="count",
+                         projection="natural earth")
 
+    fig.update_layout(title="Continent and Country Distribution of Users")
+    # Render the plot in Streamlit
     st.plotly_chart(fig)
 
 def plot_gender_distribution(data):
@@ -150,6 +151,7 @@ def main():
     
 if __name__ == "__main__":
     main()
+
     # back to home
     if st.button("Back to Home"):
         st.switch_page("Landing.py")

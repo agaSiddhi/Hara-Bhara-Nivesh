@@ -45,65 +45,32 @@ def main():
                 """
     st.markdown(hide_st_style, unsafe_allow_html=True)
 
-    # --- NAVIGATION MENU ---
-    selected = option_menu(
-        menu_title=None,
-        options=["CER", "VER"],
-        icons=["pencil-fill", "bar-chart-fill"],  # https://icons.getbootstrap.com/
-        orientation="horizontal",
-    )
+    listings = company_service.return_listings_for_auction()
+    df1 = pd.DataFrame(listings, columns=["bidID", "initial_Bid", "minimum_Step", "credits_Listed", "companyID"])
+    search_query = st.text_input('Search Companies:', value='', key='search_input')
 
-    # --- CER Tab ---
-    if selected == "CER":
-        listings = company_service.return_listings_for_auction()
-        df1 = pd.DataFrame(listings, columns=["bidID", "initial_Bid", "minimum_Step", "credits_Listed", "companyID"])
-        search_query = st.text_input('Search Companies:', value='', key='search_input')
+    # Display listings
+    if df1.empty:
+        st.write("Auction Market is empty")
+    else:
+        for index, row in df1.iterrows():
+            company_ticker = row['companyID']
+            bidID = row['bidID']
+            st.subheader(f"**{company_ticker}**")
+            col1, col2, col3 = st.columns([1, 1, 0.5])
+            ini_bid = max(df1[df1['companyID'] == company_ticker]['initial_Bid'])
+            # print(ini_bid)
+            st.write(f"##### Current highest bid: $ {get_maximum_bidding_price(company_ticker,ini_bid)}")
+            st.write(f"##### Credits Listed: {row['credits_Listed']}")
+            # Add detail button to view company details
+            button_label = "Details"
+            button_key = f"{button_label}_{bidID}_{company_ticker}_CER"
+            if col3.button(button_label, key=button_key):
+                st.session_state['cer_company'] = row
+                st.switch_page("pages/cer_details_page.py") 
+            st.write("---")
 
-        # Display listings
-        if df1.empty:
-            st.write("Auction Market is empty")
-        else:
-            for index, row in df1.iterrows():
-                company_ticker = row['companyID']
-                bidID = row['bidID']
-                st.subheader(f"**{company_ticker}**")
-                col1, col2, col3 = st.columns([1, 1, 0.5])
-                ini_bid = max(df1[df1['companyID'] == company_ticker]['initial_Bid'])
-                # print(ini_bid)
-                st.write(f"##### Current highest bid: $ {get_maximum_bidding_price(company_ticker,ini_bid)}")
-                st.write(f"##### Credits Listed: {row['credits_Listed']}")
-                # Add detail button to view company details
-                button_label = "Details"
-                button_key = f"{button_label}_{bidID}_{company_ticker}_CER"
-                if col3.button(button_label, key=button_key):
-                    st.session_state['cer_company'] = row
-                    st.switch_page("pages/cer_details_page.py") 
-                st.write("---")
-
-    # --- VER Tab ---
-    if selected == "VER":
-
-        # Search bar with search icon
-        search_query = st.text_input('Search Companies:', value='', key='search_input')
-
-        # Display listings
-        if len(df) == 0:
-            st.write('No results found.')
-        else:
-            for index, row in df.iterrows():
-                st.subheader(f"**{row['company_ticker']}**")
-                col1, col2, col3 = st.columns([1, 1, 0.5])
-                col1.markdown(f"##### Current highest bid: ${get_maximum_bidding_price(row['company_ticker'])}")
-                col2.markdown(f"##### Credits Listed: {row['credits_to_list']}")
-                # Add detail button to view company details
-                button_label = "Details"
-                button_key = f"{button_label}_{row['company_ticker']}_CER"
-                if col3.button(button_label, key=button_key):
-                    st.session_state['cer_company'] = row
-                    st.switch_page("pages/cer_details_page.py") 
-                st.write("---")
-        
-
+    
 
 
 if __name__ == "__main__":
