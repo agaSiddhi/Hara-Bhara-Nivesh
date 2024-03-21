@@ -122,6 +122,8 @@ def my_account():
             
             company_ticker = st.session_state.get('company_ticker').upper()
             company_ticker=company_ticker.upper()
+            company_details = company_service.return_signup_company_data(company_ticker)
+            company_details_df = pd.DataFrame(company_details,columns=['companyName','ticker','password','walletBalance','creditBalance','fundCat','industryID'])
 
             # image is to be replaced by actual image of the company ehich we ll keep downloaded for presenation purpose
             user_image_url = '../assets/username.jpeg'
@@ -134,8 +136,8 @@ def my_account():
             st.subheader(f"{get_company_name(company_ticker)}")
             
             col1,col2 = st.columns(2)
-            col1.write(f"Money Wallet Balance: ${get_wallet_balance(company_ticker)}")
-            col2.write(f"Credits Wallet Balance: {get_credit_balance(company_ticker)} credits")
+            col1.write(f"Money Wallet Balance: ${company_details_df['walletBalance'][0]}")
+            col2.write(f"Credits Wallet Balance: {company_details_df['creditBalance'][0]} credits")
             
             st.write("---")
             add_vertical_space(2)
@@ -150,13 +152,15 @@ def my_account():
         if 'company_ticker' in st.session_state:
             company_ticker=st.session_state.company_ticker
             company_ticker=company_ticker.upper()
+            company_details = company_service.return_signup_company_data(company_ticker)
+            company_details_df = pd.DataFrame(company_details,columns=['companyName','ticker','password','walletBalance','creditBalance','fundCat','industryID'])
             
             # Display company details
             st.subheader(f"{get_company_name(company_ticker)}")
             
             col1,col2 = st.columns(2)
-            col1.write(f"Money Wallet Balance: ${get_wallet_balance(company_ticker)}")
-            col2.write(f"Credits Wallet Balance: {get_credit_balance(company_ticker)} credits")
+            col1.write(f"Money Wallet Balance: ${company_details_df['walletBalance'][0]}")
+            col2.write(f"Credits Wallet Balance: {company_details_df['creditBalance'][0]} credits")
 
             # Form to list credits
             st.subheader("List Credits:")
@@ -172,6 +176,11 @@ def my_account():
                    
                     company_service.return_update_credit_wallet_balance(company_ticker, credits_to_list)
                     st.success("Credits listed successfully!")
+
+                    company_details = company_service.return_signup_company_data(company_ticker)
+                    company_details_df = pd.DataFrame(company_details,columns=['companyName','ticker','password','walletBalance','creditBalance','fundCat','industryID'])
+                    updated_credit_balance = company_details_df['creditBalance'][0]  # Get the updated credit balance from the database
+                    col2.write(f"Updated Credit Balance: {updated_credit_balance} credits") 
                 else:
                     st.error("Insufficient credits in the wallet.")
         else:
