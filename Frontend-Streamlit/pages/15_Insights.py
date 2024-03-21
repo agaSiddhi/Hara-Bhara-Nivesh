@@ -1,33 +1,25 @@
 import streamlit as st
 import plotly.express as px
 import pandas as pd
+from backend.configuration import initialize_system
+
+
+user_service = initialize_system()[1]
+
+# def load_data():
+#     return pd.read_csv('user_data.csv')
 
 def load_data():
-    return pd.read_csv('user_data.csv')
-
-
-def categorize_age(age):
-    if age < 18:
-        return '<18'
-    elif 18 <= age <= 29:
-        return '18-29'
-    elif 30 <= age <= 44:
-        return '30-44'
-    elif 45 <= age <= 60:
-        return '45-60'
-    else:
-        return '>60'
+    return user_service.get_user_data_frame_for_insights()
 
 user_data = load_data()
-
-# Create a new column for age groups
-user_data['age_group'] = user_data['age'].apply(categorize_age)
+user_data_investment=unique_df = user_data.drop_duplicates(subset=['age', 'username', 'investment_type'])
 
 # Display the data
 st.write("### Age and Investment Distribution of Users")
 
 # Plot the age distribution and investment type distribution using Plotly
-fig = px.histogram(user_data, x='age_group', color='investment_type', title='Age and Investment Distribution of Users', labels={'age_group': 'Age Group', 'investment_type': 'Investment Type', 'count': 'Number of Users'})
+fig = px.histogram(user_data_investment, x='age', color='investment_type', title='Age and Investment Distribution of Users', labels={'age_group': 'Age Group', 'investment_type': 'Investment Type', 'count': 'Number of Users'})
 fig.update_layout(barmode='group')
 st.plotly_chart(fig)
 
@@ -47,13 +39,15 @@ def plot_continent_country_distribution(data):
 
 # Display the continent and country distribution
 st.write("### Continent and Country Distribution of Users")
-plot_continent_country_distribution(user_data)
+user_data_continent_country= user_data.drop_duplicates(subset=['continent', 'username', 'country'])
+plot_continent_country_distribution(user_data_continent_country)
 
 
 
 
 def plot_gender_distribution(data):
     # Group users by gender
+    
     gender_counts = data['gender'].value_counts()
 
     # Create a pie chart for gender distribution
@@ -64,7 +58,9 @@ def plot_gender_distribution(data):
 
 # Display the gender distribution
 st.write("### Gender Distribution of Users")
-plot_gender_distribution(user_data)
+
+user_data_gender= user_data.drop_duplicates(subset=['gender', 'username'])
+plot_gender_distribution(user_data_gender)
 
 
 
@@ -81,8 +77,8 @@ def plot_asset_distribution(data):
 
 # Display the asset type distribution
 st.write("### Asset Type Distribution of Users")
-plot_asset_distribution(user_data)
-
+user_data_asset=unique_df = user_data.drop_duplicates(subset=['age', 'username', 'asset_type'])
+plot_asset_distribution(user_data_asset)
 def load_transaction_data():
     return pd.read_csv('transaction_data.csv')
 
@@ -129,28 +125,6 @@ def plot_average_amount_invested(data):
 st.write("### Average Amount Invested Over Time")
 plot_average_amount_invested(transaction_data)
 
-
-# def plot_monthly_invested_amount(data):
-#     # Convert 'date' column to datetime
-#     data['date'] = pd.to_datetime(data['date'])
-
-#     # Extract month and year from the date and convert to string
-#     data['month_year'] = data['date'].dt.to_period('M').astype(str)
-
-#     # Group data by month and sum the invested amounts
-#     monthly_invested_amount = data.groupby('month_year')['amount'].sum().reset_index()
-
-#     # Create a line plot for month-wise invested amount
-#     fig = px.line(monthly_invested_amount, x='month_year', y='amount', title='Month-wise Invested Amount')
-#     fig.update_xaxes(title='Month')
-#     fig.update_yaxes(title='Total Invested Amount')
-
-#     st.plotly_chart(fig)
-
-
-# # Display the month-wise invested amount
-# st.write("### Month-wise Invested Amount")
-# plot_monthly_invested_amount(transaction_data)
 def plot_monthly_invested_amount(data):
     # Convert 'date' column to datetime
     data['date'] = pd.to_datetime(data['date'])

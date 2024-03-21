@@ -5,16 +5,16 @@ import pandas as pd
 import numpy as np
 from datetime import datetime as dt
 from backend.dao.dao import CompanyDao
+import pycountry_convert as pc
 
 
 class UserDao(CompanyDao):
-    def __init__(self, host, user, password, database,port):
+    def __init__(self, host, user, password, database):
         self.connection = mysql.connector.connect(
             host=host,
             user=user,
             password=password,
             database=database,
-            port = port
         )
         
     def execute_query(self, query, params=None):
@@ -238,3 +238,48 @@ class UserDao(CompanyDao):
         df = pd.DataFrame(result, columns=["Amount", "Date", "Order Type", "Price/Quote", "Ticker"])
         df = df.sort_values(by='Date')
         return df
+    
+    def get_age_from_username(self,username):
+        query=f'''SELECT age from User
+                WHERE username="{username}";'''
+        result=self.execute_query(query)
+        return result[0][0]
+    
+    def get_gender_from_username(self,username):
+        query=f'''SELECT gender from User
+                WHERE username="{username}";'''
+        result=self.execute_query(query)
+        return result[0][0]
+    
+    def get_country_from_username(self,username):
+        query=f'''SELECT country from User
+                WHERE username="{username}";'''
+        result=self.execute_query(query)
+        return result[0][0]
+    
+    def get_continent_from_country(self,country_name):
+        country_name=country_name.capitalize()
+        country_alpha2 = pc.country_name_to_country_alpha2(country_name)
+        country_continent_code = pc.country_alpha2_to_continent_code(country_alpha2)
+        country_continent_name = pc.convert_continent_code_to_continent_name(country_continent_code)
+        return country_continent_name
+        
+        
+    def get_user_data_frame_for_insights(self):
+        query = f'''
+        SELECT username, Ticker
+        FROM Portfolio_entry;'''
+        result=self.execute_query(query)
+        df=pd.DataFrame(result,columns=["username","Ticker"])
+        df['investment_type'] = df['Ticker'].apply(self.get_fund_category_from_ticker).apply(lambda x: x[0][0])
+        df['asset_type']= df['Ticker'].apply(self.get_industry_keyword_from_companyID).apply(lambda x: x[0][0])
+        df['age']=df['username'].apply(self.get_age_from_username)
+        df['gender']= df['username'].apply(self.get_gender_from_username)
+        df['country']= df['username'].apply(self.get_country_from_username)
+        df['continent']=df['country'].apply(self.get_continent_from_country)
+        print(df)
+        return df
+    
+
+
+        

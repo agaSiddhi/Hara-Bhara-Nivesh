@@ -29,7 +29,6 @@ class ConcreteFactory(AbstractFactory):
             user=config['DATABASE']['user'],
             password=config['DATABASE']['password'],
             database=config['DATABASE']['database'],
-            port=config['DATABASE']['port']
         )
 
     @classmethod
@@ -43,7 +42,6 @@ class ConcreteFactory(AbstractFactory):
             user=config['DATABASE']['user'],
             password=config['DATABASE']['password'],
             database=config['DATABASE']['database'],
-            port=config['DATABASE']['port'],
         )
 
     @classmethod
@@ -55,7 +53,7 @@ def read_config(file_path):
     config.read(file_path)
     return config
 
-def initialize_system(config_path="/home/agasiddhi/Documents/desis/project/DesisSG-2/backend/config.ini"):
+def initialize_system(config_path="../backend/config.ini"):
     config = read_config(config_path)
     factory = ConcreteFactory()
 
