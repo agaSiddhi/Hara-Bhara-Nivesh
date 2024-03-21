@@ -9,13 +9,13 @@ import pycountry_convert as pc
 
 
 class UserDao(CompanyDao):
-    def __init__(self, host, user, password, database,port):
+    def __init__(self, host, user, password, database):
         self.connection = mysql.connector.connect(
             host=host,
             user=user,
             password=password,
             database=database,
-            port=port
+            # port = port
         )
         
     def execute_query(self, query, params=None):

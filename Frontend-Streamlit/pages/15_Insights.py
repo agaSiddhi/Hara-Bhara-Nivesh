@@ -6,8 +6,6 @@ from backend.configuration import initialize_system
 
 user_service = initialize_system()[1]
 
-# def load_data():
-#     return pd.read_csv('user_data.csv')
 
 def load_data():
     return user_service.get_user_data_frame_for_insights()

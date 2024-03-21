@@ -46,8 +46,6 @@ def read_yaml(filename):
 # Import the company details into your script
 # company_data = read_yaml('company_details.yaml')
 
-def get_credits_balance(ticker):
-    return company_data['credentials']['usernames'][ticker]['credits_wallet']
 
 def add_emissions(ticker, emissions):
     industry = company_service.return_industry_keyword_from_companySignup_ticker(ticker)

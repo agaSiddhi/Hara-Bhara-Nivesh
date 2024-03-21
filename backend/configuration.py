@@ -29,6 +29,7 @@ class ConcreteFactory(AbstractFactory):
             user=config['DATABASE']['user'],
             password=config['DATABASE']['password'],
             database=config['DATABASE']['database'],
+            # port=config['DATABASE']['port']
         )
 
     @classmethod
@@ -42,6 +43,7 @@ class ConcreteFactory(AbstractFactory):
             user=config['DATABASE']['user'],
             password=config['DATABASE']['password'],
             database=config['DATABASE']['database'],
+            # port=config['DATABASE']['port'],
         )
 
     @classmethod
