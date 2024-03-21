@@ -744,6 +744,36 @@ VALUES
     (200.00, '2024-03-20 10:30:00', 'Buy', 2, 'UBP', 'user5'),
     (190.00, '2024-03-17 12:00:00', 'Sell', 1, 'MET', 'user5');
 
+-- Inserting diverse portfolio entry data with dates spanning different months
+INSERT INTO Portfolio_entry (price_quote, date, order_type, amount, Ticker, username)
+VALUES
+    (100.00, '2023-12-15 10:00:00', 'Buy', 10, 'CAAMX.SA', 'user1'),
+    (110.00, '2023-11-20 11:30:00', 'Sell', 5, 'CSMF.PA', 'user1'),
+    (90.00, '2023-10-18 13:45:00', 'Buy', 8, 'UBSG.SW', 'user1'),
+    (50.00, '2023-09-19 09:30:00', 'Buy', 5, 'JEF', 'user2'),
+    (55.00, '2023-08-20 14:00:00', 'Sell', 3, 'HNNMY', 'user2'),
+    (120.00, '2023-07-18 10:45:00', 'Buy', 12, 'MSCI', 'user3'),
+    (130.00, '2023-06-19 12:15:00', 'Sell', 7, 'KPMGY', 'user3'),
+    (115.00, '2023-05-17 14:30:00', 'Buy', 10, 'EXK', 'user3'),
+    (75.00, '2023-04-18 11:00:00', 'Buy', 8, 'PM', 'user4'),
+    (200.00, '2023-03-20 10:30:00', 'Buy', 2, 'UBP', 'user5'),
+    (190.00, '2023-02-17 12:00:00', 'Sell', 1, 'MET', 'user5');
+
+-- Inserting diverse transaction history data with dates spanning different months
+INSERT INTO Transaction_history (price_quote, date, order_type, amount, Ticker, username)
+VALUES
+    (100.00, '2023-12-15 10:00:00', 'Buy', 10, 'CAAMX.SA', 'user1'),
+    (110.00, '2023-11-20 11:30:00', 'Sell', 5, 'CSMF.PA', 'user1'),
+    (90.00, '2023-10-18 13:45:00', 'Buy', 8, 'UBSG.SW', 'user1'),
+    (50.00, '2023-09-19 09:30:00', 'Buy', 5, 'JEF', 'user2'),
+    (55.00, '2023-08-20 14:00:00', 'Sell', 3, 'HNNMY', 'user2'),
+    (120.00, '2023-07-18 10:45:00', 'Buy', 12, 'MSCI', 'user3'),
+    (130.00, '2023-06-19 12:15:00', 'Sell', 7, 'KPMGY', 'user3'),
+    (115.00, '2023-05-17 14:30:00', 'Buy', 10, 'EXK', 'user3'),
+    (75.00, '2023-04-18 11:00:00', 'Buy', 8, 'PM', 'user4'),
+    (200.00, '2023-03-20 10:30:00', 'Buy', 2, 'UBP', 'user5'),
+    (190.00, '2023-02-17 12:00:00', 'Sell', 1, 'MET', 'user5');
+
 
 
 SELECT * FROM User;
