@@ -143,16 +143,14 @@ def main():
     st.write("Explore some of our top sustainable investment options:")
     # Add images of featured investments
     images = [
-        '../assets/apple.jpeg',
-        '../assets/tesla.jpeg',
-        '../assets/gs.webp',
-        '../assets/nike.jpeg'
+        '../assets/amazon.png',
+        '../assets/h&m.jpeg', 
+        '../assets/barclays.svg'
     ]
-    col1, col2, col3, col4 = st.columns(4)
+    col1, col2, col3 = st.columns(3)
     col1.image(images[0],caption=None)
     col2.image(images[1],caption=None)
     col3.image(images[2],caption=None )
-    col4.image(images[3],caption=None )
     st.markdown("---")
 
     add_vertical_space(2)

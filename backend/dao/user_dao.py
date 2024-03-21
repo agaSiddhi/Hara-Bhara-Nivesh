@@ -183,7 +183,7 @@ class UserDao(CompanyDao):
     def get_name_from_username(self,username):
         query=f'''SELECT name FROM User WHERE username="{username}";'''
         result=self.execute_query(query)
-    
+        return result[0][0]
 
     
     def calculate_portfolio_balance(self,data):
