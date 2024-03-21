@@ -23,6 +23,7 @@ def authenticated_menu_user():
 def main():
     st.title("Sell Shares")
     user_service= initialize_system()[1]
+    company_service=initialize_system()[0]
     company_names = [company for company, shares in shares.items() if shares > 0]
     selected_company = st.selectbox("Select a company to sell shares:", company_names)
     quantity = st.number_input(f"Enter quantity to sell for {selected_company}:", min_value=0, max_value=int(shares[selected_company]), step=1)
@@ -35,7 +36,7 @@ def main():
     if st.button("Sell"):
         company_details = {
             'name': selected_company,
-            'price_per_stock': user_service.get_current_price_for_ticker(selected_company)  # You can fetch the actual price from your data source
+            'price_per_stock': company_service.get_current_price_for_ticker(selected_company)  # You can fetch the actual price from your data source
         }
         user_service.sell_stock(shares, company_details, quantity)
 
