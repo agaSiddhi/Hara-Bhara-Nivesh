@@ -47,10 +47,6 @@ def plot_asset_distribution(data):
 
 
 
-def load_transaction_data():
-    return pd.read_csv('transaction_data.csv')
-
-
 def plot_time_distribution():
     # Convert 'date' column to datetime
     time_distribution_data = user_service.get_time_frequency_of_user()
@@ -63,10 +59,11 @@ def plot_time_distribution():
     st.plotly_chart(fig)
 
 
-
 def plot_average_amount_invested():
     # Convert 'date' column to datetime
     data= user_service.get_date_amount_for_avg_insights()
+
+    data['date'] = pd.to_datetime(data['date'])
 
     # Calculate the total amount invested per day
     daily_total = data.groupby(data['date'].dt.date)['amount'].sum().cumsum()
@@ -87,7 +84,9 @@ def plot_average_amount_invested():
 
 
 
-def plot_monthly_invested_amount(data):
+def plot_monthly_invested_amount():
+
+    data= user_service.get_date_amount_for_avg_insights() 
     # Convert 'date' column to datetime
     data['date'] = pd.to_datetime(data['date'])
 
@@ -135,7 +134,6 @@ def main():
     user_data_asset=unique_df = user_data.drop_duplicates(subset=['age', 'username', 'asset_type'])
     plot_asset_distribution(user_data_asset)
     
-    transaction_data = load_transaction_data()
 
     # Display the time distribution of investments
     st.write("### Time Distribution of User Investments")
@@ -147,7 +145,7 @@ def main():
 
     # Display the month-wise invested amount
     st.write("### Month-wise Invested Amount")
-    plot_monthly_invested_amount(transaction_data)
+    plot_monthly_invested_amount()
     
     
 if __name__ == "__main__":
