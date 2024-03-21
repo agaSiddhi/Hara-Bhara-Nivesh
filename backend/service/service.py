@@ -250,5 +250,14 @@ class UserService:
     
     def get_transaction_history(self,username):
         return self.user_dao.get_transaction_history(username)
+    
+    def get_user_data_frame_for_insights(self):
+        return self.user_dao.get_user_data_frame_for_insights()
+    
+    def get_time_frequency_of_user(self):
+        return self.user_dao.get_time_frequency_of_user()
+    
+    def get_date_amount_for_avg_insights(self):
+        return self.user_dao.get_date_amount_for_avg_insights()
         
         
