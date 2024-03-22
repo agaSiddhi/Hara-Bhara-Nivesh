@@ -15,7 +15,7 @@ class UserDao(CompanyDao):
     It inherits from the CompanyDao class and provides additional functionalities specific to user data.
     """
 
-    def __init__(self, host, user, password, database,port):
+    def __init__(self, host, user, password, database):
         """
         Initializes a UserDao object with the connection details to the MySQL database.
 
@@ -30,7 +30,7 @@ class UserDao(CompanyDao):
             user=user,
             password=password,
             database=database,
-            port = port
+            # port = port
         )
 
     def execute_query(self, query, params=None):

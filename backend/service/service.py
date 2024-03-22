@@ -130,6 +130,8 @@ class CompanyService():
     # Calculate the percentage of each category
         total_stocks = sum(stocks.values())
         category_percentage = {'Equity': 0, 'Debt': 0, 'Hybrid': 0, 'Others': 0}
+        if total_stocks == 0:
+            return category_percentage
         for ticker, amount in stocks.items():
             category= self.company_dao.get_fund_category_from_ticker(ticker)
             category_percentage[category[0][0]] += amount / total_stocks
@@ -146,8 +148,11 @@ class CompanyService():
             dict: A dictionary containing the percentage of stocks held in each industry.
         """
         total_stocks = sum(stocks.values())
+        
         # Calculate the percentage of each industry
         industry_percentage = {'Capital Goods': 0, 'Financial': 0, 'Services': 0, 'HealthCare': 0, 'Consumer Staples':0, 'Other':0}
+        if total_stocks == 0:
+            return industry_percentage
         for ticker, amount in stocks.items():
             industry = self.company_dao.get_industry_keyword_from_companyID(ticker)
             industry_percentage[industry[0][0]] += amount / total_stocks

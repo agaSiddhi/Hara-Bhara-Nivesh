@@ -118,33 +118,44 @@ def main():
 
 
     ## ----- Distribution of Stock Industries
-            
+    total_stocks = sum(stocks.values())
     industry_percentage=company_service.return_industry_percentage(stocks)
-
-    # Convert dictionary to lists for plotting
+     # Convert dictionary to lists for plotting
     industries = list(industry_percentage.keys())
     percentages = list(industry_percentage.values())
-
-    # Plotting the horizontal bar graph with shades of blue
-    fig, ax = plt.subplots()
-
     # Convert colormap to color names
     cmap = plt.get_cmap('Reds')
     colors = [mcolors.to_hex(cmap(i)) for i in np.linspace(0.2, 1, len(industries))]
+    if total_stocks==0:
+        ax.pie([1], labels=[''],colors=colors,wedgeprops=dict(width=0.3))
+        ax.set_aspect('equal')
+        st.write("---")
+        st.markdown("### Allocation of Stock Industries")
+        st.pyplot(fig)
+    else:
+        
 
-    # Plot the pie chart with a hole inside
-    fig, ax = plt.subplots()
+       
 
-    # Outer pie chart
-    wedges, texts, autotexts = ax.pie(percentages, colors=colors, autopct='%1.1f%%', startangle=360, wedgeprops=dict(width=0.3), pctdistance=0.85)
+        # Plotting the horizontal bar graph with shades of blue
+        fig, ax = plt.subplots()
 
-    # Equal aspect ratio ensures that pie is drawn as a circle
-    ax.set_aspect('equal')
-    st.write("---")
-    st.markdown("### Allocation of Stock Industries")
+        
 
-    # Display the plot using Streamlit
-    st.pyplot(fig)
+        # Plot the pie chart with a hole inside
+        fig, ax = plt.subplots()
+
+        # Outer pie chart
+        
+        wedges, texts, autotexts = ax.pie(percentages, colors=colors, autopct='%1.1f%%', startangle=360, wedgeprops=dict(width=0.3), pctdistance=0.85)
+
+        # Equal aspect ratio ensures that pie is drawn as a circle
+        ax.set_aspect('equal')
+        st.write("---")
+        st.markdown("### Allocation of Stock Industries")
+
+        # Display the plot using Streamlit
+        st.pyplot(fig)
 
     col1, col2, col3,col4 = st.columns([0.6, 3, 1, 0.5])
     # Iterate over category_percentage dictionary

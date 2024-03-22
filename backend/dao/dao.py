@@ -12,7 +12,7 @@ class CompanyDao:
     It establishes a connection to the database and provides methods for executing various 
     queries related to company data.'''
 
-    def __init__(self, host, user, password, database,port):
+    def __init__(self, host, user, password, database):
         """
         Initializes a new instance of the class.
 
@@ -31,7 +31,7 @@ class CompanyDao:
             user=user,
             password=password,
             database=database,
-            port = port
+            # port = port
         )
 
     def execute_query(self, query, params=None):
