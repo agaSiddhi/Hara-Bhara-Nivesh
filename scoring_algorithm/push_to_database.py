@@ -30,14 +30,14 @@ def push_data_to_database(csv_file, config_path, table_name, column_names):
     except Exception as e:
         print(f"Error: {e}")
 
-def push_esg_data_to_database(csv_file='Scraper/final_data.csv', config_path='backend/config.ini'):
+def push_esg_data_to_database(csv_file='final_data.csv', config_path='../backend/config.ini'):
     column_names = ['Company Name', 'Date', 'Environment', 'Social', 'Governance', 'ESG_ratings', 'Final_ESG_Score', 'Historical_esg_score']
     push_data_to_database(csv_file, config_path, 'esg_data', column_names)
 
-def push_article_data_to_database(csv_file='Scraper/Article_data.csv', config_path='backend/config.ini'):
+def push_article_data_to_database(csv_file='../Scraper/Article_data.csv', config_path='../backend/config.ini'):
     column_names = ['Heading', 'Text', 'Datetime', 'Company', 'Category', 'Score', 'Score_blob']
     push_data_to_database(csv_file, config_path, 'article_data', column_names)
 
-def push_ratings_data_to_database(csv_file='Scraper/sustainalytics_data.csv', config_path='backend/config.ini'):
+def push_ratings_data_to_database(csv_file='../Scraper/sustainalytics_data.csv', config_path='../backend/config.ini'):
     column_names = ['Company Name', 'ESG Risk Rating', 'Score']
     push_data_to_database(csv_file, config_path, 'esg_ratings', column_names)

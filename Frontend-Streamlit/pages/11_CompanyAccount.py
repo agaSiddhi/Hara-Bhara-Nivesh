@@ -45,7 +45,7 @@ def update_wallets(company_ticker, bidder_company, bid_amount,bidID):
 
     # Update credits_wallet and money_wallet for the company_ticker
     company_service.return_add_money_to_wallet(company_ticker, money)
-    company_service.return_add_credit_to_credit_wallet(bidder_company, money)
+    company_service.return_add_credit_to_credit_wallet(bidder_company, credits_listed)
     company_service.return_subtract_money_from_wallet(bidder_company, money)
         
 def display_bids_by_company(company_ticker):
