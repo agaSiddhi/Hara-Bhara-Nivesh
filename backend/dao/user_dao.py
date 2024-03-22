@@ -1,5 +1,4 @@
 import mysql.connector
-# from backend.database import return_price_and_date, return_score_and_date
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -14,7 +13,7 @@ class UserDao(CompanyDao):
     It inherits from the CompanyDao class and provides additional functionalities specific to user data.
     """
 
-    def __init__(self, host, user, password, database):
+    def __init__(self, host, user, password, database,port):
         """
         Initializes a UserDao object with the connection details to the MySQL database.
 
@@ -29,7 +28,7 @@ class UserDao(CompanyDao):
             user=user,
             password=password,
             database=database,
-            # port = port
+            port = port
         )
 
     def execute_query(self, query, params=None):
@@ -48,7 +47,7 @@ class UserDao(CompanyDao):
         """
         try:
             with self.connection.cursor() as cursor:
-                cursor.execute(query, params=params)
+                cursor.execute(query, params)
                 return cursor.fetchall()
         except mysql.connector.Error as err:
             print(f"Error executing query: {query}. Error: {err}")
@@ -69,8 +68,13 @@ class UserDao(CompanyDao):
             country (str): The country of residence of the user.
             gender (str): The gender of the user (e.g., male, female, others).
         """
-        query = f'''INSERT INTO User (username, name, password, balance, age, country, gender) VALUES ("{username}", "{name}", "{password}", {10000}, "{age}", "{country}", "{gender}");'''
-        self.execute_query(query)
+        query = """
+            INSERT INTO User (username, name, password, balance, age, country, gender)
+            VALUES (%s, %s, %s, %s, %s, %s, %s);
+        """
+        params = (username, name, password, 10000, age, country, gender)
+        self.execute_query(query, params)
+
 
     def add_user_email(self, username, email):
         """
@@ -80,8 +84,12 @@ class UserDao(CompanyDao):
             username (str): The username of the user.
             email (str): The email address of the user.
         """
-        query = f'''INSERT INTO User_mail (username, email) VALUES ("{username}", "{email}");'''
-        self.execute_query(query)
+        query = """
+            INSERT INTO User_mail (username, email)
+            VALUES (%s, %s);
+        """
+        params = (username, email)
+        self.execute_query(query, params)
 
     def get_user_data(self):
         """
@@ -124,12 +132,23 @@ class UserDao(CompanyDao):
             Args:
                 row (pandas.Series): A pandas Series representing a single row of the DataFrame.
             """
-            query = f'''
-                INSERT INTO Portfolio_entry (date, order_type, Ticker, amount, price_quote,username)
-                VALUES ("{row['Date'].strftime('%Y-%m-%d')}","{row['Order Type']}", "{row['Ticker']}", {float(row['Amount'])}, {float(row['Price/Quote'])}, "{st.session_state.get('username')}");
-            '''
-      
-            self.execute_query(query)
+            date = row['Date'].strftime('%Y-%m-%d')  
+            order_type = row['Order Type'] 
+            ticker = row['Ticker']  
+            amount = float(row['Amount'])
+            price_quote = float(row['Price/Quote'])
+            username = st.session_state.get('username') 
+
+            # Construct parameterized query with placeholders
+            query = """
+                INSERT INTO Portfolio_entry (date, order_type, Ticker, amount, price_quote, username)
+                VALUES (%s, %s, %s, %s, %s, %s);
+            """
+            # Create a tuple with extracted and potentially validated data
+            params = (date, order_type, ticker, amount, price_quote, username)
+
+        # Execute the query using parameterized execution
+        self.execute_query(query, params)
     
     def get_wallet_balance(self, username):
         """
@@ -141,10 +160,13 @@ class UserDao(CompanyDao):
         Returns:
             float: The current wallet balance of the user.
         """
-        query = f'''SELECT balance
-                FROM User
-                WHERE username = "{username}";'''
-        result = self.execute_query(query)
+        query = """
+        SELECT balance
+        FROM User
+        WHERE username = %s;
+        """
+        params = (username,)  
+        result = self.execute_query(query, params)
         return result[0][0]
 
     def update_transaction_history(self, company_id, quantity, price_per_stock, order_type):
@@ -159,9 +181,12 @@ class UserDao(CompanyDao):
         """
         today_date = dt.today()
         today_date_str = today_date.strftime('%Y-%m-%d')
-        query = f'''INSERT INTO Transaction_history (order_type, date, amount, ticker, username, price_quote) 
-        VALUES ("{order_type}","{today_date_str}",{quantity},"{company_id}","{st.session_state.get('username')}",{price_per_stock});'''
-        self.execute_query(query)
+        query = """
+            INSERT INTO Transaction_history (order_type, date, amount, ticker, username, price_quote) 
+            VALUES (%s, %s, %s, %s, %s, %s);
+        """
+        params = (order_type, today_date_str, quantity, company_id, st.session_state.get('username'), price_per_stock)
+        self.execute_query(query, params)
 
     def update_portfolio(self, company_id, quantity, price_per_stock, order_type):
         """
@@ -175,27 +200,13 @@ class UserDao(CompanyDao):
         """
         today_date = dt.today()
         today_date_str = today_date.strftime('%Y-%m-%d')
-        query = f'''INSERT INTO Portfolio_entry (order_type, date, amount, ticker, username, price_quote) 
-        VALUES ("{order_type}","{today_date_str}",{quantity},"{company_id}","{st.session_state.get('username')}",{price_per_stock});'''
-        self.execute_query(query)
-
-    def get_current_price_for_ticker(self, company_id):
+        query = """
+            INSERT INTO Portfolio_entry (order_type, date, amount, ticker, username, price_quote) 
+            VALUES (%s, %s, %s, %s, %s, %s);
         """
-        Retrieves the current price for a given company ticker symbol.
+        params = (order_type, today_date_str, quantity, company_id, st.session_state.get('username'), price_per_stock)
+        self.execute_query(query, params)
 
-        Args:
-            company_id (str): The ticker symbol of the company.
-
-        Returns:
-            float: The current price of the company's stock.
-        """
-        query = f'''SELECT price
-            FROM PriceHistory
-            WHERE companyID = "{company_id}"
-            ORDER BY updatedAt DESC
-            LIMIT 1;'''
-        result = self.execute_query(query)
-        return result[0][0]
 
     def update_wallet(self, user_wallet):
         """
@@ -232,9 +243,13 @@ class UserDao(CompanyDao):
         Returns:
             str: The email address of the user, or None if not found.
         """
-        query = f'''SELECT email from User_mail
-                WHERE username="{username}";'''
-        result = self.execute_query(query)
+        query = """
+            SELECT email
+            FROM User_mail
+            WHERE username = %s;
+        """
+        params = (username,)  # Tuple with username as parameter
+        result = self.execute_query(query, params)
         if result:
             return result[0][0]
         else:
@@ -251,9 +266,13 @@ class UserDao(CompanyDao):
         Returns:
             pandas.DataFrame: A DataFrame containing the user's portfolio data.
         """
-        query = f'''SELECT amount, date, order_type, price_quote, Ticker
-            FROM Portfolio_entry WHERE username="{username}"; '''
-        result = self.execute_query(query)
+        query = """
+            SELECT amount, date, order_type, price_quote, Ticker
+            FROM Portfolio_entry
+            WHERE username = %s;
+        """
+        params = (username,)  # Tuple with username as parameter
+        result = self.execute_query(query, params)
         df = pd.DataFrame(result, columns=["Amount", "Date", "Order Type", "Price/Quote", "Ticker"])
         df = df.sort_values(by='Date')
         return df
@@ -268,8 +287,13 @@ class UserDao(CompanyDao):
         Returns:
             str: The full name of the user, or None if not found.
         """
-        query = f'''SELECT name FROM User WHERE username="{username}";'''
-        result = self.execute_query(query)
+        query = """
+            SELECT name
+            FROM User
+            WHERE username = %s;
+        """
+        params = (username,)  # Tuple with username as parameter
+        result = self.execute_query(query, params)
         if result:
             return result[0][0]
         else:
@@ -285,11 +309,13 @@ class UserDao(CompanyDao):
         Returns:
             pandas.DataFrame: A DataFrame containing the user's transaction history data.
         """
-        query = f'''
-        SELECT amount, date, order_type, price_quote, Ticker
-        FROM Transaction_history
-        WHERE username = '{username}';'''
-        result = self.execute_query(query)
+        query = """
+            SELECT amount, date, order_type, price_quote, Ticker
+            FROM Transaction_history
+            WHERE username = %s;
+        """
+        params = (username,)  # Tuple with username as parameter
+        result = self.execute_query(query, params)
         df = pd.DataFrame(result, columns=["Amount", "Date", "Order Type", "Price/Quote", "Ticker"])
         df = df.sort_values(by='Date')
         return df
@@ -304,9 +330,13 @@ class UserDao(CompanyDao):
         Returns:
             int: The age of the user, or None if not found.
         """
-        query = f'''SELECT age from User
-                WHERE username="{username}";'''
-        result = self.execute_query(query)
+        query = """
+            SELECT age
+            FROM User
+            WHERE username = %s;
+        """
+        params = (username,)  # Tuple with username as parameter
+        result = self.execute_query(query, params)
         if result:
             return result[0][0]
         else:
@@ -322,9 +352,13 @@ class UserDao(CompanyDao):
         Returns:
             str: The gender of the user, or None if not found.
         """
-        query = f'''SELECT gender from User
-                WHERE username="{username}";'''
-        result = self.execute_query(query)
+        query = """
+            SELECT gender
+            FROM User
+            WHERE username = %s;
+        """
+        params = (username,)  # Tuple with username as parameter
+        result = self.execute_query(query, params)
         if result:
             return result[0][0]
         else:
@@ -340,9 +374,13 @@ class UserDao(CompanyDao):
         Returns:
             str: The country of residence of the user, or None if not found.
         """
-        query = f'''SELECT country from User
-                WHERE username="{username}";'''
-        result = self.execute_query(query)
+        query = """
+            SELECT country
+            FROM User
+            WHERE username = %s;
+        """
+        params = (username,)  # Tuple with username as parameter
+        result = self.execute_query(query, params)
         if result:
             return result[0][0]
         else:
@@ -388,3 +426,9 @@ class UserDao(CompanyDao):
 
 
         
+    def get_date_amount_for_avg_insights(self):
+        query = f'''SELECT date, amount FROM Transaction_history;'''
+        result=self.execute_query(query)
+        df = pd.DataFrame(result, columns=['date', 'amount'])
+        print("amount distribution",df)
+        return df

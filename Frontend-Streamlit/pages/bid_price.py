@@ -38,7 +38,6 @@ def bid_price():
         st.subheader("Bid Price:")
         print(get_maximum_bidding_price(company_details.get('companyID'),company_details))
         mini = float(get_maximum_bidding_price(company_details.get('companyID'),company_details))
-        # step_size = get_step_size(company_details.get('company_ticker'))
         step_size = float(company_details.get('minimum_Step',0))
 
         credits_to_bid = st.number_input("Enter Bidding price", min_value=mini,step=step_size) 
@@ -49,27 +48,6 @@ def bid_price():
             bidID = company_details.get('bidID')
             bid = credits_to_bid
             company_service.return_insert_into_bidding_table(bidder, bidID, bid)
-            data = {
-                    'company_ticker': [company_details.get('companyID', 'N/A')],
-                    'bid_amount': [credits_to_bid],
-                    'bidder_company': [st.session_state.company_ticker.upper()],
-                    'bid_time': [datetime.now().strftime("%Y-%m-%d %H:%M:%S")]
-                    }
-
-            # Create DataFrame
-            df = pd.DataFrame(data)
-
-            # Save to CSV file
-            csv_filename = "bidding_list.csv"
-            if os.path.exists(csv_filename):
-                existing_df = pd.read_csv(csv_filename)
-                df = pd.concat([existing_df, df], ignore_index=True)
-
-                df.to_csv(csv_filename, index=False)
-
-                
-            else:
-                df.to_csv(csv_filename, index=False)
                 
             st.success("Success!")
         if col2.button("Go back"):

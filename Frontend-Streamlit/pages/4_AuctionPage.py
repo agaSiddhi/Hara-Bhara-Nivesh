@@ -12,7 +12,6 @@ def get_maximum_bidding_price(company_ticker,ini_bid):
     if max_amount:
         return max_amount
     else:
-        # return get_current_price(company_details)
         print("ini bid",ini_bid)
         return ini_bid  # Return the initial bid if no bids are placed
 
@@ -59,7 +58,6 @@ def main():
             st.subheader(f"**{company_ticker}**")
             col1, col2, col3 = st.columns([1, 1, 0.5])
             ini_bid = max(df1[df1['companyID'] == company_ticker]['initial_Bid'])
-            # print(ini_bid)
             st.write(f"##### Current highest bid: $ {get_maximum_bidding_price(company_ticker,ini_bid)}")
             st.write(f"##### Credits Listed: {row['credits_Listed']}")
             # Add detail button to view company details

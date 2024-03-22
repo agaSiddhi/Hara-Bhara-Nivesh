@@ -28,9 +28,6 @@ def save_uploaded_file(uploaded_file,username):
     uploaded = pd.read_excel(uploaded_file)
         
     user_service.add_uploaded_file_to_current_portfolio(uploaded)
-    
-    
-    
 
 def main():
 

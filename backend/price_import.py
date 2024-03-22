@@ -9,10 +9,15 @@ import numpy as np
 def insert_db(file):
     # Establish database connection
     db_connection = mysql.connector.connect(
+        # host="localhost",
+        # user="root",
+        # password="Baba@7849",
+        # database="Securities"
         host="localhost",
         user="root",
-        password="Baba@7849",
-        database="Securities"
+        password="Sr1r@dhe",
+        database="Securities",
+        port="3333"
     )
     cursor = db_connection.cursor()
 

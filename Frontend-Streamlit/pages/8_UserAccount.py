@@ -135,7 +135,6 @@ def my_account():
                     col1.markdown(f"### {company_name}")
                     col2.markdown(f'### ${amount:.6}')
                     st.write('---')
-                # st.write(current_portfolio)
             else:
                 st.warning("You haven't made any investments yet!!")
                 st.write("---")
