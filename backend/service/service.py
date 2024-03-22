@@ -15,7 +15,7 @@ logger = logger.get_logger()
 class CompanyService():
     def __init__(self, company_dao):
         self.company_dao = company_dao
-        logger.basicConfig(filename="./app.log", filemode='w')
+        # logger.basicConfig(filename="../app.log", filemode='w')
     
     def return_company_name_and_description(self):
         """
@@ -156,7 +156,7 @@ class CompanyService():
             return industry_percentage
         for ticker, amount in stocks.items():
             industry = self.company_dao.get_industry_keyword_from_companyID(ticker)
-            industry_percentage[industry[0][0]] += amount / total_stocks
+            industry_percentage[industry[0][0]] += abs(amount / total_stocks)
         return industry_percentage
     
     def calculate_portfolio_balance(self,data=None):
