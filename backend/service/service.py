@@ -8,13 +8,14 @@ from backend.dao.user_dao import UserDao
 import streamlit as st
 import pycountry_convert as pc
 import string
-import logging
+from logger import logger
+logger = logger.get_logger()
 
 
 class CompanyService():
     def __init__(self, company_dao):
         self.company_dao = company_dao
-        logging.basicConfig(filename="./app.log", filemode='w')
+        logger.basicConfig(filename="./app.log", filemode='w')
     
     def return_company_name_and_description(self):
         """
@@ -362,7 +363,7 @@ class CompanyService():
             self.company_dao.update_wallet_balance(ticker, updated_wallet_balance)
             return True  # Indicate success
         except Exception as e:
-            logging.error(f"Error updating wallet balance for {ticker}: {e}")
+            logger.error(f"Error updating wallet balance for {ticker}: {e}")
             return False  # Indicate failure
     
     def return_industry_keyword_from_companyID(self,companyID=None):
@@ -412,7 +413,7 @@ class CompanyService():
             self.company_dao.add_new_company(ticker, name, total_assets, revenue, employee_count, founded_year, industry_id, fund_category)
             return True  # Indicate success
         except Exception as e:
-            logging.error(f"Error adding new company: {e}")
+            logger.error(f"Error adding new company: {e}")
             return False  # Indicate failure
 
     def return_industry_id_by_keyword(self, industry_keyword):
@@ -493,13 +494,13 @@ class CompanyService():
             bool: True if the company signup details are successfully added, False otherwise.
         """
         industryID = self.return_industry_id_by_keyword(industry)[0][0]
-        # print(industryID)
+        # logger.info("debug industry iD", industryID)
         try:
             # Call the DAO method to insert the new company into the database
             self.company_dao.add_company_signup_details(company_name,company_ticker,password,initial_money_wallet_balance,initial_credits_wallet_balance,industryID,fund_category)
             return True  # Indicate success
         except Exception as e:
-            logging.error(f"Error adding new company: {e}")
+            logger.error(f"Error adding new company: {e}")
             return False  # Indicate failure
     
     def get_company_data_dict(self):
@@ -555,7 +556,7 @@ class CompanyService():
             self.company_dao.update_credit_wallet_balance(ticker, credits)
             return True  # Indicate success
         except Exception as e:
-            logging.error(f"Error updating credit wallet balance for {ticker}: {e}")
+            logger.error(f"Error updating credit wallet balance for {ticker}: {e}")
             return False  # Indicate failure
 
     def add_listed_credit_to_bid(self, initial_bid, min_step, credits, ticker):
@@ -576,7 +577,7 @@ class CompanyService():
             self.company_dao.add_listed_credit_to_bid(initial_bid, min_step, credits, ticker)
             return True  # Indicate success
         except Exception as e:
-            logging.error(f"Error adding listed credit to bid for {ticker}: {e}")
+            logger.error(f"Error adding listed credit to bid for {ticker}: {e}")
             return False  # Indicate failure
         
     def return_industry_keyword_from_companySignup_ticker(self,ticker):
@@ -619,7 +620,7 @@ class CompanyService():
             self.company_dao.add_credits_wallet_balance_from_companySignup_ticker(ticker, updated_wallet_balance)
             return True  # Indicate success
         except Exception as e:
-            logging.error(f"Error adding credits wallet balance for {ticker}: {e}")
+            logger.error(f"Error adding credits wallet balance for {ticker}: {e}")
             return False  # Indicate failure
         
     def return_listings_for_auction(self):
@@ -658,7 +659,7 @@ class CompanyService():
             self.company_dao.insert_into_bidding_table(bidder, bidID, bid)
             return True  # Indicate success
         except Exception as e:
-            logging.error(f"Error adding to bidding table: {e}")
+            logger.error(f"Error adding to bidding table: {e}")
             return False  # Indicate failure
 
     def return_max_bidding_amount(self, ticker):
@@ -732,7 +733,7 @@ class CompanyService():
             self.company_dao.add_money_to_wallet(ticker,money)
             return True  # Indicate success
         except Exception as e:
-            logging.error(f"Error  adding to money wallet balance for {ticker}: {e}")
+            logger.error(f"Error  adding to money wallet balance for {ticker}: {e}")
             return False  # Indicate failure
         
     def return_add_credit_to_credit_wallet(self,ticker,cred_listed):
@@ -754,7 +755,7 @@ class CompanyService():
             self.company_dao.add_credit_to_credit_wallet(ticker,cred_listed)
             return True  # Indicate success
         except Exception as e:
-            logging.error(f"Error adding credit to credit wallet balance for {ticker}: {e}")
+            logger.error(f"Error adding credit to credit wallet balance for {ticker}: {e}")
             return False  # Indicate failure
     
     def return_subtract_money_from_wallet(self,ticker,money):
@@ -776,7 +777,7 @@ class CompanyService():
             self.company_dao.subtract_money_from_wallet(ticker,money)
             return True  # Indicate success
         except Exception as e:
-            logging.error(f"Error subtracting money from wallet balance for {ticker}: {e}")
+            logger.error(f"Error subtracting money from wallet balance for {ticker}: {e}")
             return False  # Indicate failure
         
     def return_remove_bid_from_bidID(self, bidID):
@@ -797,7 +798,7 @@ class CompanyService():
             self.company_dao.remove_bid_from_bidID( bidID)
             return True  # Indicate success
         except Exception as e:
-            logging.error(f"Error removing for {bidID}: {e}")
+            logger.error(f"Error removing for {bidID}: {e}")
             return False  # Indicate failure
 
 class UserService:
@@ -1008,7 +1009,7 @@ class UserService:
         df.fillna(method='ffill',inplace=True)
         df = df.fillna(0)
         current_score = 0
-        logging.info(df)
+        logger.info(df)
         tickers = df.columns.to_numpy()
         stocks = {ticker: 0 for ticker in tickers}
         
@@ -1148,7 +1149,7 @@ class UserService:
         df['gender']= df['username'].apply(self.user_dao.get_gender_from_username)
         df['country']= df['username'].apply(self.user_dao.get_country_from_username)
         df['continent']=df['country'].apply(self.get_continent_from_country)
-        logging.info(df)
+        logger.info(df)
         return df
     
     def get_time_frequency_of_user(self):
