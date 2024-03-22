@@ -13,7 +13,7 @@ class UserDao(CompanyDao):
     It inherits from the CompanyDao class and provides additional functionalities specific to user data.
     """
 
-    def __init__(self, host, user, password, database,port):
+    def __init__(self, host, user, password, database):
         """
         Initializes a UserDao object with the connection details to the MySQL database.
 
@@ -28,7 +28,7 @@ class UserDao(CompanyDao):
             user=user,
             password=password,
             database=database,
-            port = port
+            # port = port
         )
 
     def execute_query(self, query, params=None):
@@ -412,16 +412,16 @@ class UserDao(CompanyDao):
         df = pd.DataFrame(result, columns=['date', 'amount'])
         return df
     
-    def get_score_history_of_all_companies(self):
-        query = f'''SELECT companyID, score, updatedAt
-                FROM ScoreHistory;'''
-        scoreData = self.execute_query(query)
-        df = pd.DataFrame(scoreData, columns=['tickers', 'score', 'dates'])
-        df['Date']=pd.to_datetime(df['dates'])
-        df = df.pivot(index="Date", columns="tickers", values="score")
-        df.fillna(method='ffill', inplace=True)
-        df=df.fillna(0)
-        return df
+    # def get_score_history_of_all_companies(self):
+    #     query = f'''SELECT companyID, score, updatedAt
+    #             FROM ScoreHistory;'''
+    #     scoreData = self.execute_query(query)
+    #     df = pd.DataFrame(scoreData, columns=['tickers', 'score', 'dates'])
+    #     df['Date']=pd.to_datetime(df['dates'])
+    #     df = df.pivot(index="Date", columns="tickers", values="score")
+    #     df.fillna(method='ffill', inplace=True)
+    #     df=df.fillna(0)
+    #     return df
     
 
 

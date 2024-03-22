@@ -10,7 +10,7 @@ class CompanyDao:
     It establishes a connection to the database and provides methods for executing various 
     queries related to company data.'''
 
-    def __init__(self, host, user, password, database,port):
+    def __init__(self, host, user, password, database):
         """
         Initializes a new instance of the class.
 
@@ -29,7 +29,7 @@ class CompanyDao:
             user=user,
             password=password,
             database=database,
-            port = port
+            # port = port
         )
         
     def execute_query(self, query, params=None):
@@ -613,7 +613,7 @@ class CompanyDao:
                 VALUES (%s, %s, %s, %s);'''
         params = (initial_bid, min_step, credits, ticker)
         try:
-            self.execute_query(query)
+            self.execute_query(query,params)
             print("added listed credit to bid successfully")
         except Exception as e:
             print(f"Error adding listed credit to bid : {e}")
@@ -672,7 +672,7 @@ class CompanyDao:
         query = '''UPDATE CompanySignup SET InitialCreditsWalletBalance = %s WHERE CompanyTicker = %s;'''
         params = (updated_wallet_balance, ticker)
         try:
-            self.execute_query(query)
+            self.execute_query(query,params)
             print(f"Credits Wallet balance updated successfully for {ticker}")
         except Exception as e:
             print(f"Error updating credits wallet balance for {ticker}: {e}")

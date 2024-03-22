@@ -1009,7 +1009,8 @@ class UserService:
         stocks = {ticker: 0 for ticker in tickers}
         
         for index, row in data.iterrows():
-            
+            string_timestamp = row['Date'].strftime('%Y-%m-%d')
+            converted_timestamp = pd.Timestamp(string_timestamp)
             if row['Order Type'] == 'Buy':
                 stocks[row['Ticker']]+=float(row['Amount'])
                 if stocks[row['Ticker']] != 0:
