@@ -204,10 +204,13 @@ class UserDao(CompanyDao):
         Args:
             user_wallet (float): The new wallet balance of the user.
         """
-        query = f'''UPDATE User
-                 SET balance = {user_wallet}
-                 WHERE username = "{st.session_state.get('username')}"; '''
-        self.execute_query(query)  
+        query = """
+            UPDATE User
+            SET balance = %s
+            WHERE username = %s;
+        """
+        params = (user_wallet, st.session_state.get('username')) 
+        self.execute_query(query, params)   
         
     def get_usernames(self):
         """

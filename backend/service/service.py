@@ -118,6 +118,9 @@ class CompanyService():
     def return_company_details_for_credits(self):
         return self.company_dao.get_company_details_for_credits()
     
+    def get_current_price_for_ticker(self,ticker):
+        return self.company_dao.get_current_price_for_ticker(ticker)
+    
     def carry_over(self,score_data,field):
         
         # Define the start and end dates for the data
@@ -371,7 +374,7 @@ class UserService:
     def buy_stock(self,username, quantity, company_id):
         user_wallet = self.get_wallet_balance(username)
 
-        price_per_stock = self.get_current_price_for_ticker(company_id)
+        price_per_stock = self.user_dao.get_current_price_for_ticker(company_id)
         
         total_price = quantity*price_per_stock
         
@@ -414,9 +417,6 @@ class UserService:
         else:
             st.warning("You don't own any shares of this company.")
     
-    def get_current_price_for_ticker(self,company_id):
-        return self.user_dao.get_current_price_for_ticker(company_id)
-    
     def get_mail(self,username):
         return self.user_dao.get_mail(username)
     
@@ -442,7 +442,7 @@ class UserService:
         df.fillna(method='ffill',inplace=True)
         df = df.fillna(0)
         current_score = 0
-        
+        print(df)
         tickers = df.columns.to_numpy()
         stocks = {ticker: 0 for ticker in tickers}
         

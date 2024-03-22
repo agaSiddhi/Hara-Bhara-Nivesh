@@ -74,7 +74,24 @@ class CompanyDao:
                 WHERE companyID = "{companyID}";'''
         result = self.execute_query(query)
         return result
-        
+
+    def get_current_price_for_ticker(self, company_id):
+        """
+        Retrieves the current price for a given company ticker symbol.
+
+        Args:
+            company_id (str): The ticker symbol of the company.
+
+        Returns:
+            float: The current price of the company's stock.
+        """
+        query = f'''SELECT price
+            FROM PriceHistory
+            WHERE companyID = "{company_id}"
+            ORDER BY updatedAt DESC
+            LIMIT 1;'''
+        result = self.execute_query(query)
+        return result[0][0]
 
     def get_score_history_from_companyID(self, companyID=None):
         query = f'''SELECT score, updatedAt

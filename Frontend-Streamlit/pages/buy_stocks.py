@@ -8,7 +8,7 @@ def main():
     company_id = company_service.return_companyID_from_company_name(company_name)[0][0]
 
     st.subheader(f"Buy: {company_name}")
-    st.write(f"Price per stock: ${user_service.get_current_price_for_ticker(company_id)}")
+    st.write(f"Price per stock: ${company_service.get_current_price_for_ticker(company_id)}")
     quantity = st.number_input("Enter quantity to buy:", min_value=10, max_value=1000, step=1)
 
     # Button to buy stocks
