@@ -388,3 +388,9 @@ class UserDao(CompanyDao):
 
 
         
+    def get_date_amount_for_avg_insights(self):
+        query = f'''SELECT date, amount FROM Transaction_history;'''
+        result=self.execute_query(query)
+        df = pd.DataFrame(result, columns=['date', 'amount'])
+        print("amount distribution",df)
+        return df
