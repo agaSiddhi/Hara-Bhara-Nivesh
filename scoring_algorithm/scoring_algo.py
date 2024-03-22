@@ -48,7 +48,7 @@ def update_yaml_file(last_occurrence, yaml_file):
     with open(yaml_file, 'w') as file:
         yaml.dump(last_occurrence, file)
 
-def scoring_algorithm(articles_file = 'Scraper/Article_data.csv' , esg_ratings_file = 'Scraper/sustainalytics_data.csv' , yaml_file = 'Scraper/dictionary.yaml', output_csv_file = 'Scraper/final_data.csv'):
+def scoring_algorithm(articles_file = '../Scraper/Article_data.csv' , esg_ratings_file = '../Scraper/sustainalytics_data.csv' , yaml_file = 'dictionary.yaml', output_csv_file = 'final_data.csv'):
     articles = pd.read_csv(articles_file)
     esg_ratings = pd.read_csv(esg_ratings_file)
 

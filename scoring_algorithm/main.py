@@ -4,8 +4,8 @@ import time
 from Scraper.scraper_esg_investing import scrape_and_save_articles_daily
 from Scraper.clean import process_articles_and_save
 from Scraper.scraper_sustainalytics import scrape_sustainalytics_data
-from Scraper.scoring_algo import scoring_algorithm
-from Scraper.push_to_database import (
+from scoring_algo import scoring_algorithm
+from push_to_database import (
     push_esg_data_to_database,
     push_article_data_to_database,
     push_ratings_data_to_database,
