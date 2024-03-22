@@ -149,8 +149,8 @@ class UserDao(CompanyDao):
             # Create a tuple with extracted and potentially validated data
             params = (date, order_type, ticker, amount, price_quote, username)
 
-        # Execute the query using parameterized execution
-        self.execute_query(query, params)
+            # Execute the query using parameterized execution
+            self.execute_query(query, params)
     
     def get_wallet_balance(self, username):
         """
