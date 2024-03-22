@@ -776,4 +776,15 @@ VALUES
 
 
 
-SELECT * FROM User;
+CREATE INDEX createdAt ON Company (createdAt);
+CREATE INDEX updatedAt ON Company (updatedAt);
+CREATE INDEX currentScore ON Company (currentScore);
+CREATE INDEX fundCategory ON Company (fundCategory);
+CREATE INDEX fundCategory ON CompanySignup (fundCategory);
+CREATE INDEX updatedAt ON PriceHistory (updatedAt);
+CREATE INDEX updatedAt ON ScoreHistory (updatedAt);
+CREATE INDEX age ON User (age);
+CREATE INDEX country ON User (country);
+CREATE INDEX gender ON User (gender);
+CREATE INDEX date ON Transaction_history(date);
+CREATE INDEX date ON Portfolio_entry(date);

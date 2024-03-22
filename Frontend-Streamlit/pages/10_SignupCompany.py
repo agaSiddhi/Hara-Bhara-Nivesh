@@ -35,7 +35,7 @@ def company_signup():
     verify_password = st.text_input("Verify Password", type="password", key="signup_verify_password")
     initial_money_wallet = st.number_input("Initial Money Wallet Balance", value=0)
     initial_credits_wallet = st.number_input("Initial Credits Wallet Balance", value=0)
-    industry_options = ['Capital Goods','Financial', 'Services','Health Care','Consumer Staples','Others']
+    industry_options = ['Capital Goods','Financial', 'Services','HealthCare','Consumer Staples','Others']
     industry = st.selectbox("Industry Type:", industry_options)
     fund_category_options = ['Equity', 'Hybrid', 'Debt', 'Others']
     fund_category = st.selectbox("Fund Category Type:", fund_category_options)
