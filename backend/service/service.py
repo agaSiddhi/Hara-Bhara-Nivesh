@@ -432,15 +432,12 @@ class UserService:
     def calculate_portfolio_score(self,data=None):
         # Initialize portfolio score
         portfolio_score = []
-        current_score = 0
-        scoreData= self.user_dao.get_score_history_of_all_companies()
-        df = pd.DataFrame(scoreData, columns=['tickers', 'score', 'Date'])
+
+        df = self.user_dao.get_score_history_of_all_companies()
+
         start_date = '2023-01-01'
         end_date = dt.today().strftime('%Y-%m-%d')
         date_range = pd.date_range(start=start_date, end=end_date, freq='D')
-        df = df.pivot(index='Date', columns='tickers', values='score')
-        df.fillna(method='ffill',inplace=True)
-        df = df.fillna(0)
         df = df.reindex(date_range)
         df.fillna(method='ffill',inplace=True)
         df = df.fillna(0)
@@ -451,12 +448,14 @@ class UserService:
         
         for index, row in data.iterrows():
             
+            string_timestamp = row['Date'].strftime('%Y-%m-%d')
+            converted_timestamp = pd.Timestamp(string_timestamp)
             if row['Order Type'] == 'Buy':
                 stocks[row['Ticker']]+=float(row['Amount'])
-                current_score += (float(row['Amount'])/stocks[row['Ticker']]) * float(df.loc[row['Date']][row['Ticker']])
+                current_score += (float(row['Amount'])/stocks[row['Ticker']]) * float(df.loc[converted_timestamp][row['Ticker']])
             elif row['Order Type'] == 'Sell':
                 stocks[row['Ticker']]-=float(row['Amount'])
-                current_score -= (float(row['Amount'])/stocks[row['Ticker']]) * float(df.loc[row['Date']][row['Ticker']])
+                current_score -= (float(row['Amount'])/stocks[row['Ticker']]) * float(df.loc[converted_timestamp][row['Ticker']])
                 
             if len((portfolio_score))!=0:
                 portfolio_score.append(current_score/len(portfolio_score))
@@ -464,10 +463,7 @@ class UserService:
                 portfolio_score.append(current_score)
 
         data['Score'] = portfolio_score
-        if len((portfolio_score))!=0:
-            return current_score/len(portfolio_score), data 
-        else:
-            return current_score, data 
+        return portfolio_score[-1], data 
     
     
     def calculate_portfolio_balance(self,data):
@@ -542,7 +538,26 @@ class UserService:
         df['continent']=df['country'].apply(self.get_continent_from_country)
         print(df)
         return df
-    
+    def get_portfolio_score_for_each_user(self):
+        # Get usernames
+        usernames = self.user_dao.get_usernames()
+        
+        # Initialize an empty DataFrame to store results
+        df = pd.DataFrame(columns=['Username', 'Portfolio Score'])
+        
+        # Iterate over usernames
+        for username in usernames:
+            # Get portfolio for the user
+            portfolio = self.get_portfolio_entry_for_user(username)
+            
+            # Calculate portfolio score
+            score, _ = self.calculate_portfolio_score(portfolio)
+            
+            # Append username and score to result DataFrame
+            df = df.append({'Username': username, 'Portfolio Score': score}, ignore_index=True)
+        
+        return df
+
     def get_time_frequency_of_user(self):
         return self.user_dao.get_time_frequency_of_user()
     

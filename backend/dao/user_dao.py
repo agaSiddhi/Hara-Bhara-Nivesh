@@ -207,7 +207,18 @@ class UserDao(CompanyDao):
         query = f'''UPDATE User
                  SET balance = {user_wallet}
                  WHERE username = "{st.session_state.get('username')}"; '''
-        self.execute_query(query)       
+        self.execute_query(query)  
+        
+    def get_usernames(self):
+        """
+        Retrieves all usernames from the User table.
+
+        Returns:
+            list: A list of usernames.
+        """
+        query = '''SELECT username FROM User;'''
+        result = self.execute_query(query)
+        return [row[0] for row in result]     
     
     def get_mail(self, username):
         """
@@ -358,6 +369,17 @@ class UserDao(CompanyDao):
         query = f'''SELECT date, amount FROM Transaction_history;'''
         result = self.execute_query(query)
         df = pd.DataFrame(result, columns=['date', 'amount'])
+        return df
+    
+    def get_score_history_of_all_companies(self):
+        query = f'''SELECT companyID, score, updatedAt
+                FROM ScoreHistory;'''
+        scoreData = self.execute_query(query)
+        df = pd.DataFrame(scoreData, columns=['tickers', 'score', 'dates'])
+        df['Date']=pd.to_datetime(df['dates'])
+        df = df.pivot(index="Date", columns="tickers", values="score")
+        df.fillna(method='ffill', inplace=True)
+        df=df.fillna(0)
         return df
     
 

@@ -104,7 +104,17 @@ def plot_monthly_invested_amount():
 
     st.plotly_chart(fig)
 
-
+def plot_portfolio_score():
+    data = user_service.get_portfolio_score_for_each_user()
+    
+    # Categorize investments as sustainable or non-sustainable based on portfolio score
+    data['Investment Type'] = data['Portfolio Score'].apply(lambda x: 'Sustainable' if x >= 30 else 'Non-Sustainable')
+    
+    # Plot the graph
+    fig = px.histogram(data, x='Investment Type', title='Number of Sustainable and Non-Sustainable Investments', labels={'Investment Type': 'Investment Type', 'count': 'Number of Investments'})
+    
+    # Show the graph
+    st.plotly_chart(fig)
 
 def main():
     user_data = load_data()
@@ -148,6 +158,8 @@ def main():
     st.write("### Month-wise Invested Amount")
     plot_monthly_invested_amount()
     
+    st.write("### Sustainable and Non-Sustainable Investments")
+    plot_portfolio_score()
     
 if __name__ == "__main__":
     main()
