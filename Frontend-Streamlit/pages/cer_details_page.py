@@ -23,8 +23,6 @@ def get_maximum_bidding_price(company_ticker,company_details):
         return max_amount
     else:
         return get_current_price(company_details.get('companyID'))
-        # print("ini bid",ini_bid)
-        # return ini_bid  # Return the initial bid if no bids are placed
 
 
 def main():
@@ -36,9 +34,7 @@ def main():
         company_details = st.session_state.cer_company
 
         # Display company details
-        # st.subheader(f"Company Name: {company_details.get('Name', 'N/A')}")
         st.subheader(f"{company_details.get('companyID', 'N/A')}")
-        # st.write(f"Initial Bidding Price: ${get_current_price(company_details['companyID'])}")
         st.write(f"Initial Bidding Price: $ {company_details.get('initial_Bid',0)}")
 
         st.write(f"Current highest bid: $ {get_maximum_bidding_price(company_details['companyID'],company_details)}")

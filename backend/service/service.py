@@ -507,9 +507,7 @@ class CompanyService():
                 Each company entry includes name, password, initial money wallet balance,
                 initial credits wallet balance, fund category, and industry ID.
         """
-        query = '''SELECT * FROM CompanySignup;'''
-        company_data = self.execute_query(query)
-
+        company_data = self.company_dao.get_company_data()
         company_data_dict = {}
         for row in company_data:
             name, ticker,password, initial_money_wallet_balance,initial_credits_wallet_balance,fundCategory, industryID = row
@@ -1014,10 +1012,13 @@ class UserService:
             
             if row['Order Type'] == 'Buy':
                 stocks[row['Ticker']]+=float(row['Amount'])
-                current_score += (float(row['Amount'])/stocks[row['Ticker']]) * float(df.loc[row['Date']][row['Ticker']])
+                if stocks[row['Ticker']] != 0:
+                    current_score += (float(row['Amount'])/stocks[row['Ticker']]) * float(df.loc[converted_timestamp][row['Ticker']])
             elif row['Order Type'] == 'Sell':
-                stocks[row['Ticker']]-=float(row['Amount'])
-                current_score -= (float(row['Amount'])/stocks[row['Ticker']]) * float(df.loc[row['Date']][row['Ticker']])
+                if stocks[row['Ticker']] != 0:
+                    current_score -= (float(row['Amount'])/stocks[row['Ticker']]) * float(df.loc[converted_timestamp][row['Ticker']])
+                    stocks[row['Ticker']]-=float(row['Amount'])
+                    
                 
             if len((portfolio_score))!=0:
                 portfolio_score.append(current_score/len(portfolio_score))
@@ -1181,8 +1182,10 @@ class UserService:
         
             # Calculate portfolio score
             score, _ = self.calculate_portfolio_score(portfolio)
-            df = df.append({'Username': username, 'Portfolio Score': score}, ignore_index=True)
-    
+            
+            # Append username and score to result DataFrame
+            df = df._append({'Username': username, 'Portfolio Score': score}, ignore_index=True)
+        
         return df
 
         

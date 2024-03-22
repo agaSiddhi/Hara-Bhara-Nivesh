@@ -43,9 +43,6 @@ def read_yaml(filename):
     except FileNotFoundError:
         return {}
 
-# Import the company details into your script
-# company_data = read_yaml('company_details.yaml')
-
 
 def add_emissions(ticker, emissions):
     industry = company_service.return_industry_keyword_from_companySignup_ticker(ticker)
@@ -55,14 +52,8 @@ def add_emissions(ticker, emissions):
         # Add the remainder to the company's wallet
         remainder = (cap - emissions)
         wallet_balance = company_service.return_wallet_balance_from_companySignup_ticker(ticker)[0][0]
-        # wallet_balance = get_credits_balance(ticker)
         updated_wallet_balance = float(wallet_balance) + remainder
-        # success = company_service.return_update_wallet_balance(ticker, updated_wallet_balance)
-        # company_data['credentials']['usernames'][ticker]['credits_wallet']=updated_wallet_balance
         success = company_service.add_credits_wallet_balance_from_companySignup_ticker(ticker,updated_wallet_balance)
-        # Write the updated data back to the YAML file
-        # with open("company_details.yaml", 'w') as file:
-        #     yaml.dump(company_data, file)
         st.success(f'Emissions added successfully. Wallet balance updated: ${updated_wallet_balance}')
     else:
         st.error(f'Emissions ({emissions}) exceed the industry cap ({cap}). Not eligible to issue Carbon Credits.')

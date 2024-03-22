@@ -1,5 +1,4 @@
 import mysql.connector
-# from backend.database import return_price_and_date, return_score_and_date
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -14,7 +13,7 @@ class UserDao(CompanyDao):
     It inherits from the CompanyDao class and provides additional functionalities specific to user data.
     """
 
-    def __init__(self, host, user, password, database):
+    def __init__(self, host, user, password, database,port):
         """
         Initializes a UserDao object with the connection details to the MySQL database.
 
@@ -29,7 +28,7 @@ class UserDao(CompanyDao):
             user=user,
             password=password,
             database=database,
-            # port = port
+            port = port
         )
 
     def execute_query(self, query, params=None):

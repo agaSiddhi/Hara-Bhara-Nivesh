@@ -23,20 +23,6 @@ def validate_email(email):
     pattern = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
     return re.match(pattern, email)
 
-# Function to write data to YAML file
-def write_to_yaml(data, filename):
-    with open(filename, 'w') as file:
-        yaml.dump(data, file, default_flow_style=False)
-
-# Function to read YAML file
-def read_yaml(filename):
-    try:
-        with open(filename, 'r') as file:
-            data = yaml.load(file, Loader=yaml.FullLoader)
-        return data
-    except FileNotFoundError:
-        return {}
-
 company_service= initialize_system()[0]
 
 def company_signup():
@@ -58,21 +44,9 @@ def company_signup():
     if st.button("Sign Up"):
         # Validate if all fields are not empty
         if name and ticker and password and password == verify_password:
-            # Load existing data or create a new dictionary if the file doesn't exist
-            company_data = read_yaml('company_details.yaml')
-            if company_data is None:
-                company_data = {}
-                
-            # if 'credentials' not in company_data:
-            #     company_data['credentials'] = {'usernames': {}}
                 
             hashed_password = stauth.Hasher([password]).generate()
-            
-            # Add company details to the dictionary
-
-            # Write company details to YAML file
             company_service.return_add_new_company_signup(name,ticker, hashed_password[0],initial_money_wallet,initial_credits_wallet,industry,fund_category)
-            # write_to_yaml(company_data, 'company_details.yaml')
             st.success("You have successfully signed up as a company!")
         elif password != verify_password:
             st.error("Passwords do not match. Please verify your password.")

@@ -6,7 +6,6 @@ user_service = initialize_system()[1]
 
 authenticator = stauth.Authenticate(
     user_service.get_user_data_dict(),
-    # user_data['credentials'],
     'company_cookie',
     'company_key',
    30,
