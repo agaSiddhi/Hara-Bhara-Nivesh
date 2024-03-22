@@ -79,8 +79,9 @@ class CompanyDao:
         Returns:
             list: A list containing the company ID as a single element.
         """
-        query = f'SELECT companyID FROM Company WHERE name = "{company_name}";'
-        result = self.execute_query(query)
+        query = 'SELECT companyID FROM Company WHERE name = %s;'
+        params = (company_name,)
+        result = self.execute_query(query,params)
         
         return result
     
@@ -98,10 +99,11 @@ class CompanyDao:
             Exception: If there is an error executing the query or retrieving the result.
         """
 
-        query = f'''SELECT c.Environmental, c.Social , c.Governance
-                FROM ESG c WHERE c.companyID = {f"'{companyID}'"};'''
+        query = '''SELECT c.Environmental, c.Social , c.Governance
+                FROM ESG c WHERE c.companyID = %s;'''
+        params = (companyID,)
         try:
-            result = self.execute_query(query)
+            result = self.execute_query(query,params)
             return result
         except Exception as e:
             print(e)
@@ -137,11 +139,12 @@ class CompanyDao:
         Raises:
             Exception: If there is an error executing the query.
         """
-        query = f'''SELECT c.companyID, c.name AS companyName, c.createdAt, c.updatedAt, c.totalAssets, c.revenue, c.employeeCount, c.currentScore, c.foundedYear, w.url 
+        query = '''SELECT c.companyID, c.name AS companyName, c.createdAt, c.updatedAt, c.totalAssets, c.revenue, c.employeeCount, c.currentScore, c.foundedYear, w.url 
                 FROM Company c 
-                LEFT JOIN CompanyWebsite w ON c.companyID = w.companyID WHERE c.companyID = {f"'{companyID}'"};'''
+                LEFT JOIN CompanyWebsite w ON c.companyID = w.companyID WHERE c.companyID = %s;'''
+        params = (companyID,)
         try:
-            result = self.execute_query(query)
+            result = self.execute_query(query,params)
         except Exception as e:
             print(e)
         return result
@@ -156,11 +159,12 @@ class CompanyDao:
         Returns:
             list: A list containing the industry description.
         """
-        query = f''' SELECT i.description
+        query = ''' SELECT i.description
                 FROM Company c
                 JOIN Industry i ON c.industryID = i.industryID
-                WHERE c.companyID = "{companyID}"; '''
-        result = self.execute_query(query)
+                WHERE c.companyID = %s; '''
+        params = (companyID,)
+        result = self.execute_query(query,params)
         return result
     
     def get_price_history_from_companyID(self, companyID=None):
@@ -173,10 +177,11 @@ class CompanyDao:
         Returns:
             list: A list of tuples containing the price and updatedAt information for the company.
         """
-        query = f'''SELECT price, updatedAt
+        query = '''SELECT price, updatedAt
                 FROM PriceHistory
-                WHERE companyID = "{companyID}";'''
-        result = self.execute_query(query)
+                WHERE companyID = %s;'''
+        params = (companyID,)
+        result = self.execute_query(query,params)
         return result
 
     def get_current_price_for_ticker(self, company_id):
@@ -189,12 +194,13 @@ class CompanyDao:
         Returns:
             float: The current price of the company's stock.
         """
-        query = f'''SELECT price
+        query = '''SELECT price
             FROM PriceHistory
-            WHERE companyID = "{company_id}"
+            WHERE companyID = %s
             ORDER BY updatedAt DESC
             LIMIT 1;'''
-        result = self.execute_query(query)
+        params = (company_id,)
+        result = self.execute_query(query,params)
         return result[0][0]
 
     def get_score_history_from_companyID(self, companyID=None):
@@ -207,10 +213,11 @@ class CompanyDao:
         Returns:
             list: A list of tuples containing the score and the update timestamp for each score history entry.
         """
-        query = f'''SELECT score, updatedAt
+        query = '''SELECT score, updatedAt
                 FROM ScoreHistory
-                WHERE companyID = "{companyID}";'''
-        result = self.execute_query(query)
+                WHERE companyID = %s;'''
+        params = (companyID,)
+        result = self.execute_query(query,params)
         return result
     
     def get_fund_category_from_ticker(self,companyID=None):
@@ -223,10 +230,11 @@ class CompanyDao:
         Returns:
             str: The fund category associated with the company ID.
         """
-        query = f'''SELECT fundCategory
+        query = '''SELECT fundCategory
                 FROM Company
-                WHERE companyID = "{companyID}";'''
-        result = self.execute_query(query)
+                WHERE companyID = %s;'''
+        params = (companyID,)
+        result = self.execute_query(query,params)
         return result
     
     def get_industry(self, companyID=None):
@@ -239,11 +247,12 @@ class CompanyDao:
         Returns:
             str: The industry description for the specified company ID.
         """
-        query = f'''SELECT Industry.description
+        query = '''SELECT Industry.description
                 FROM Company
                 JOIN Industry ON Company.industryID = Industry.industryID
-                WHERE Company.companyID = "{companyID}";'''
-        result = self.execute_query(query)
+                WHERE Company.companyID = %s;'''
+        params = (companyID,)
+        result = self.execute_query(query,params)
         return result[0][0]
    
     def get_score_history_of_all_companies(self):
@@ -258,7 +267,7 @@ class CompanyDao:
         scoreData = self.execute_query(query)
         return scoreData
     
-    def get_price_history_of_all_companies(self,data=None):
+    def get_price_history_of_all_companies(self):
         """
         Fetches the price history of all companies from the database.
 
@@ -342,8 +351,9 @@ class CompanyDao:
         if isinstance(companyID,list):
             companyID=companyID[0]
 
-        query=f'SELECT AVG(score) FROM ScoreHistory WHERE companyID="{companyID}";'
-        result=self.execute_query(query)
+        query='SELECT AVG(score) FROM ScoreHistory WHERE companyID=%s;'
+        params = (companyID,)
+        result=self.execute_query(query,params)
 
         return float(result[0][0])
 
@@ -398,9 +408,10 @@ class CompanyDao:
         Returns:
             None
         """
-        query = f'''UPDATE Company SET wallet = {updated_wallet_balance} WHERE companyID = "{ticker}";'''
+        query = '''UPDATE Company SET wallet = %s WHERE companyID = %s;'''
+        params = (updated_wallet_balance,ticker)
         try:
-            self.execute_query(query)
+            self.execute_query(query, params)
             print(f"Wallet balance updated successfully for {ticker}")
         except Exception as e:
             print(f"Error updating wallet balance for {ticker}: {e}")
@@ -416,11 +427,12 @@ class CompanyDao:
         Returns:
             list: A list of industry keywords associated with the company ID.
         """
-        query = f'''SELECT i.keyword
+        query = '''SELECT i.keyword
                 FROM Company c
                 JOIN Industry i ON c.industryID = i.industryID
-                WHERE c.companyID = "{companyID}"; '''
-        result = self.execute_query(query)
+                WHERE c.companyID = %s; '''
+        params = (companyID,)
+        result = self.execute_query(query,params)
 
         return result
 
@@ -434,10 +446,11 @@ class CompanyDao:
         Returns:
             list: A list containing the wallet balance for the specified company ID.
         """
-        query = f'''SELECT wallet
+        query = '''SELECT wallet
                 FROM Company
-                WHERE companyID = "{companyID}"; '''
-        result = self.execute_query(query)
+                WHERE companyID = %s; '''
+        params = (companyID,)
+        result = self.execute_query(query, params)
 
         return result
     
@@ -477,8 +490,9 @@ class CompanyDao:
         Returns:
             result: The industry ID corresponding to the provided keyword.
         """
-        query = f'''SELECT industryID FROM Industry WHERE keyword = "{industry_keyword}";'''
-        result = self.execute_query(query)
+        query = '''SELECT industryID FROM Industry WHERE keyword = %s;'''
+        params = (industry_keyword,)
+        result = self.execute_query(query,params)
 
         return result
     
@@ -552,8 +566,9 @@ class CompanyDao:
         Returns:
             list: A list of dictionaries containing the signup company data.
         """
-        query = f'''SELECT * FROM CompanySignup WHERE CompanyTicker = '{name}';'''
-        result = self.execute_query(query)
+        query = '''SELECT * FROM CompanySignup WHERE CompanyTicker = %s;'''
+        params = (name, )
+        result = self.execute_query(query,params)
         return result
     
     def update_credit_wallet_balance(self, ticker, credits):
@@ -568,11 +583,12 @@ class CompanyDao:
         Returns:
             None
         """
-        query = f'''UPDATE CompanySignup
-                    SET InitialCreditsWalletBalance = InitialCreditsWalletBalance - {credits}
-                    WHERE CompanyTicker = '{ticker}';'''
+        query = '''UPDATE CompanySignup
+                    SET InitialCreditsWalletBalance = InitialCreditsWalletBalance - %s
+                    WHERE CompanyTicker = %s;'''
+        params = (credits,ticker)
         try:
-            self.execute_query(query)
+            self.execute_query(query, params)
             print("updated credit wallet balance successfully.")
         except Exception as e:
             print(f"Error updating credit wallet balance : {e}")
@@ -593,8 +609,9 @@ class CompanyDao:
         Raises:
             Exception: If there is an error executing the query.
         """
-        query= f'''INSERT INTO Bid (initial_Bid, minimum_Step, credits_Listed, companyID)
-                VALUES ({initial_bid}, {min_step}, {credits}, '{ticker}');'''
+        query= '''INSERT INTO Bid (initial_Bid, minimum_Step, credits_Listed, companyID)
+                VALUES (%s, %s, %s, %s);'''
+        params = (initial_bid, min_step, credits, ticker)
         try:
             self.execute_query(query)
             print("added listed credit to bid successfully")
@@ -611,11 +628,12 @@ class CompanyDao:
         Returns:
             list: A list of industry keywords.
         """
-        query = f'''SELECT i.keyword
+        query = '''SELECT i.keyword
                 FROM CompanySignup cs
                 JOIN Industry i ON cs.industryID = i.industryID
-                WHERE cs.CompanyTicker = "{ticker}"; '''
-        result = self.execute_query(query)
+                WHERE cs.CompanyTicker = %s; '''
+        params = (ticker,)
+        result = self.execute_query(query,params)
 
         return result
     
@@ -629,10 +647,11 @@ class CompanyDao:
         Returns:
             result (object): The initial credit wallet balance.
         """
-        query = f'''SELECT InitialCreditsWalletBalance
+        query = '''SELECT InitialCreditsWalletBalance
                 FROM CompanySignup
-                WHERE CompanyTicker = "{ticker}"; '''
-        result = self.execute_query(query)
+                WHERE CompanyTicker = %s; '''
+        params = (ticker,)
+        result = self.execute_query(query, params)
 
         return result
     
@@ -650,7 +669,8 @@ class CompanyDao:
         Raises:
             Exception: If there is an error updating the wallet balance.
         """
-        query = f'''UPDATE CompanySignup SET InitialCreditsWalletBalance = {updated_wallet_balance} WHERE CompanyTicker = "{ticker}";'''
+        query = '''UPDATE CompanySignup SET InitialCreditsWalletBalance = %s WHERE CompanyTicker = %s;'''
+        params = (updated_wallet_balance, ticker)
         try:
             self.execute_query(query)
             print(f"Credits Wallet balance updated successfully for {ticker}")
@@ -691,10 +711,11 @@ class CompanyDao:
         Returns:
             None
         """
-        query = f"""INSERT INTO Bidding (bidder, bidID, bid)
-        VALUES ('{bidder}', {bidID}, {bid});"""
+        query = """INSERT INTO Bidding (bidder, bidID, bid)
+        VALUES (%s, %s, %s);"""
+        params = (bidder,bidID,bid)
         try:
-            self.execute_query(query)
+            self.execute_query(query,params)
             print("added to bidding table successfully")
         except Exception as e:
             print(f"Error adding to bidding table : {e}")
@@ -709,11 +730,12 @@ class CompanyDao:
         Returns:
             list: A list containing the maximum bidding amount.
         """
-        query = f'''SELECT MAX(b.bid) AS max_bid
+        query = '''SELECT MAX(b.bid) AS max_bid
                     FROM Bidding b
                     JOIN Bid bd ON b.bidID = bd.bidID
-                    WHERE bd.companyID = '{ticker}';'''
-        result = self.execute_query(query)
+                    WHERE bd.companyID = %s;'''
+        params = (ticker,)
+        result = self.execute_query(query,params)
         return result
 
     def get_companyID_from_bidID(self, bidID):
@@ -726,11 +748,12 @@ class CompanyDao:
         Returns:
             list: A list containing the company ID associated with the bid ID.
         """
-        query = f'''SELECT companyID AS cID
+        query = '''SELECT companyID AS cID
                     FROM Bid as bd
                     JOIN Bidding b on b.bidID = bd.bidID
-                    WHERE b.bidID = '{bidID}';'''
-        result = self.execute_query(query)
+                    WHERE b.bidID = %s;'''
+        params = (bidID,)
+        result = self.execute_query(query, params)
         return result
     
     def get_bidding_details_from_ticker(self, ticker):
@@ -743,11 +766,12 @@ class CompanyDao:
         Returns:
             list: A list of dictionaries containing the bidder, bid amount, and bid ID for the specified ticker.
         """
-        query = f'''SELECT b.bidder, b.bid, b.bidID
+        query = '''SELECT b.bidder, b.bid, b.bidID
                     FROM Bidding as b
                     JOIN Bid bd on b.bidID = bd.bidID
-                    WHERE bd.companyID = '{ticker}';'''
-        result = self.execute_query(query)
+                    WHERE bd.companyID = %s;'''
+        params = (ticker,)
+        result = self.execute_query(query,params)
         return result
     
     def get_credits_listed_from_bidID(self, bidID):
@@ -760,10 +784,11 @@ class CompanyDao:
         Returns:
             list: The list of credits listed for the bid.
         """
-        query = f'''SELECT credits_Listed
+        query = '''SELECT credits_Listed
                     FROM Bid
-                    WHERE bidID = '{bidID}';'''
-        result = self.execute_query(query)
+                    WHERE bidID = %s;'''
+        params = (bidID,)
+        result = self.execute_query(query, params)
         return result
     
     def add_money_to_wallet(self,ticker,money):
@@ -780,11 +805,12 @@ class CompanyDao:
         Raises:
             Exception: If there is an error while updating the wallet balance.
         """
-        query = f'''UPDATE CompanySignup
-                    SET InitialMoneyWalletBalance = InitialMoneyWalletBalance + {money}
-                    WHERE CompanyTicker = '{ticker}';'''
+        query = '''UPDATE CompanySignup
+                    SET InitialMoneyWalletBalance = InitialMoneyWalletBalance + %s
+                    WHERE CompanyTicker = %s;'''
+        params = (money,ticker)
         try:
-            self.execute_query(query)
+            self.execute_query(query, params)
             print("added to money wallet balance successfully")
         except Exception as e:
             print(f"Error adding to money wallet balance : {e}")
@@ -800,11 +826,12 @@ class CompanyDao:
         Returns:
             None
         """
-        query = f'''UPDATE CompanySignup
-                    SET InitialCreditsWalletBalance = InitialCreditsWalletBalance + {cred_listed}
-                    WHERE CompanyTicker = '{ticker}';'''
+        query = '''UPDATE CompanySignup
+                    SET InitialCreditsWalletBalance = InitialCreditsWalletBalance + %s
+                    WHERE CompanyTicker = %s;'''
+        params = (cred_listed, ticker)
         try:
-            self.execute_query(query)
+            self.execute_query(query,params)
             print("added credit to credit balance successfully")
         except Exception as e:
             print(f"Error adding credit to credit wallet balance : {e}")
@@ -823,11 +850,12 @@ class CompanyDao:
         Raises:
             Exception: If there is an error subtracting the money from the wallet balance.
         """
-        query = f'''UPDATE CompanySignup
-                    SET InitialMoneyWalletBalance = InitialMoneyWalletBalance - {money}
-                    WHERE CompanyTicker = '{ticker}';'''
+        query = '''UPDATE CompanySignup
+                    SET InitialMoneyWalletBalance = InitialMoneyWalletBalance - %s
+                    WHERE CompanyTicker = %s;'''
+        params = (money,ticker)
         try:
-            self.execute_query(query)
+            self.execute_query(query, params)
             print("subtracted money from wallet balance successfully")
         except Exception as e:
             print(f"Error subtracting money from wallet balance : {e}")
@@ -842,12 +870,13 @@ class CompanyDao:
         Returns:
             None
         """
-        query = f'''DELETE B, BD
+        query = '''DELETE B, BD
                     FROM Bidding B
                     JOIN Bid BD ON B.bidID = BD.bidID
-                    WHERE B.bidID = {bidID};'''
+                    WHERE B.bidID = %s;'''
+        params = (bidID,)
         try:
-            self.execute_query(query)
+            self.execute_query(query, params)
             print("removed successfully")
         except Exception as e:
             print(f"Error removing : {e}")
