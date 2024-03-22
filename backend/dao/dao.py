@@ -4,13 +4,15 @@ import numpy as np
 from datetime import datetime, timedelta
 import yfinance as yf
 from datetime import datetime as dt
+from logger import logger
+logger = logger.get_logger()
 
 class CompanyDao:
     '''This class definition, CompanyDao, is a data access object for a company database. 
     It establishes a connection to the database and provides methods for executing various 
     queries related to company data.'''
 
-    def __init__(self, host, user, password, database):
+    def __init__(self, host, user, password, database,port):
         """
         Initializes a new instance of the class.
 
@@ -29,9 +31,9 @@ class CompanyDao:
             user=user,
             password=password,
             database=database,
-            # port = port
+            port = port
         )
-        
+
     def execute_query(self, query, params=None):
         """
         Executes a SQL query using the provided query and parameters and returns the result set.
@@ -51,7 +53,7 @@ class CompanyDao:
                 cursor.execute(query, params=params)
                 return cursor.fetchall()
         except mysql.connector.Error as err:
-            print(f"Error executing query: {query}. Error: {err}")
+            logger.error(f"Error executing query: {query}. Error: {err}")
             raise
         finally:
             if not self.connection.autocommit:
@@ -106,7 +108,7 @@ class CompanyDao:
             result = self.execute_query(query,params)
             return result
         except Exception as e:
-            print(e)
+            logger.error(f"An error occurred: {e}")
     
     def get_company_data(self):
         """
@@ -146,7 +148,7 @@ class CompanyDao:
         try:
             result = self.execute_query(query,params)
         except Exception as e:
-            print(e)
+            logger.error(f"An error occurred: {e}")
         return result
     
     def get_industry_description_from_companyID(self,companyID=None):
@@ -412,9 +414,9 @@ class CompanyDao:
         params = (updated_wallet_balance,ticker)
         try:
             self.execute_query(query, params)
-            print(f"Wallet balance updated successfully for {ticker}")
+            logger.info(f"Wallet balance updated successfully for {ticker}")
         except Exception as e:
-            print(f"Error updating wallet balance for {ticker}: {e}")
+            logger.error(f"Error updating wallet balance for {ticker}: {e}")
             raise
     
     def get_industry_keyword_from_companyID(self,companyID=None):
@@ -475,9 +477,9 @@ class CompanyDao:
         params = (ticker.upper(), name, total_assets, revenue, employee_count, founded_year, industry_id, fund_category)
         try:
             self.execute_query(query, params)
-            print("New company added successfully.")
+            logger.info("New company added successfully.")
         except Exception as e:
-            print(f"Error adding new company: {e}")
+            logger.error(f"Error adding new company: {e}")
             raise
 
     def get_industry_id_by_keyword(self, industry_keyword):
@@ -552,9 +554,9 @@ class CompanyDao:
         params = (company_name, company_ticker, password, initial_money_wallet_balance, initial_credits_wallet_balance,fund_category,industryID)
         try:
             self.execute_query(query, params)
-            print("Company signup details added successfully.")
+            logger.ino("Company signup details added successfully.")
         except Exception as e:
-            print(f"Error adding company signup details: {e}")
+            logger.error(f"Error adding company signup details: {e}")
     
     def get_signup_company_data(self, name):
         """
@@ -589,9 +591,9 @@ class CompanyDao:
         params = (credits,ticker)
         try:
             self.execute_query(query, params)
-            print("updated credit wallet balance successfully.")
+            logger.info("updated credit wallet balance successfully.")
         except Exception as e:
-            print(f"Error updating credit wallet balance : {e}")
+            logger.error(f"Error updating credit wallet balance : {e}")
 
     def add_listed_credit_to_bid(self, initial_bid, min_step, credits, ticker):
         """
@@ -614,9 +616,9 @@ class CompanyDao:
         params = (initial_bid, min_step, credits, ticker)
         try:
             self.execute_query(query,params)
-            print("added listed credit to bid successfully")
+            logger.info("added listed credit to bid successfully")
         except Exception as e:
-            print(f"Error adding listed credit to bid : {e}")
+            logger.error(f"Error adding listed credit to bid : {e}")
 
     def get_industry_keyword_from_companySignup_ticker(self,ticker):
         """
@@ -673,9 +675,9 @@ class CompanyDao:
         params = (updated_wallet_balance, ticker)
         try:
             self.execute_query(query,params)
-            print(f"Credits Wallet balance updated successfully for {ticker}")
+            logger.info(f"Credits Wallet balance updated successfully for {ticker}")
         except Exception as e:
-            print(f"Error updating credits wallet balance for {ticker}: {e}")
+            logger.error(f"Error updating credits wallet balance for {ticker}: {e}")
             raise
 
     def get_listings_for_auction(self):
@@ -716,9 +718,9 @@ class CompanyDao:
         params = (bidder,bidID,bid)
         try:
             self.execute_query(query,params)
-            print("added to bidding table successfully")
+            logger.info("added to bidding table successfully")
         except Exception as e:
-            print(f"Error adding to bidding table : {e}")
+            logger.error(f"Error adding to bidding table : {e}")
 
     def get_max_bidding_amount(self, ticker):
         """
@@ -811,9 +813,9 @@ class CompanyDao:
         params = (money,ticker)
         try:
             self.execute_query(query, params)
-            print("added to money wallet balance successfully")
+            logger.info("added to money wallet balance successfully")
         except Exception as e:
-            print(f"Error adding to money wallet balance : {e}")
+            logger.error(f"Error adding to money wallet balance : {e}")
 
     def add_credit_to_credit_wallet(self,ticker,cred_listed):
         """
@@ -832,9 +834,9 @@ class CompanyDao:
         params = (cred_listed, ticker)
         try:
             self.execute_query(query,params)
-            print("added credit to credit balance successfully")
+            logger.info("added credit to credit balance successfully")
         except Exception as e:
-            print(f"Error adding credit to credit wallet balance : {e}")
+            logger.error(f"Error adding credit to credit wallet balance : {e}")
 
     def subtract_money_from_wallet(self,ticker,money):
         """
@@ -856,9 +858,9 @@ class CompanyDao:
         params = (money,ticker)
         try:
             self.execute_query(query, params)
-            print("subtracted money from wallet balance successfully")
+            logger.info("subtracted money from wallet balance successfully")
         except Exception as e:
-            print(f"Error subtracting money from wallet balance : {e}")
+            logger.error(f"Error subtracting money from wallet balance : {e}")
 
     def remove_bid_from_bidID(self, bidID):
         """
@@ -877,6 +879,6 @@ class CompanyDao:
         params = (bidID,)
         try:
             self.execute_query(query, params)
-            print("removed successfully")
+            logger.info("removed successfully")
         except Exception as e:
-            print(f"Error removing : {e}")
+            logger.error(f"Error removing : {e}")

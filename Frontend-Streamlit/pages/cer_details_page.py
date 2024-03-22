@@ -1,10 +1,11 @@
 import streamlit as st
 import pandas as pd
 import os
+from logger import logger
+logger = logger.get_logger()
 
 from backend.configuration import initialize_system
 company_service = initialize_system()[0]  
-
 def append(company,user_bid):
     company['Bids'].append({'Bidder': st.session_state.bidder, 'Bid': user_bid})
     st.success(f"Bid placed successfully! Current highest bid: ${user_bid} by {st.session_state.bidder}")
@@ -18,7 +19,7 @@ def get_current_price(company_ticker):
 
 def get_maximum_bidding_price(company_ticker,company_details):
     max_amount = company_service.return_max_bidding_amount(company_ticker)[0][0]
-    print("max bid price",max_amount)
+    logger.info("max bid price",max_amount)
     if max_amount:
         return max_amount
     else:

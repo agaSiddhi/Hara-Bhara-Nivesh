@@ -2,17 +2,19 @@ import streamlit as st
 import pandas as pd
 from streamlit_option_menu import option_menu
 import os
-
+from logger import logger
+logger = logger.get_logger()
 from backend.configuration import initialize_system
 company_service = initialize_system()[0]
     
+
 def get_maximum_bidding_price(company_ticker,ini_bid):
     max_amount = company_service.return_max_bidding_amount(company_ticker)[0][0]
-    print("max bid price",max_amount)
+    logger.info("max bid price",max_amount)
     if max_amount:
         return max_amount
     else:
-        print("ini bid",ini_bid)
+        logger.info("ini bid",ini_bid)
         return ini_bid  # Return the initial bid if no bids are placed
 
 def filter_companies(search_query, data):

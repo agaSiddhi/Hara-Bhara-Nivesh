@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 import os
 from datetime import datetime
+from logger import logger
+logger = logger.get_logger()
 
 from backend.configuration import initialize_system
 company_service = initialize_system()[0]
@@ -36,7 +38,7 @@ def bid_price():
 
         # Form to list credits
         st.subheader("Bid Price:")
-        print(get_maximum_bidding_price(company_details.get('companyID'),company_details))
+        logger.info(get_maximum_bidding_price(company_details.get('companyID'),company_details))
         mini = float(get_maximum_bidding_price(company_details.get('companyID'),company_details))
         step_size = float(company_details.get('minimum_Step',0))
 

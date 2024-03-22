@@ -6,6 +6,8 @@ from datetime import datetime as dt
 from backend.dao.dao import CompanyDao
 import pycountry_convert as pc
 import string
+from logger import logger
+logger = logger.get_logger()
 
 class UserDao(CompanyDao):
     """
@@ -13,7 +15,7 @@ class UserDao(CompanyDao):
     It inherits from the CompanyDao class and provides additional functionalities specific to user data.
     """
 
-    def __init__(self, host, user, password, database):
+    def __init__(self, host, user, password, database,port):
         """
         Initializes a UserDao object with the connection details to the MySQL database.
 
@@ -28,7 +30,7 @@ class UserDao(CompanyDao):
             user=user,
             password=password,
             database=database,
-            # port = port
+            port = port
         )
 
     def execute_query(self, query, params=None):
@@ -50,7 +52,7 @@ class UserDao(CompanyDao):
                 cursor.execute(query, params)
                 return cursor.fetchall()
         except mysql.connector.Error as err:
-            print(f"Error executing query: {query}. Error: {err}")
+            logger.error(f"Error executing query: {query}. Error: {err}")
             raise
         finally:
             if not self.connection.autocommit:
@@ -430,5 +432,5 @@ class UserDao(CompanyDao):
         query = f'''SELECT date, amount FROM Transaction_history;'''
         result=self.execute_query(query)
         df = pd.DataFrame(result, columns=['date', 'amount'])
-        print("amount distribution",df)
+        logger.info("amount distribution user: %s",df)
         return df

@@ -1,5 +1,7 @@
 import streamlit_authenticator as stauth
 import streamlit as st
+from logger import logger
+logger = logger.get_logger()
 
 from backend.configuration import initialize_system
 company_service = initialize_system()[0]
@@ -15,7 +17,7 @@ authenticator = stauth.Authenticate(
 
 def main():
     name, authentication_status, username = authenticator.login()
-    print("Authentication status:",authentication_status, "username",username,'name', name)
+    logger.info("Authentication status:",authentication_status, "username",username,'name', name)
     if authentication_status:
         company_ticker=username
         st.session_state['authenticator']=authenticator

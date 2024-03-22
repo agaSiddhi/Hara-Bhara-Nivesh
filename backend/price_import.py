@@ -5,6 +5,8 @@ import csv
 import mysql.connector
 from datetime import datetime as dt
 import numpy as np
+from logger import logger
+logger = logger.get_logger()
 
 def insert_db(file):
     # Establish database connection
@@ -42,6 +44,7 @@ def insert_db(file):
     db_connection.commit()
     cursor.close()
     db_connection.close()
+
 # Define a dictionary mapping ticker symbols to company names
 company_names = {
     'CAAMX.SA': 'China Asset Management Co.',
@@ -91,7 +94,7 @@ for symbol in ticker_symbols:
 all_data.to_csv('data.csv')
 
 # Print the first few rows of the combined data
-print(all_data.head())
+logger.info(all_data.head())
 
 
 
@@ -128,6 +131,6 @@ for symbol in missing_ticker_symbols:
 all_data_missing.to_csv('missing_data.csv', index=False)
 
 # Print the first few rows of the combined data
-print(all_data_missing.head())
+logger.info(all_data_missing.head())
 
 insert_db('missing_data.csv')
