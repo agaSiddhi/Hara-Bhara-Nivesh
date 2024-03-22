@@ -48,7 +48,7 @@ def update_yaml_file(last_occurrence, yaml_file):
     with open(yaml_file, 'w') as file:
         yaml.dump(last_occurrence, file)
 
-def scoring_algorithm(articles_file = '../Scraper/Article_data.csv' , esg_ratings_file = '../Scraper/sustainalytics_data.csv' , yaml_file = 'dictionary.yaml', output_csv_file = 'final_data.csv'):
+def scoring(articles_file = '../Scraper/Article_data.csv' , esg_ratings_file = '../Scraper/sustainalytics_data.csv'):
     articles = pd.read_csv(articles_file)
     esg_ratings = pd.read_csv(esg_ratings_file)
 
@@ -69,7 +69,7 @@ def scoring_algorithm(articles_file = '../Scraper/Article_data.csv' , esg_rating
                 df.loc[(df['Company Name'] == company_name) & (df['Date'] == date), category] = score
             else:
                 new_row = {"Company Name": company_name, "Date": date, category: score}
-                df = df.append(new_row, ignore_index=True)
+                df = df._append(new_row, ignore_index=True)
 
     for i in range(len(esg_ratings)):
         company_name = esg_ratings.loc[i, 'Company']
@@ -78,9 +78,16 @@ def scoring_algorithm(articles_file = '../Scraper/Article_data.csv' , esg_rating
         else:
             date = datetime.now().date().strftime('%Y-%m-%d')
             new_row = {"Company Name": company_name, "ESG_ratings": esg_ratings.loc[i, 'Score'], "Date": str(date)}
-            df = df.append(new_row, ignore_index=True)
+            df = df._append(new_row, ignore_index=True)
 
-    df.fillna(-1, inplace=True)
+        df.fillna(-1, inplace=True)
+
+    return df
+
+    
+def scoring_algorithm(yaml_file = 'dictionary.yaml', output_csv_file = 'final_data.csv'):
+
+    df = scoring()
 
     df = update_final_esg_score(df)
 
@@ -98,4 +105,3 @@ def scoring_algorithm(articles_file = '../Scraper/Article_data.csv' , esg_rating
     update_yaml_file(updated_yaml_data, yaml_file)
 
     push_data_to_csv(df, output_csv_file)
-
